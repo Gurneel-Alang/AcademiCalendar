@@ -1,4 +1,73 @@
 package data_access;
 
-public class EventDataAccessObject {
+import entity.event.EventInterface;
+import use_case.add_event.AddEventDataAccessInterface;
+import use_case.edit_event.EditEventDataAccessInterface;
+import use_case.delete_event.DeleteEventDataAccessInterface;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * The DAO for events.
+ */
+public class EventDataAccessObject implements AddEventDataAccessInterface,
+    EditEventDataAccessInterface, DeleteEventDataAccessInterface {
+
+    private final Map<Integer, EventInterface> events = new HashMap<>();
+
+    @Override
+    public boolean existsByTitle(String title) {
+        for (EventInterface event : events.values()) {
+            if (title.equals(event.getTitle())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void addEvent(EventInterface event) {
+        events.put(Integer.valueOf(event.getId()), event);
+    }
+
+    private int getKeyByValue(String title) {
+        for (Integer i : events.keySet()) {
+            if (title.equals(events.get(i).getTitle())) {
+                return i;
+            }
+        }
+        throw new RuntimeException("No key found.");
+    }
+
+    @Override
+    public void editEvent(String title, EventInterface other) {
+        for (EventInterface event : events.values()) {
+            if (title.equals(event.getTitle())) {
+                try {
+                    int id = getKeyByValue(title);
+                    events.put(id, other);
+                    other.setId(id);
+                }
+                catch (RuntimeException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteEvent(String title) {
+        for (EventInterface event : events.values()) {
+            if (title.equals(event.getTitle())) {
+                try {
+                    int id = getKeyByValue(title);
+                    events.remove(id);
+                }
+                catch (RuntimeException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
 }
