@@ -12,8 +12,7 @@ import javax.swing.JLabel;
  * Main application view containing navigation and feature views.
  */
 public class MainView extends JPanel {
-
-    private static final String CALENDAR_VIEW = "calendar";
+    private static final String EVENT_VIEW = "event";
     private static final String WEATHER_VIEW = "weather";
 
     private final CardLayout rightCardLayout;
@@ -28,29 +27,28 @@ public class MainView extends JPanel {
             CalendarView calendarView) {
         setLayout(new BorderLayout());
 
-        final JButton calendarButton =
-                new JButton("Calendar");
+        final JButton eventButton =
+                new JButton("Events");
         final JButton weatherButton =
                 new JButton("Weather");
 
         final JPanel navigationPanel =
                 new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        navigationPanel.add(calendarButton);
+        navigationPanel.add(eventButton);
         navigationPanel.add(weatherButton);
 
         rightCardLayout = new CardLayout();
         rightContentPanel = new JPanel(rightCardLayout);
 
 // The first page on the right; additional pages can be added later to implement other usercase
-        final JPanel calendarOptionsPanel = new JPanel();
-        calendarOptionsPanel.add(new JLabel("Calendar options"));
+        final JPanel eventPanel = new JPanel();
+        eventPanel.add(new JLabel("Events for the selected date"));
 
-// 右侧第二个页面
         final JPanel weatherPanel = new JPanel();
-        weatherPanel.add(new JLabel("Weather"));
+        weatherPanel.add(new JLabel(""));
 
-        rightContentPanel.add(calendarOptionsPanel, CALENDAR_VIEW);
+        rightContentPanel.add(eventPanel, EVENT_VIEW);
         rightContentPanel.add(weatherPanel, WEATHER_VIEW);
 
 // Main area: Calendar is fixed; you can switch between views on the right
@@ -59,8 +57,8 @@ public class MainView extends JPanel {
         mainContentPanel.add(calendarView, BorderLayout.CENTER);
         mainContentPanel.add(rightContentPanel, BorderLayout.EAST);
 
-        calendarButton.addActionListener(
-                event -> showView(CALENDAR_VIEW)
+        eventButton.addActionListener(
+                event -> showView(EVENT_VIEW)
         );
 
         weatherButton.addActionListener(
@@ -68,7 +66,6 @@ public class MainView extends JPanel {
         );
         add(navigationPanel, BorderLayout.NORTH);
         add(mainContentPanel, BorderLayout.CENTER);
-        showView(CALENDAR_VIEW);
     }
 
     /**
