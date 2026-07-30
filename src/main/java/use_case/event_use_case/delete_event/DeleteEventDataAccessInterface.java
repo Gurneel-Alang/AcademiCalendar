@@ -1,4 +1,4 @@
-package use_case.delete_event;
+package use_case.event_use_case.delete_event;
 
 /**
  * DAO for the Edit Event Use Case.

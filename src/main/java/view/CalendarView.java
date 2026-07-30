@@ -1,27 +1,57 @@
 package view;
 
-import java.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.time.LocalDate;
+import java.awt.Dimension;
+import java.util.Locale;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+
+import com.github.lgooddatepicker.components.CalendarPanel;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
 
-public class CalendarView {
-    private final JFrame border = newJFrame();
 
-    // Import calendar, and set coloring
-    DatePickerSettings calendarImport = new DatePickerSettings();
-    Color bgColor = new Color (180, 205, 205);
-    calendarImport.setColor(DateArea.BackgroundOverallCalendarPanel, bgColor);
+public class CalendarView extends JPanel {
+    private static final int CALENDAR_WIDTH = 650;
+    private static final int CALENDAR_HEIGHT = 420;
+    private final CalendarPanel calendarPanel;
 
-    // Set selected date as highlighted
-    calendarImport.sethighlightPolicy (new EventHighlightPolicy());
+    /**
+     * Creates the calendar view.
+     */
+    public CalendarView() {
+        setLayout(new BorderLayout(20, 0));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        final DatePickerSettings settings =
+                new DatePickerSettings(Locale.CANADA);
 
-    // Might need this for further events, delete if unnecessary
-    calendarPanel = new calendarPanel(dateSettings);
-    calendarPanel.setSelectedDate(LocalDate.now());
+        settings.setSizeDatePanelMinimumWidth(CALENDAR_WIDTH);
+        settings.setSizeDatePanelMinimumHeight(350);
+        settings.setColor(
+                DateArea.BackgroundOverallCalendarPanel,
+                new Color(180, 205, 205)
+        );
 
-    // Panel to hold the calendar
-    panel = new JPanel();
-    panel.add(calendarPanel, BorderLayout.NORTH)
+        calendarPanel = new CalendarPanel(settings);
+        calendarPanel.setPreferredSize(
+                new Dimension(CALENDAR_WIDTH, CALENDAR_HEIGHT)
+        );
+        calendarPanel.setSelectedDate(LocalDate.now());
 
-    // Button for checklist view
+        add(calendarPanel, BorderLayout.CENTER);
+    }
 
+
+    /**
+     * Returns the currently selected date.
+     *
+     * @return the selected date
+     */
+    public LocalDate getSelectedDate() {
+        return calendarPanel.getSelectedDate();
+    }
 }

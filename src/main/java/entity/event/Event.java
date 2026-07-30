@@ -25,19 +25,19 @@ public class Event implements EventInterface{
     }
 
     @Override
-    public int getId() { return this.id; }
+    public int getId() { return id; }
 
     @Override
     public void setId(int id) { this.id = id; }
 
     @Override
-    public String getTitle() { return this.title; }
+    public String getTitle() { return title; }
 
     @Override
-    public String getDescription() { return this.description; }
+    public String getDescription() { return description; }
 
     @Override
-    public Date getStartDate() { return this.startDate; }
+    public Date getStartDate() { return startDate; }
 
     @Override
     public Date getEndDate() { return endDate; }
