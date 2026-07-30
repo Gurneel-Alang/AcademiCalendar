@@ -21,4 +21,7 @@ public class CalendarView {
     // Panel to hold the calendar
     panel = new JPanel();
     panel.add(calendarPanel, BorderLayout.NORTH)
+
+    // Button for checklist view
+
 }
