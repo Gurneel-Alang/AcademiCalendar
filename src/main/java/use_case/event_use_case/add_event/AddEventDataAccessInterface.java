@@ -1,9 +1,9 @@
-package use_case.add_event;
+package use_case.event_use_case.add_event;
 
 import entity.event.EventInterface;
 
 /**
- * DAO for the Add Event Use Case.
+ * The DAO for the Add Event Use Case.
  */
 public interface AddEventDataAccessInterface {
 
