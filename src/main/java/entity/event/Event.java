@@ -1,6 +1,6 @@
 package entity.event;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * An implementation of the EventInterface interface.
@@ -11,11 +11,11 @@ public class Event implements EventInterface{
     private int id;
     private String title;
     private String description;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Event(String title, String description,
-                 Date startDate, Date endDate) {
+                 LocalDate startDate, LocalDate endDate) {
         this.id = nextId;
         nextId++;
         this.title = title;
@@ -37,8 +37,8 @@ public class Event implements EventInterface{
     public String getDescription() { return description; }
 
     @Override
-    public Date getStartDate() { return startDate; }
+    public LocalDate getStartDate() { return startDate; }
 
     @Override
-    public Date getEndDate() { return endDate; }
+    public LocalDate getEndDate() { return endDate; }
 }

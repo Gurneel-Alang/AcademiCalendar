@@ -3,9 +3,16 @@ package use_case.event_use_case.edit_event;
 import entity.event.EventInterface;
 
 /**
- * DAO for the Edit Event Use Case.
+ * The DAO for the Edit Event Use Case.
  */
 public interface EditEventDataAccessInterface {
+
+    /**
+     * Return if an event with the given title exists.
+     * @param title the title to look for
+     * @return true if an event with the given title exists, or false otherwise
+     */
+    boolean existsByTitle(String title);
 
     /**
      * Edit an event of the given title with new information from a new event.
