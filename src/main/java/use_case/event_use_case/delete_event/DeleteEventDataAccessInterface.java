@@ -1,9 +1,16 @@
 package use_case.event_use_case.delete_event;
 
 /**
- * DAO for the Edit Event Use Case.
+ * The DAO for the Delete Event Use Case.
  */
 public interface DeleteEventDataAccessInterface {
+
+    /**
+     * Return if an event with the given title exists.
+     * @param title the title to look for
+     * @return true if an event with the given title exists, or false otherwise
+     */
+    boolean existsByTitle(String title);
 
     /**
      * Delete an event of the given title
