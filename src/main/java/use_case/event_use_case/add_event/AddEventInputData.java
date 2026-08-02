@@ -1,6 +1,6 @@
 package use_case.event_use_case.add_event;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * The input data for the Add Event Use Case.
@@ -9,22 +9,45 @@ public class AddEventInputData {
 
     private final String title;
     private final String description;
-    private final Date startDate;
-    private final Date endDate;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
 
-    public AddEventInputData(String title, String description,
-                             Date startDate, Date endDate) {
+    public AddEventInputData(String title, String description, LocalDate startDate, LocalDate endDate) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    String getTitle() { return title; }
+    /**
+     * Return the title.
+     * @return the title
+     */
+    String getTitle() {
+        return title;
+    }
 
-    String getDescription() { return description; }
+    /**
+     * Return the description.
+     * @return the description
+     */
+    String getDescription() {
+        return description;
+    }
 
-    Date getStartDate() { return startDate; }
+    /**
+     * Return the start date.
+     * @return the start date
+     */
+    LocalDate getStartDate() {
+        return startDate;
+    }
 
-    Date getEndDate() { return endDate; }
+    /**
+     * Return the end date.
+     * @return the end date
+     */
+    LocalDate getEndDate() {
+        return endDate;
+    }
 }

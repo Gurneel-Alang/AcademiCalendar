@@ -7,7 +7,11 @@ public class AddEventOutputData {
 
     private final boolean useCaseFailed;
 
-    public AddEventOutputData(boolean useCaseFailed) { this.useCaseFailed = useCaseFailed; }
+    public AddEventOutputData(boolean useCaseFailed) {
+        this.useCaseFailed = useCaseFailed;
+    }
 
-    public boolean isUseCaseFailed() { return useCaseFailed; }
+    public boolean isUseCaseFailed() {
+        return useCaseFailed;
+    }
 }

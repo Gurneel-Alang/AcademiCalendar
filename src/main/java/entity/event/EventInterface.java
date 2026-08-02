@@ -1,6 +1,6 @@
 package entity.event;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * The representation of an event.
@@ -35,11 +35,11 @@ public interface EventInterface {
      * Return the start date of this event.
      * @return the start date of this event
      */
-    Date getStartDate();
+    LocalDate getStartDate();
 
     /**
      * Return the end date of this event.
      * @return the end date of this event
      */
-    Date getEndDate();
+    LocalDate getEndDate();
 }

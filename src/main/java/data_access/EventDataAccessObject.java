@@ -31,7 +31,12 @@ public class EventDataAccessObject implements AddEventDataAccessInterface,
         events.put(Integer.valueOf(event.getId()), event);
     }
 
-    private int getIdByTitle(String title) {
+    /**
+     * Helper method to gather the ID of an event given its title.
+     * @param title the event title
+     * @return the event's associated ID
+     */
+    public int getIdByTitle(String title) {
         for (Integer i : events.keySet()) {
             if (title.equals(events.get(i).getTitle())) {
                 return i;
