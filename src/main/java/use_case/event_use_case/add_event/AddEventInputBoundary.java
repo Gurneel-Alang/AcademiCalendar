@@ -10,4 +10,9 @@ public interface AddEventInputBoundary {
      * @param addEventInputData the input data
      */
     void execute(AddEventInputData addEventInputData);
+
+    /**
+     * Execute the "switch to main view" Use Case.
+     */
+    void switchToMainView();
 }

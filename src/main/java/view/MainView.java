@@ -1,8 +1,11 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
+import java.beans.PropertyChangeEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -23,23 +26,27 @@ public class MainView extends JPanel {
      *
      * @param calendarView the calendar feature view
      */
-    public MainView(
-            CalendarView calendarView) {
+    public MainView(CalendarView calendarView, Runnable onAddEventRequested) {
         setLayout(new BorderLayout());
 
-        final JButton eventButton =
-                new JButton("Events");
-        final JButton weatherButton =
-                new JButton("Weather");
+        final JButton eventButton = new JButton("Events");
+        final JButton weatherButton = new JButton("Weather");
 
-        final JPanel navigationPanel =
-                new JPanel(new FlowLayout(FlowLayout.LEFT));
+        final JPanel navigationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         navigationPanel.add(eventButton);
         navigationPanel.add(weatherButton);
 
         rightCardLayout = new CardLayout();
         rightContentPanel = new JPanel(rightCardLayout);
+
+        final JButton addEventButton = new JButton("Add Event");
+        final JButton editEventButton = new JButton("Edit Event");
+        final JButton deleteEventButton = new JButton("Delete Event");
+        final JPanel eventButtonsPanel = new JPanel();
+        eventButtonsPanel.add(addEventButton);
+        eventButtonsPanel.add(editEventButton);
+        eventButtonsPanel.add(deleteEventButton);
 
 // The first page on the right; additional pages can be added later to implement other usercase
         final JPanel eventPanel = new JPanel();
@@ -60,17 +67,20 @@ public class MainView extends JPanel {
         eventButton.addActionListener(
                 event -> showView(EVENT_VIEW)
         );
-
         weatherButton.addActionListener(
                 event -> showView(WEATHER_VIEW)
         );
+        addEventButton.addActionListener(
+                event -> onAddEventRequested.run()
+        );
+
         add(navigationPanel, BorderLayout.NORTH);
         add(mainContentPanel, BorderLayout.CENTER);
+        add(eventButtonsPanel, BorderLayout.SOUTH);
     }
 
     /**
      * Displays the requested feature view.
-     *
      * @param viewName name of the view
      */
     private void showView(String viewName) {
