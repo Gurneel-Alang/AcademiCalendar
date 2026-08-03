@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 public class MainView extends JPanel {
     private static final String EVENT_VIEW = "event";
     private static final String WEATHER_VIEW = "weather";
+    private static final String CHECKLIST_VIEW = "checklist";
 
     private final CardLayout rightCardLayout;
     private final JPanel rightContentPanel;
@@ -31,11 +32,13 @@ public class MainView extends JPanel {
 
         final JButton eventButton = new JButton("Events");
         final JButton weatherButton = new JButton("Weather");
+        final JButton checklistButton = new JButton("Checklist");
 
         final JPanel navigationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         navigationPanel.add(eventButton);
         navigationPanel.add(weatherButton);
+        navigationPanel.add(checklistButton);
 
         rightCardLayout = new CardLayout();
         rightContentPanel = new JPanel(rightCardLayout);
@@ -43,10 +46,12 @@ public class MainView extends JPanel {
         final JButton addEventButton = new JButton("Add Event");
         final JButton editEventButton = new JButton("Edit Event");
         final JButton deleteEventButton = new JButton("Delete Event");
+        final JButton addTaskButton = new JButton("Add Task");
         final JPanel eventButtonsPanel = new JPanel();
         eventButtonsPanel.add(addEventButton);
         eventButtonsPanel.add(editEventButton);
         eventButtonsPanel.add(deleteEventButton);
+        eventButtonsPanel.add(addTaskButton);
 
 // The first page on the right; additional pages can be added later to implement other usercase
         final JPanel eventPanel = new JPanel();
@@ -55,8 +60,12 @@ public class MainView extends JPanel {
         final JPanel weatherPanel = new JPanel();
         weatherPanel.add(new JLabel(""));
 
+        final JPanel checklistPanel = new JPanel();
+        checklistPanel.add(new JLabel("Tasks"));
+
         rightContentPanel.add(eventPanel, EVENT_VIEW);
         rightContentPanel.add(weatherPanel, WEATHER_VIEW);
+        rightContentPanel.add(checklistPanel, CHECKLIST_VIEW);
 
 // Main area: Calendar is fixed; you can switch between views on the right
         final JPanel mainContentPanel = new JPanel(new BorderLayout());
@@ -70,7 +79,13 @@ public class MainView extends JPanel {
         weatherButton.addActionListener(
                 event -> showView(WEATHER_VIEW)
         );
+        checklistButton.addActionListener(
+                event -> showView(CHECKLIST_VIEW)
+        );
         addEventButton.addActionListener(
+                event -> onAddEventRequested.run()
+        );
+        addTaskButton.addActionListener(
                 event -> onAddEventRequested.run()
         );
 
