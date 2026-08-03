@@ -30,8 +30,7 @@ public class AddEventInteractor implements AddEventInputBoundary {
 
         if (eventDataAccessObject.existsByTitle(title)) {
             addEventPresenter.prepareFailView("Failed; event of given title already exists.");
-        }
-        else {
+        } else {
             final EventInterface event = eventFactory.create(title, description, startDate, endDate);
             eventDataAccessObject.addEvent(event);
 

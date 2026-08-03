@@ -1,4 +1,4 @@
-package interface_adapter.add_event;
+package interface_adapter.event.add_event;
 
 import use_case.event_use_case.add_event.AddEventInputBoundary;
 import use_case.event_use_case.add_event.AddEventInputData;

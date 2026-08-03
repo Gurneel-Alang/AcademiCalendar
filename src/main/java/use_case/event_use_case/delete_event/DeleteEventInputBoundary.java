@@ -10,4 +10,9 @@ public interface DeleteEventInputBoundary {
      * @param deleteEventInputData the input data
      */
     void execute(DeleteEventInputData deleteEventInputData);
+
+    /**
+     * Execute the "switch to main view" Use Case.
+     */
+    void switchToMainView();
 }

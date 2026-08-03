@@ -1,7 +1,7 @@
-package view;
+package view.event_view;
 
-import interface_adapter.add_event.AddEventController;
-import interface_adapter.add_event.AddEventViewModel;
+import interface_adapter.event.add_event.AddEventController;
+import interface_adapter.event.add_event.AddEventViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,10 +29,8 @@ public class AddEventView extends JPanel {
     private final AddEventController addEventController;
     private final AddEventViewModel addEventViewModel;
 
-    private final JButton addEventButton;
-    private final JButton cancelButton;
-
-    private final JLabel errorLabel = new JLabel();
+    private final JButton  addEventButton = new JButton("Add");
+    private final JButton cancelButton = new JButton("Cancel");
 
     public AddEventView(AddEventController addEventController,
                         AddEventViewModel addEventViewModel) {
@@ -70,16 +68,14 @@ public class AddEventView extends JPanel {
         endDateInfo.add(new JLabel("Enter end date:"));
         endDateInfo.add(endDateFields);
 
-        addEventButton = new JButton("Add");
-        cancelButton = new JButton("Cancel");
         final JPanel buttons = new JPanel();
         buttons.add(addEventButton);
         buttons.add(cancelButton);
 
         addEventButton.addActionListener(
                 new ActionListener() {
-                    public void actionPerformed(ActionEvent event) {
-                        if (event.getSource().equals(addEventButton)) {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(addEventButton)) {
                             final String title = titleInputField.getText();
                             final String description = descriptionInputField.getText();
                             final LocalDate startDate = LocalDate.of(

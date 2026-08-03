@@ -26,7 +26,8 @@ public class MainView extends JPanel {
      *
      * @param calendarView the calendar feature view
      */
-    public MainView(CalendarView calendarView, Runnable onAddEventRequested) {
+    public MainView(CalendarView calendarView, Runnable onAddEventRequested,
+                    Runnable onDeleteEventRequested) {
         setLayout(new BorderLayout());
 
         final JButton eventButton = new JButton("Events");
@@ -72,6 +73,9 @@ public class MainView extends JPanel {
         );
         addEventButton.addActionListener(
                 event -> onAddEventRequested.run()
+        );
+        deleteEventButton.addActionListener(
+                event -> onDeleteEventRequested.run()
         );
 
         add(navigationPanel, BorderLayout.NORTH);

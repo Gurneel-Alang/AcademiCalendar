@@ -1,9 +1,9 @@
-package interface_adapter.add_event;
+package interface_adapter.event.delete_event;
 
 /**
- * The state for the Add Event view model.
+ * The state for the Delete Event view model.
  */
-public class AddEventState {
+public class DeleteEventState {
 
     private String titleError;
     private String errorMessage;
