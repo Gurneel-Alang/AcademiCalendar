@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import data_access.EventDataAccessObject;
+import data_access.ReminderScheduler;
 import entity.event.EventFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.add_event.AddEventController;
@@ -35,7 +36,8 @@ public class CalendarPreviewMain {
             final AddEventInteractor addEventInteractor = new AddEventInteractor(
                     eventDataAccessObject, addEventPresenter, new EventFactory());
             final AddEventController addEventController = new AddEventController(addEventInteractor);
-            final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel);
+            final ReminderScheduler reminderScheduler = new ReminderScheduler();
+            final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel, reminderScheduler);
 
             final CalendarView calendarView = new CalendarView();
             final MainView mainView = new MainView(calendarView, () -> {
