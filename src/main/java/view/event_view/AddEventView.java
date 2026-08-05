@@ -32,8 +32,7 @@ public class AddEventView extends JPanel {
     private final JButton  addEventButton = new JButton("Add");
     private final JButton cancelButton = new JButton("Cancel");
 
-    public AddEventView(AddEventController addEventController,
-                        AddEventViewModel addEventViewModel) {
+    public AddEventView(AddEventController addEventController, AddEventViewModel addEventViewModel) {
         this.addEventController = addEventController;
         this.addEventViewModel = addEventViewModel;
 
