@@ -1,5 +1,7 @@
 package view.event_view;
 
+import data_access.ReminderScheduler;
+import entity.reminder.ReminderChoices;
 import interface_adapter.event.add_event.AddEventController;
 import interface_adapter.event.add_event.AddEventViewModel;
 
@@ -26,15 +28,29 @@ public class AddEventView extends JPanel {
     private final JComboBox<Month> endMonthInputField = new JComboBox<>();
     private final JComboBox<Integer> endDayInputField = new JComboBox<>();
 
+    // Added Reminder setup for AddEvent here
+
+    private final JComboBox<ReminderChoices> reminderInputField =
+            new JComboBox<>(ReminderChoices.all());
+
     private final AddEventController addEventController;
     private final AddEventViewModel addEventViewModel;
+    private final ReminderScheduler reminderScheduler;
+
+    private String pendingReminderTitle;
+    private ReminderChoices pendingReminderOption;
 
     private final JButton  addEventButton = new JButton("Add");
     private final JButton cancelButton = new JButton("Cancel");
 
-    public AddEventView(AddEventController addEventController, AddEventViewModel addEventViewModel) {
+    private final JLabel errorLabel = new JLabel();
+
+    public AddEventView(AddEventController addEventController,
+                        AddEventViewModel addEventViewModel,
+                        ReminderScheduler reminderScheduler) {
         this.addEventController = addEventController;
         this.addEventViewModel = addEventViewModel;
+        this.reminderScheduler = reminderScheduler;
 
         populateDateFields();
 
@@ -67,6 +83,13 @@ public class AddEventView extends JPanel {
         endDateInfo.add(new JLabel("Enter end date:"));
         endDateInfo.add(endDateFields);
 
+        // Added Reminder setup here
+        final JPanel reminderInfo = new JPanel();
+        reminderInfo.add(new JLabel("Remind me:"));
+        reminderInfo.add(reminderInputField);
+
+        addEventButton = new JButton("Add");
+        cancelButton = new JButton("Cancel");
         final JPanel buttons = new JPanel();
         buttons.add(addEventButton);
         buttons.add(cancelButton);
@@ -86,6 +109,10 @@ public class AddEventView extends JPanel {
                                     (Month) endMonthInputField.getSelectedItem(),
                                     (Integer) endDayInputField.getSelectedItem());
 
+                            // Added reminders schedule queue
+                            pendingReminderTitle = title;
+                            pendingReminderOption = (ReminderChoices) reminderInputField.getSelectedItem();
+
                             addEventController.execute(title, description, startDate, endDate);
                         }
                     }
@@ -97,11 +124,21 @@ public class AddEventView extends JPanel {
 
         addEventViewModel.addPropertyChangeListener(evt -> {
             if (AddEventViewModel.CLOSE_PROPERTY.equals(evt.getPropertyName())) {
+                if (pendingReminderTitle != null){
+                    reminderScheduler.schedule(
+                            pendingReminderTitle,
+                            pendingReminderOption,
+                            this::showReminder);
+                    pendingReminderTitle = null;
+                    pendingReminderOption = null;
+                }
                 final Window window = SwingUtilities.getWindowAncestor(this);
                 if (window != null) {
                     window.dispose();
                 }
             } else if (AddEventViewModel.ERROR_PROPERTY.equals(evt.getPropertyName())) {
+                pendingReminderTitle = null;
+                pendingReminderOption = null;
                 final String message = addEventViewModel.getState().getErrorMessage();
                 JOptionPane.showMessageDialog(this, message);
             }
@@ -113,7 +150,24 @@ public class AddEventView extends JPanel {
         this.add(descriptionInfo);
         this.add(startDateInfo);
         this.add(endDateInfo);
+        this.add(reminderInfo);
         this.add(buttons);
+    }
+
+    private void showReminder(String eventTitle, ReminderChoices option) {
+        final Object[] buttons = {"Remind me again in 1 hour", "Dismiss"};
+        final int choice = JOptionPane.showOptionDialog(
+                null,
+                "Reminder: \"" + eventTitle + "\" (" + option.getPastLabel() + ")",  // message
+                "Reminder",                                                            // title
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                buttons,
+                buttons[0]);
+        if (choice == 0) {
+            reminderScheduler.schedule(eventTitle, ReminderChoices.oneHour(), this::showReminder);
+        }
     }
 
     private void populateDateFields() {
