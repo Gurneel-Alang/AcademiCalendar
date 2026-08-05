@@ -1,22 +1,22 @@
-package interface_adapter.add_event;
+package interface_adapter.event.delete_event;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
- * The view model for the Add Event view.
+ * The view model for the Delete Event view.
  */
-public class AddEventViewModel {
+public class DeleteEventViewModel {
 
     public static final String CLOSE_PROPERTY = "close";
     public static final String ERROR_PROPERTY = "error";
 
-    private AddEventState state = new AddEventState();
+    private DeleteEventState state = new DeleteEventState();
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public AddEventState getState() { return state; }
+    public DeleteEventState getState() { return state; }
 
-    public void setState(AddEventState state) { this.state = state; }
+    public void setState(DeleteEventState state) { this.state = state; }
 
     /**
      * Notify listeners when a property has changed.

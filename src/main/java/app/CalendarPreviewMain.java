@@ -5,15 +5,20 @@ import javax.swing.SwingUtilities;
 
 import data_access.EventDataAccessObject;
 import entity.event.EventFactory;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.add_event.AddEventController;
-import interface_adapter.add_event.AddEventPresenter;
-import interface_adapter.add_event.AddEventViewModel;
+import interface_adapter.event.add_event.AddEventController;
+import interface_adapter.event.add_event.AddEventPresenter;
+import interface_adapter.event.add_event.AddEventViewModel;
+import interface_adapter.event.delete_event.DeleteEventController;
+import interface_adapter.event.delete_event.DeleteEventPresenter;
+import interface_adapter.event.delete_event.DeleteEventViewModel;
 import use_case.event_use_case.add_event.AddEventInteractor;
-import view.AddEventDialog;
-import view.AddEventView;
+import use_case.event_use_case.delete_event.DeleteEventInteractor;
+import view.event_view.AddEventDialog;
+import view.event_view.AddEventView;
 import view.CalendarView;
 import view.MainView;
+import view.event_view.DeleteEventDialog;
+import view.event_view.DeleteEventView;
 
 /**
  * Runs a preview of the application views.
@@ -30,6 +35,7 @@ public class CalendarPreviewMain {
             final JFrame frame = new JFrame("AcademiCalendar");
 
             final EventDataAccessObject eventDataAccessObject = new EventDataAccessObject();
+
             final AddEventViewModel addEventViewModel = new AddEventViewModel();
             final AddEventPresenter addEventPresenter = new AddEventPresenter(addEventViewModel);
             final AddEventInteractor addEventInteractor = new AddEventInteractor(
@@ -37,15 +43,24 @@ public class CalendarPreviewMain {
             final AddEventController addEventController = new AddEventController(addEventInteractor);
             final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel);
 
+            final DeleteEventViewModel deleteEventViewModel = new DeleteEventViewModel();
+            final DeleteEventPresenter deleteEventPresenter = new DeleteEventPresenter(deleteEventViewModel);
+            final DeleteEventInteractor deleteEventInteractor = new DeleteEventInteractor(
+                    eventDataAccessObject, deleteEventPresenter);
+            final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
+            final DeleteEventView deleteEventView = new DeleteEventView(deleteEventController, deleteEventViewModel);
+
             final CalendarView calendarView = new CalendarView();
-            final MainView mainView = new MainView(calendarView, () -> {
+            final MainView mainView = new MainView(calendarView,
+                    () -> {
                 final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
-                dialog.setVisible(true); // blocks here (modal) until dialog.dispose() is called
+                dialog.setVisible(true);
+                }, () -> {
+                final DeleteEventDialog dialog = new DeleteEventDialog(frame, deleteEventView);
+                dialog.setVisible(true);
             });
 
-            frame.setDefaultCloseOperation(
-                    JFrame.EXIT_ON_CLOSE
-            );
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setContentPane(mainView);
             frame.setSize(1000, 600);
             frame.setLocationRelativeTo(null);

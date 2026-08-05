@@ -16,4 +16,9 @@ public interface DeleteEventOutputBoundary {
      * @param errorMessage the explanation of the failure
      */
     void prepareFailView(String errorMessage);
+
+    /**
+     * Switch to the main view.
+     */
+    void switchToMainView();
 }
