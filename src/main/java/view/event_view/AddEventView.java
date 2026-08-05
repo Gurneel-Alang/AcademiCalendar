@@ -88,8 +88,7 @@ public class AddEventView extends JPanel {
         reminderInfo.add(new JLabel("Remind me:"));
         reminderInfo.add(reminderInputField);
 
-        addEventButton = new JButton("Add");
-        cancelButton = new JButton("Cancel");
+
         final JPanel buttons = new JPanel();
         buttons.add(addEventButton);
         buttons.add(cancelButton);
