@@ -75,9 +75,9 @@ public class CalendarPreviewMain {
                 final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
                 dialog.setVisible(true);
                 }, () -> {
-                //final EditEventDialog dialog = new EditEventDialog(frame, editEventView);
-                //dialog.setVisible(true);
-                //}, () -> {
+                final EditEventDialog dialog = new EditEventDialog(frame, editEventView);
+                dialog.setVisible(true);
+                }, () -> {
                 final DeleteEventDialog dialog = new DeleteEventDialog(frame, deleteEventView);
                 dialog.setVisible(true);
             });
