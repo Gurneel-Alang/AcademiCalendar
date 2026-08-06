@@ -21,8 +21,7 @@ public class DeleteEventView extends JPanel {
     private final JButton deleteEventButton = new JButton("Delete");
     private final JButton cancelButton = new JButton("Cancel");
 
-    public DeleteEventView(DeleteEventController deleteEventController,
-                           DeleteEventViewModel deleteEventViewModel) {
+    public DeleteEventView(DeleteEventController deleteEventController, DeleteEventViewModel deleteEventViewModel) {
         this.deleteEventController = deleteEventController;
         this.deleteEventViewModel = deleteEventViewModel;
 

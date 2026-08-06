@@ -28,7 +28,7 @@ public class MainView extends JPanel {
      * @param calendarView the calendar feature view
      */
     public MainView(CalendarView calendarView, Runnable onAddEventRequested,
-                    Runnable onDeleteEventRequested) {
+                    Runnable onEditEventRequested, Runnable onDeleteEventRequested) {
         setLayout(new BorderLayout());
 
         final JButton eventButton = new JButton("Events");
@@ -85,6 +85,9 @@ public class MainView extends JPanel {
         );
         addEventButton.addActionListener(
                 event -> onAddEventRequested.run()
+        );
+        editEventButton.addActionListener(
+                event -> onEditEventRequested.run()
         );
         deleteEventButton.addActionListener(
                 event -> onDeleteEventRequested.run()
