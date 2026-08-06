@@ -25,7 +25,11 @@ import entity.task.CommonTaskFactory;
 import interface_adapter.checklist.ChecklistViewModel;
 import interface_adapter.checklist.create_task.CreateTaskController;
 import interface_adapter.checklist.create_task.CreateTaskPresenter;
+import interface_adapter.checklist.toggle_task.ToggleTaskController;
+import interface_adapter.checklist.toggle_task.ToggleTaskPresenter;
 import use_case.task.create_task.CreateTaskInteractor;
+import use_case.task.toggle_task.ToggleTaskInteractor;
+
 
 import view.event_view.*;
 import view.CalendarView;
@@ -103,6 +107,21 @@ public class CalendarPreviewMain {
 
             final CreateTaskController createTaskController =
                     new CreateTaskController(createTaskInteractor);
+
+            /*
+             * Toggle task completion.
+             */
+            final ToggleTaskPresenter toggleTaskPresenter =
+                    new ToggleTaskPresenter(checklistViewModel);
+
+            final ToggleTaskInteractor toggleTaskInteractor =
+                    new ToggleTaskInteractor(
+                            checkListDataAccessObject,
+                            toggleTaskPresenter
+                    );
+
+            final ToggleTaskController toggleTaskController =
+                    new ToggleTaskController(toggleTaskInteractor);
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setContentPane(mainView);
