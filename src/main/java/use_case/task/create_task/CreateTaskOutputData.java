@@ -1,10 +1,6 @@
-package use_case.create_task;
+package use_case.task.create_task;
 
-/**
- * Data returned after a task has been created.
- */
 public class CreateTaskOutputData {
-
     private final String taskId;
     private final String eventId;
     private final String description;
@@ -22,19 +18,19 @@ public class CreateTaskOutputData {
         this.completed = completed;
     }
 
-    public String getTaskId() {
+    public String getTaskId(){
         return taskId;
     }
 
-    public String getEventId() {
+    public String getEventId(){
         return eventId;
     }
 
-    public String getDescription() {
+    public String getDescription(){
         return description;
     }
 
-    public boolean isCompleted() {
+    public boolean isCompleted(){
         return completed;
     }
 }

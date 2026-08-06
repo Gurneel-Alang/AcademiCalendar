@@ -1,28 +1,12 @@
-package interface_adapter.create_task;
+package interface_adapter.checklist;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Complete state displayed by the checklist View.
- */
 public class ChecklistState {
-
-    private String eventId;
+    private String eventId = "";
     private List<TaskState> tasks = new ArrayList<>();
-    private String errorMessage;
-
-    public ChecklistState() {
-    }
-
-    /**
-     * Copy constructor.
-     */
-    public ChecklistState(ChecklistState other) {
-        this.eventId = other.eventId;
-        this.tasks = new ArrayList<>(other.tasks);
-        this.errorMessage = other.errorMessage;
-    }
+    private String errorMessage = "";
 
     public String getEventId() {
         return eventId;
@@ -33,11 +17,24 @@ public class ChecklistState {
     }
 
     public List<TaskState> getTasks() {
-        return new ArrayList<>(tasks);
+        return List.copyOf(tasks);
     }
 
     public void setTasks(List<TaskState> tasks) {
         this.tasks = new ArrayList<>(tasks);
+    }
+
+    public void addTask(TaskState task) {
+        tasks.add(task);
+    }
+
+    public void replaceTask(TaskState replacement) {
+        for (int index = 0; index < tasks.size(); index++) {
+            if (tasks.get(index).getId().equals(replacement.getId())) {
+                tasks.set(index, replacement);
+                return;
+            }
+        }
     }
 
     public String getErrorMessage() {

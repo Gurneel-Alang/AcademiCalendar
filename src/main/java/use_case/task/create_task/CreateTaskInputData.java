@@ -1,10 +1,6 @@
-package use_case.create_task;
+package use_case.task.create_task;
 
-/**
- * Data entering the Create Task use case.
- */
 public class CreateTaskInputData {
-
     private final String eventId;
     private final String description;
 
