@@ -1,26 +1,22 @@
-package interface_adapter.create_task;
+package interface_adapter.checklist;
 
-/**
- * UI representation of one task.
- */
 public class TaskState {
-
-    private final String taskId;
+    private final String id;
     private final String description;
-    private boolean completed;
+    private final boolean completed;
 
     public TaskState(
-            String taskId,
+            String id,
             String description,
             boolean completed
     ) {
-        this.taskId = taskId;
+        this.id = id;
         this.description = description;
         this.completed = completed;
     }
 
-    public String getTaskId() {
-        return taskId;
+    public String getId() {
+        return id;
     }
 
     public String getDescription() {
@@ -29,9 +25,5 @@ public class TaskState {
 
     public boolean isCompleted() {
         return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 }

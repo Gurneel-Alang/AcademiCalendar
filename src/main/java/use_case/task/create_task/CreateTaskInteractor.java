@@ -1,19 +1,16 @@
-package use_case.create_task;
+package use_case.task.create_task;
 
 import entity.task.Task;
 import entity.task.TaskFactory;
+import use_case.task.TaskDataAccessInterface;
 
-/**
- * Implements the business logic for creating a task.
- */
 public class CreateTaskInteractor implements CreateTaskInputBoundary {
-
-    private final AddTaskDataAccessInterface taskDataAccessObject;
+    private final TaskDataAccessInterface taskDataAccessObject;
     private final CreateTaskOutputBoundary presenter;
     private final TaskFactory taskFactory;
 
     public CreateTaskInteractor(
-            AddTaskDataAccessInterface taskDataAccessObject,
+            TaskDataAccessInterface taskDataAccessObject,
             CreateTaskOutputBoundary presenter,
             TaskFactory taskFactory
     ) {
@@ -37,22 +34,14 @@ public class CreateTaskInteractor implements CreateTaskInputBoundary {
             return;
         }
 
-        final String cleanedDescription = description.trim();
+        final Task task = taskFactory.create(eventId, description);
+        taskDataAccessObject.save(task);
 
-        final Task task = taskFactory.create(
-                eventId,
-                cleanedDescription
+        final CreateTaskOutputData outputData = new CreateTaskOutputData( task.getId(),
+                task.getEventId(),
+                task.getDescription(),
+                task.isCompleted()
         );
-
-        taskDataAccessObject.saveTask(task);
-
-        final CreateTaskOutputData outputData =
-                new CreateTaskOutputData(
-                        task.getId(),
-                        task.getEventId(),
-                        task.getDescription(),
-                        task.isCompleted()
-                );
 
         presenter.prepareSuccessView(outputData);
     }

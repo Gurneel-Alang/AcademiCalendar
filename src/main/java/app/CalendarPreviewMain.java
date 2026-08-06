@@ -12,12 +12,21 @@ import interface_adapter.event.add_event.AddEventViewModel;
 import interface_adapter.event.delete_event.DeleteEventController;
 import interface_adapter.event.delete_event.DeleteEventPresenter;
 import interface_adapter.event.delete_event.DeleteEventViewModel;
-import interface_adapter.event.edit_event.EditEventController;
-import interface_adapter.event.edit_event.EditEventPresenter;
-import interface_adapter.event.edit_event.EditEventViewModel;
+
+//import interface_adapter.event.edit_event.EditEventController;
+//import interface_adapter.event.edit_event.EditEventPresenter;
+//import interface_adapter.event.edit_event.EditEventViewModel;
 import use_case.event_use_case.add_event.AddEventInteractor;
 import use_case.event_use_case.delete_event.DeleteEventInteractor;
 import use_case.event_use_case.edit_event.EditEventInteractor;
+
+import data_access.CheckListDataAccessObject;
+import entity.task.CommonTaskFactory;
+import interface_adapter.checklist.ChecklistViewModel;
+import interface_adapter.checklist.create_task.CreateTaskController;
+import interface_adapter.checklist.create_task.CreateTaskPresenter;
+import use_case.task.create_task.CreateTaskInteractor;
+
 import view.event_view.*;
 import view.CalendarView;
 import view.MainView;
@@ -46,12 +55,12 @@ public class CalendarPreviewMain {
             final ReminderScheduler reminderScheduler = new ReminderScheduler();
             final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel, reminderScheduler);
 
-            final EditEventViewModel editEventViewModel = new EditEventViewModel();
-            final EditEventPresenter editEventPresenter = new EditEventPresenter(editEventViewModel);
-            final EditEventInteractor editEventInteractor = new EditEventInteractor(
-                    eventDataAccessObject, editEventPresenter, new EventFactory());
-            final EditEventController editEventController = new EditEventController(editEventInteractor);
-            final EditEventView editEventView = new EditEventView(editEventController, editEventViewModel);
+            //final EditEventViewModel editEventViewModel = new EditEventViewModel();
+            //final EditEventPresenter editEventPresenter = new EditEventPresenter(editEventViewModel);
+            //final EditEventInteractor editEventInteractor = new EditEventInteractor(
+                    //eventDataAccessObject, editEventPresenter, new EventFactory());
+            //final EditEventController editEventController = new EditEventController(editEventInteractor);
+            //final EditEventView editEventView = new EditEventView(editEventController, editEventViewModel);
 
             final DeleteEventViewModel deleteEventViewModel = new DeleteEventViewModel();
             final DeleteEventPresenter deleteEventPresenter = new DeleteEventPresenter(deleteEventViewModel);
@@ -66,12 +75,34 @@ public class CalendarPreviewMain {
                 final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
                 dialog.setVisible(true);
                 }, () -> {
-                final EditEventDialog dialog = new EditEventDialog(frame, editEventView);
-                dialog.setVisible(true);
-                }, () -> {
+                //final EditEventDialog dialog = new EditEventDialog(frame, editEventView);
+                //dialog.setVisible(true);
+                //}, () -> {
                 final DeleteEventDialog dialog = new DeleteEventDialog(frame, deleteEventView);
                 dialog.setVisible(true);
             });
+
+            final CheckListDataAccessObject checkListDataAccessObject =
+                    new CheckListDataAccessObject();
+
+            final ChecklistViewModel checklistViewModel =
+                    new ChecklistViewModel();
+
+            /*
+             * Create task.
+             */
+            final CreateTaskPresenter createTaskPresenter =
+                    new CreateTaskPresenter(checklistViewModel);
+
+            final CreateTaskInteractor createTaskInteractor =
+                    new CreateTaskInteractor(
+                            checkListDataAccessObject,
+                            createTaskPresenter,
+                            new CommonTaskFactory()
+                    );
+
+            final CreateTaskController createTaskController =
+                    new CreateTaskController(createTaskInteractor);
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setContentPane(mainView);

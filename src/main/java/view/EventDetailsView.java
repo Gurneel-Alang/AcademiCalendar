@@ -1,184 +1,111 @@
 package view;
 
-import interface_adapter.create_task.ChecklistState;
-import interface_adapter.create_task.ChecklistViewModel;
-import interface_adapter.create_task.CreateTaskController;
-import interface_adapter.create_task.TaskState;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-/**
- * Displays information for one Event and its checklist.
- */
-public class EventDetailsView extends JPanel
-        implements PropertyChangeListener {
+import interface_adapter.checklist.ChecklistViewModel;
+import interface_adapter.checklist.create_task.CreateTaskController;
+import view.ChecklistView;
 
-    private final String eventId;
+
+public class EventDetailsView extends JPanel {
 
     private final CreateTaskController createTaskController;
-    private final ChecklistViewModel checklistViewModel;
 
-    private final JTextField taskDescriptionField =
-            new JTextField();
+    private final JLabel eventTitleLabel = new JLabel();
+    private final JLabel eventDateLabel = new JLabel();
 
-    private final JButton addTaskButton =
-            new JButton("Add Task");
+    private final JTextField taskInput = new JTextField(25);
+    private final JButton addTaskButton = new JButton("Add Task");
 
-    private final JPanel checklistPanel =
-            new JPanel();
+    private String currentEventId;
 
     public EventDetailsView(
-            String eventId,
-            String eventName,
             CreateTaskController createTaskController,
             ChecklistViewModel checklistViewModel
     ) {
-        this.eventId = eventId;
         this.createTaskController = createTaskController;
-        this.checklistViewModel = checklistViewModel;
 
-        checklistViewModel.addPropertyChangeListener(this);
-
-        configureLayout(eventName);
-        configureActions();
-    }
-
-    private void configureLayout(String eventName) {
         setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(
-                15,
-                15,
-                15,
-                15
-        ));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        final JLabel eventTitle =
-                new JLabel(eventName);
-
-        add(eventTitle, BorderLayout.NORTH);
-
-        checklistPanel.setLayout(
-                new BoxLayout(
-                        checklistPanel,
-                        BoxLayout.Y_AXIS
+        final JPanel informationPanel = new JPanel();
+        informationPanel.setLayout(
+                new javax.swing.BoxLayout(
+                        informationPanel,
+                        javax.swing.BoxLayout.Y_AXIS
                 )
         );
 
-        final JScrollPane checklistScrollPane =
-                new JScrollPane(checklistPanel);
+        informationPanel.add(eventTitleLabel);
+        informationPanel.add(eventDateLabel);
 
-        checklistScrollPane.setPreferredSize(
-                new Dimension(400, 250)
-        );
+        final ChecklistView checklistView =
+                new ChecklistView(
+                        checklistViewModel
+                );
 
-        add(checklistScrollPane, BorderLayout.CENTER);
+        final JPanel addTaskPanel = new JPanel(new FlowLayout());
+        addTaskPanel.add(taskInput);
+        addTaskPanel.add(addTaskButton);
 
-        final JPanel addTaskPanel =
-                new JPanel(new BorderLayout(5, 5));
-
-        addTaskPanel.add(
-                taskDescriptionField,
-                BorderLayout.CENTER
-        );
-
-        addTaskPanel.add(
-                addTaskButton,
-                BorderLayout.EAST
-        );
-
+        add(informationPanel, BorderLayout.NORTH);
+        add(checklistView, BorderLayout.CENTER);
         add(addTaskPanel, BorderLayout.SOUTH);
+
+        addTaskButton.addActionListener(event -> addTask());
+        taskInput.addActionListener(event -> addTask());
+
+        checklistViewModel.addPropertyChangeListener(event -> {
+            final String error =
+                    checklistViewModel.getState().getErrorMessage();
+
+            if (error != null && !error.isBlank()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        error,
+                        "Checklist Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
     }
 
-    private void configureActions() {
-        addTaskButton.addActionListener(
-                this::handleAddTask
-        );
+    /**
+     * Changes this view to display a particular event.
+     */
+    public void displayEvent(
+            String eventId,
+            String eventTitle,
+            String eventDate
+    ) {
+        currentEventId = eventId;
+        eventTitleLabel.setText("Event: " + eventTitle);
+        eventDateLabel.setText("Date: " + eventDate);
 
-        taskDescriptionField.addActionListener(
-                this::handleAddTask
-        );
     }
 
-    private void handleAddTask(ActionEvent event) {
-        final String description =
-                taskDescriptionField.getText();
-
-        createTaskController.execute(
-                eventId,
-                description
-        );
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent event) {
-        if (ChecklistViewModel.STATE_PROPERTY.equals(
-                event.getPropertyName()
-        )) {
-            renderChecklist();
-        }
-    }
-
-    private void renderChecklist() {
-        final ChecklistState state =
-                checklistViewModel.getState();
-
-        if (state.getErrorMessage() != null) {
+    private void addTask() {
+        if (currentEventId == null) {
             JOptionPane.showMessageDialog(
                     this,
-                    state.getErrorMessage(),
-                    "Could Not Add Task",
-                    JOptionPane.ERROR_MESSAGE
+                    "Select an event before adding a task."
             );
-
             return;
         }
 
-        /*
-         * Prevent duplicate Swing components when the
-         * complete state is rendered again.
-         */
-        checklistPanel.removeAll();
+        final String description = taskInput.getText();
+        createTaskController.execute(currentEventId, description);
 
-        for (TaskState taskState : state.getTasks()) {
-            final JCheckBox taskCheckBox =
-                    new JCheckBox(
-                            taskState.getDescription()
-                    );
-
-            taskCheckBox.setSelected(
-                    taskState.isCompleted()
-            );
-
-            /*
-             * This currently changes only the local UI state.
-             * A separate CompleteTask use case should eventually
-             * handle checkbox changes.
-             */
-            taskCheckBox.addActionListener(actionEvent ->
-                    taskState.setCompleted(
-                            taskCheckBox.isSelected()
-                    )
-            );
-
-            checklistPanel.add(taskCheckBox);
+        if (!description.isBlank()) {
+            taskInput.setText("");
         }
-
-        taskDescriptionField.setText("");
-
-        checklistPanel.revalidate();
-        checklistPanel.repaint();
     }
 }
