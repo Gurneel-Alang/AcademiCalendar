@@ -98,6 +98,9 @@ public class MainView extends JPanel {
         addEventButton.addActionListener(
                 event -> onAddEventRequested.run()
         );
+        editEventButton.addActionListener(
+                event -> onEditEventRequested.run()
+        );
         deleteEventButton.addActionListener(
                 event -> onDeleteEventRequested.run()
         );
