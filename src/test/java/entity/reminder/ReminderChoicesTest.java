@@ -1,11 +1,16 @@
 package entity.reminder;
 
-import data_access.ReminderScheduler;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ReminderChoicesTest {
 
+    // Run this file to run these tests
+
+    /**
+     * This test returns the offset time for one hour, ensuring ReminderScheduler is working correctly
+     */
     @Test
     public void checkCorrectOffset() {
         ReminderChoices oneHour = ReminderChoices.oneHour();
@@ -16,6 +21,9 @@ public class ReminderChoicesTest {
         assertEquals("In 1 hour", oneHour.toString());
     }
 
+    /**
+     * This test should return all the time options, in order.
+     */
     @Test
     public void returnOptionsInOrder() {
         ReminderChoices[] options = ReminderChoices.all();
@@ -29,4 +37,27 @@ public class ReminderChoicesTest {
         assertEquals(10800, options[1].getOffsetTime());
         assertEquals(604800, options[2].getOffsetTime());
     }
+
+    /**
+     * This test check for whitespace leading/trailing labels.
+     */
+    @Test
+    public void noWhitespace(){
+        for (ReminderChoices choice : ReminderChoices.all()){
+            assertEquals(choice.getLabel(), choice.getLabel().trim());
+            assertEquals(choice.getPastLabel(), choice.getPastLabel().trim());
+        }
+    }
+
+    /**
+     * This test ensures offset are never negative.
+     */
+    @Test
+    public void checkNegative(){
+        for (ReminderChoices choice : ReminderChoices.all()){
+            assertTrue(choice.getLabel() + " is negative offset",
+                    choice.getOffsetTime() >= 0);
+        }
+    }
+
 }
