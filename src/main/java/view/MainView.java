@@ -28,6 +28,7 @@ public class MainView extends JPanel {
             CalendarView calendarView,
             JPanel checklistView,
             Runnable onAddEventRequested,
+            Runnable onEditEventRequested,
             Runnable onDeleteEventRequested
     ) {
         setLayout(new BorderLayout());
@@ -71,10 +72,12 @@ public class MainView extends JPanel {
          * Event buttons.
          */
         final JButton addEventButton = new JButton("Add Event");
+        final JButton editEventButton = new JButton("Edit Event");
         final JButton deleteEventButton = new JButton("Delete Event");
 
         final JPanel eventButtonsPanel = new JPanel();
         eventButtonsPanel.add(addEventButton);
+        eventButtonsPanel.add(editEventButton);
         eventButtonsPanel.add(deleteEventButton);
 
         /*

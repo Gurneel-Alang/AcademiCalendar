@@ -15,7 +15,7 @@ import interface_adapter.checklist.create_task.CreateTaskController;
 import interface_adapter.checklist.load_checklist.LoadChecklistController;
 import interface_adapter.checklist.toggle_task.ToggleTaskController;
 
-public class pushEventDetailsView extends JPanel {
+public class EventDetailsView extends JPanel {
 
     private final CreateTaskController createTaskController;
     private final LoadChecklistController loadChecklistController;
