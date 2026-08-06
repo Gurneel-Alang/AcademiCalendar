@@ -12,12 +12,13 @@ import javax.swing.JTextField;
 
 import interface_adapter.checklist.ChecklistViewModel;
 import interface_adapter.checklist.create_task.CreateTaskController;
-import view.ChecklistView;
-
+import interface_adapter.checklist.load_checklist.LoadChecklistController;
+import interface_adapter.checklist.toggle_task.ToggleTaskController;
 
 public class EventDetailsView extends JPanel {
 
     private final CreateTaskController createTaskController;
+    private final LoadChecklistController loadChecklistController;
 
     private final JLabel eventTitleLabel = new JLabel();
     private final JLabel eventDateLabel = new JLabel();
@@ -29,9 +30,12 @@ public class EventDetailsView extends JPanel {
 
     public EventDetailsView(
             CreateTaskController createTaskController,
+            ToggleTaskController toggleTaskController,
+            LoadChecklistController loadChecklistController,
             ChecklistViewModel checklistViewModel
     ) {
         this.createTaskController = createTaskController;
+        this.loadChecklistController = loadChecklistController;
 
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -49,7 +53,8 @@ public class EventDetailsView extends JPanel {
 
         final ChecklistView checklistView =
                 new ChecklistView(
-                        checklistViewModel
+                        checklistViewModel,
+                        toggleTaskController
                 );
 
         final JPanel addTaskPanel = new JPanel(new FlowLayout());
@@ -90,6 +95,7 @@ public class EventDetailsView extends JPanel {
         eventTitleLabel.setText("Event: " + eventTitle);
         eventDateLabel.setText("Date: " + eventDate);
 
+        loadChecklistController.execute(eventId);
     }
 
     private void addTask() {
