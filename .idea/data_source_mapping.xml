@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/data_access/weather/SQLiteWeatherCache.java" value="8a9722b4-5db4-4bba-a174-2e371b93dbad" />
+  </component>
+</project>

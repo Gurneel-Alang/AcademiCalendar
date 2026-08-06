@@ -24,7 +24,8 @@ public class MainView extends JPanel {
      * @param calendarView the calendar feature view
      */
     public MainView(
-            CalendarView calendarView) {
+            CalendarView calendarView,
+            WeatherView weatherView) {
         setLayout(new BorderLayout());
 
         final JButton eventButton =
@@ -45,11 +46,8 @@ public class MainView extends JPanel {
         final JPanel eventPanel = new JPanel();
         eventPanel.add(new JLabel("Events for the selected date"));
 
-        final JPanel weatherPanel = new JPanel();
-        weatherPanel.add(new JLabel(""));
-
         rightContentPanel.add(eventPanel, EVENT_VIEW);
-        rightContentPanel.add(weatherPanel, WEATHER_VIEW);
+        rightContentPanel.add(weatherView, WEATHER_VIEW);
 
 // Main area: Calendar is fixed; you can switch between views on the right
         final JPanel mainContentPanel = new JPanel(new BorderLayout());
@@ -61,13 +59,17 @@ public class MainView extends JPanel {
                 event -> showView(EVENT_VIEW)
         );
 
-        weatherButton.addActionListener(
-                event -> showView(WEATHER_VIEW)
-        );
+        weatherButton.addActionListener(event -> {
+            weatherView.setSelectedDate(
+                    calendarView.getSelectedDate()
+            );
+
+            showView(WEATHER_VIEW);
+        });
         add(navigationPanel, BorderLayout.NORTH);
         add(mainContentPanel, BorderLayout.CENTER);
-    }
 
+    }
     /**
      * Displays the requested feature view.
      *
@@ -75,5 +77,4 @@ public class MainView extends JPanel {
      */
     private void showView(String viewName) {
         rightCardLayout.show(rightContentPanel, viewName);
-    }
-}
+    }}
