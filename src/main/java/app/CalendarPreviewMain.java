@@ -13,9 +13,9 @@ import interface_adapter.event.delete_event.DeleteEventController;
 import interface_adapter.event.delete_event.DeleteEventPresenter;
 import interface_adapter.event.delete_event.DeleteEventViewModel;
 
-//import interface_adapter.event.edit_event.EditEventController;
-//import interface_adapter.event.edit_event.EditEventPresenter;
-//import interface_adapter.event.edit_event.EditEventViewModel;
+import interface_adapter.event.edit_event.EditEventController;
+import interface_adapter.event.edit_event.EditEventPresenter;
+import interface_adapter.event.edit_event.EditEventViewModel;
 import use_case.event_use_case.add_event.AddEventInteractor;
 import use_case.event_use_case.delete_event.DeleteEventInteractor;
 import use_case.event_use_case.edit_event.EditEventInteractor;
@@ -55,12 +55,12 @@ public class CalendarPreviewMain {
             final ReminderScheduler reminderScheduler = new ReminderScheduler();
             final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel, reminderScheduler);
 
-            //final EditEventViewModel editEventViewModel = new EditEventViewModel();
-            //final EditEventPresenter editEventPresenter = new EditEventPresenter(editEventViewModel);
-            //final EditEventInteractor editEventInteractor = new EditEventInteractor(
-                    //eventDataAccessObject, editEventPresenter, new EventFactory());
-            //final EditEventController editEventController = new EditEventController(editEventInteractor);
-            //final EditEventView editEventView = new EditEventView(editEventController, editEventViewModel);
+            final EditEventViewModel editEventViewModel = new EditEventViewModel();
+            final EditEventPresenter editEventPresenter = new EditEventPresenter(editEventViewModel);
+            final EditEventInteractor editEventInteractor = new EditEventInteractor(
+                    eventDataAccessObject, editEventPresenter, new EventFactory());
+            final EditEventController editEventController = new EditEventController(editEventInteractor);
+            final EditEventView editEventView = new EditEventView(editEventController, editEventViewModel);
 
             final DeleteEventViewModel deleteEventViewModel = new DeleteEventViewModel();
             final DeleteEventPresenter deleteEventPresenter = new DeleteEventPresenter(deleteEventViewModel);
