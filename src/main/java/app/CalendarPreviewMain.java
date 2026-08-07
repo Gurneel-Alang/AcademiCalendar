@@ -15,6 +15,8 @@ import interface_adapter.checklist.create_task.CreateTaskController;
 import interface_adapter.checklist.create_task.CreateTaskPresenter;
 import interface_adapter.checklist.toggle_task.ToggleTaskController;
 import interface_adapter.checklist.toggle_task.ToggleTaskPresenter;
+import use_case.task.create_task.CreateTaskInteractor;
+import use_case.task.toggle_task.ToggleTaskInteractor;
 
 import interface_adapter.event.add_event.AddEventController;
 import interface_adapter.event.add_event.AddEventPresenter;
@@ -22,15 +24,12 @@ import interface_adapter.event.add_event.AddEventViewModel;
 import interface_adapter.event.delete_event.DeleteEventController;
 import interface_adapter.event.delete_event.DeleteEventPresenter;
 import interface_adapter.event.delete_event.DeleteEventViewModel;
-
 import interface_adapter.event.edit_event.EditEventController;
 import interface_adapter.event.edit_event.EditEventPresenter;
 import interface_adapter.event.edit_event.EditEventViewModel;
 import use_case.event_use_case.add_event.AddEventInteractor;
 import use_case.event_use_case.delete_event.DeleteEventInteractor;
 import use_case.event_use_case.edit_event.EditEventInteractor;
-import use_case.task.create_task.CreateTaskInteractor;
-import use_case.task.toggle_task.ToggleTaskInteractor;
 
 import view.ChecklistView;
 import view.event_view.AddEventDialog;
@@ -63,20 +62,69 @@ public final class CalendarPreviewMain {
     }
 
     private static void startApplication() {
-        final String apiKey =
-                System.getenv("OPENWEATHER_API_KEY");
+        final String apiKey = System.getenv("OPENWEATHER_API_KEY");
+        final JFrame frame = new JFrame("AcademiCalendar");
+        final CalendarView calendarView = new CalendarView();
+        final WeatherView weatherView = WeatherUseCaseFactory.create(apiKey);
 
-        final JFrame frame =
-                new JFrame("AcademiCalendar");
+        // Event use cases
 
-        final CalendarView calendarView =
-                new CalendarView();
+        final EventDataAccessObject eventDataAccessObject= new EventDataAccessObject();
 
-        final WeatherView weatherView =
-                WeatherUseCaseFactory.create(apiKey);
+        final AddEventViewModel addEventViewModel = new AddEventViewModel();
+        final AddEventPresenter addEventPresenter = new AddEventPresenter(addEventViewModel);
+        final AddEventInteractor addEventInteractor = new AddEventInteractor(
+                eventDataAccessObject, addEventPresenter, new EventFactory());
+        final AddEventController addEventController = new AddEventController(addEventInteractor);
+        final ReminderScheduler reminderScheduler = new ReminderScheduler();
+        final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel,
+                reminderScheduler);
 
-        final MainView mainView =
-                new MainView(calendarView, weatherView);
+        final EditEventViewModel editEventViewModel = new EditEventViewModel();
+        final EditEventPresenter editEventPresenter = new EditEventPresenter(editEventViewModel);
+        final EditEventInteractor editEventInteractor = new EditEventInteractor(
+                eventDataAccessObject, editEventPresenter, new EventFactory());
+        final EditEventController editEventController = new EditEventController(editEventInteractor);
+        final EditEventView editEventView = new EditEventView(editEventController, editEventViewModel);
+
+        final DeleteEventViewModel deleteEventViewModel = new DeleteEventViewModel();
+        final DeleteEventPresenter deleteEventPresenter = new DeleteEventPresenter(deleteEventViewModel);
+        final DeleteEventInteractor deleteEventInteractor = new DeleteEventInteractor(
+                eventDataAccessObject, deleteEventPresenter);
+        final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
+        final DeleteEventView deleteEventView = new DeleteEventView(deleteEventController, deleteEventViewModel);
+
+        // Checklist and task use cases
+
+        final CheckListDataAccessObject checkListDataAccessObject = new CheckListDataAccessObject();
+
+        final ChecklistViewModel checklistViewModel = new ChecklistViewModel();
+        final CreateTaskPresenter createTaskPresenter = new CreateTaskPresenter(checklistViewModel);
+        final CreateTaskInteractor createTaskInteractor = new CreateTaskInteractor(
+                checkListDataAccessObject, createTaskPresenter, new CommonTaskFactory());
+        final CreateTaskController createTaskController = new CreateTaskController(createTaskInteractor);
+        final ToggleTaskPresenter toggleTaskPresenter = new ToggleTaskPresenter(checklistViewModel);
+        final ToggleTaskInteractor toggleTaskInteractor = new ToggleTaskInteractor(
+                checkListDataAccessObject, toggleTaskPresenter);
+        final ToggleTaskController toggleTaskController = new ToggleTaskController(toggleTaskInteractor);
+        final ChecklistView checklistView = new ChecklistView(checklistViewModel, toggleTaskController);
+
+        // MainView constructor call
+
+        final MainView mainView = new MainView(calendarView, weatherView, checklistView,
+                () -> {
+                    final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
+                    dialog.setVisible(true);
+                },
+                () -> {
+                    final EditEventDialog dialog = new EditEventDialog(frame, editEventView);
+                    dialog.setVisible(true);
+                },
+                () -> {
+                    final DeleteEventDialog dialog = new DeleteEventDialog(frame, deleteEventView);
+                    dialog.setVisible(true);
+                }
+        );
 
         frame.setDefaultCloseOperation(
                 JFrame.EXIT_ON_CLOSE

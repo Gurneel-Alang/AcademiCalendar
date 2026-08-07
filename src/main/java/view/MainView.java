@@ -24,14 +24,9 @@ public class MainView extends JPanel {
      *
      * @param calendarView the calendar feature view
      */
-    public MainView(
-            CalendarView calendarView,
-            WeatherView weatherView,
-            JPanel checklistView,
-            Runnable onAddEventRequested,
-            Runnable onEditEventRequested,
-            Runnable onDeleteEventRequested
-    ) {
+    public MainView(CalendarView calendarView, WeatherView weatherView,
+                    JPanel checklistView, Runnable onAddEventRequested,
+                    Runnable onEditEventRequested, Runnable onDeleteEventRequested) {
         setLayout(new BorderLayout());
 
         final JButton eventButton = new JButton("Events");
@@ -114,11 +109,12 @@ public class MainView extends JPanel {
         showView(EVENT_VIEW);
     }
 
-    }
     /**
      * Displays the requested feature view.
+     *
      * @param viewName name of the view
      */
     private void showView(String viewName) {
         rightCardLayout.show(rightContentPanel, viewName);
-    }}
+    }
+}
