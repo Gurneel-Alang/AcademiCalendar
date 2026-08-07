@@ -45,6 +45,7 @@ public class CalendarView extends JPanel {
         add(calendarPanel, BorderLayout.CENTER);
     }
 
+
     /**
      * Returns the currently selected date.
      *

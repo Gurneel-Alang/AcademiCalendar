@@ -3,6 +3,39 @@ package app;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import data_access.CheckListDataAccessObject;
+import data_access.EventDataAccessObject;
+import data_access.ReminderScheduler;
+
+import entity.event.EventFactory;
+import entity.task.CommonTaskFactory;
+
+import interface_adapter.checklist.ChecklistViewModel;
+import interface_adapter.checklist.create_task.CreateTaskController;
+import interface_adapter.checklist.create_task.CreateTaskPresenter;
+import interface_adapter.checklist.toggle_task.ToggleTaskController;
+import interface_adapter.checklist.toggle_task.ToggleTaskPresenter;
+
+import interface_adapter.event.add_event.AddEventController;
+import interface_adapter.event.add_event.AddEventPresenter;
+import interface_adapter.event.add_event.AddEventViewModel;
+import interface_adapter.event.delete_event.DeleteEventController;
+import interface_adapter.event.delete_event.DeleteEventPresenter;
+import interface_adapter.event.delete_event.DeleteEventViewModel;
+
+import interface_adapter.event.edit_event.EditEventController;
+import interface_adapter.event.edit_event.EditEventPresenter;
+import interface_adapter.event.edit_event.EditEventViewModel;
+import use_case.event_use_case.add_event.AddEventInteractor;
+import use_case.event_use_case.delete_event.DeleteEventInteractor;
+import use_case.event_use_case.edit_event.EditEventInteractor;
+import use_case.task.create_task.CreateTaskInteractor;
+import use_case.task.toggle_task.ToggleTaskInteractor;
+
+import view.ChecklistView;
+import view.event_view.AddEventDialog;
+import view.event_view.AddEventView;
+import view.event_view.*;
 import view.CalendarView;
 import view.MainView;
 import view.WeatherView;

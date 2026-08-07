@@ -40,13 +40,9 @@ public class ViewMonthlyScheduleInteractor
                 new ArrayList<>();
 
         for (EventInterface event : events) {
-            final LocalDate startDate = convertToLocalDate(
-                    event.getStartDate()
-            );
+            final LocalDate startDate = event.getStartDate();
 
-            final LocalDate endDate = convertToLocalDate(
-                    event.getEndDate()
-            );
+            final LocalDate endDate = event.getEndDate();
 
             eventData.add(
                     new ViewMonthlyScheduleOutputData.MonthlyEventData(
