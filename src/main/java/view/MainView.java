@@ -26,6 +26,7 @@ public class MainView extends JPanel {
      */
     public MainView(
             CalendarView calendarView,
+            WeatherView weatherView,
             JPanel checklistView,
             Runnable onAddEventRequested,
             Runnable onEditEventRequested,
@@ -53,14 +54,8 @@ public class MainView extends JPanel {
         final JPanel eventPanel = new JPanel();
         eventPanel.add(new JLabel("Events for the selected date"));
 
-        final JPanel weatherPanel = new JPanel();
-        weatherPanel.add(new JLabel("Weather"));
-
-        /*
-         * Add the real checklist view, not a dummy JPanel. (like other branches)
-         */
         rightContentPanel.add(eventPanel, EVENT_VIEW);
-        rightContentPanel.add(weatherPanel, WEATHER_VIEW);
+        rightContentPanel.add(weatherView, WEATHER_VIEW);
         rightContentPanel.add(checklistView, CHECKLIST_VIEW);
 
         final JPanel mainContentPanel = new JPanel(new BorderLayout());
@@ -87,9 +82,13 @@ public class MainView extends JPanel {
                 event -> showView(EVENT_VIEW)
         );
 
-        weatherButton.addActionListener(
-                event -> showView(WEATHER_VIEW)
-        );
+        weatherButton.addActionListener(event -> {
+            weatherView.setSelectedDate(
+                    calendarView.getSelectedDate()
+            );
+
+            showView(WEATHER_VIEW);
+        });
 
         checklistButton.addActionListener(
                 event -> showView(CHECKLIST_VIEW)
@@ -115,11 +114,11 @@ public class MainView extends JPanel {
         showView(EVENT_VIEW);
     }
 
+    }
     /**
      * Displays the requested feature view.
      * @param viewName name of the view
      */
     private void showView(String viewName) {
         rightCardLayout.show(rightContentPanel, viewName);
-    }
-}
+    }}
