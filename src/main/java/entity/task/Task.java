@@ -6,34 +6,25 @@ import java.util.Objects;
  * A task belonging to an event checklist.
  */
 public class Task {
-    private final String id;
-    private final String eventId;
+    private final String taskId;
     private final String description;
     private boolean completed;
 
-    public Task(String id, String eventId, String description, boolean completed) {
-        if (id == null || id.isBlank()){
+    public Task(String taskId, String description, boolean completed) {
+        if (taskId == null || taskId.isBlank()){
             throw new IllegalArgumentException("Task ID cannot be blank.");
         }
-        if (eventId == null || eventId.isBlank()){
-            throw new IllegalArgumentException("Event ID cannot be blank.");
-        }
+
         if (description ==  null || description.isBlank()){
             throw new IllegalArgumentException("Task description cannot be blank.");
         }
-        this.id = id;
-        this.eventId = eventId;
+        this.taskId = taskId;
         this.description = description;
         this.completed = completed;
     }
 
     public String getId() {
-        return id;
-    }
-
-    public String getEventId() {
-        // example relationship: task.getEventId().equals(statsExam.getId())
-        return eventId;
+        return taskId;
     }
 
     public String getDescription() {
@@ -62,7 +53,7 @@ public class Task {
         }
 
         final Task task = (Task) other;
-        return id.equals(task.id);
+        return taskId.equals(task.taskId);
     }
 
     /**
@@ -71,6 +62,6 @@ public class Task {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(taskId);
     }
 }

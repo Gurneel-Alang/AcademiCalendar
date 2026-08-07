@@ -4,16 +4,13 @@ import use_case.task.create_task.CreateTaskInputBoundary;
 import use_case.task.create_task.CreateTaskInputData;
 
 public class CreateTaskController {
-
     private final CreateTaskInputBoundary interactor;
 
     public CreateTaskController(CreateTaskInputBoundary interactor) {
         this.interactor = interactor;
     }
 
-    public void execute(String eventId, String description) {
-        interactor.execute(
-                new CreateTaskInputData(eventId, description)
-        );
+    public void execute(String description) {
+        interactor.execute(new CreateTaskInputData(description));
     }
 }

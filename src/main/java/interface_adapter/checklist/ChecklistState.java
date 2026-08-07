@@ -4,17 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChecklistState {
-    private String eventId = "";
     private List<TaskState> tasks = new ArrayList<>();
     private String errorMessage = "";
-
-    public String getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
-    }
 
     public List<TaskState> getTasks() {
         return List.copyOf(tasks);

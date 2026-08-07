@@ -8,12 +8,11 @@ import java.util.UUID;
 public class CommonTaskFactory implements TaskFactory {
 
     @Override
-    public Task create(String eventId, String description) {
+    public Task create(String description) {
         final String taskId = UUID.randomUUID().toString();
 
         return new Task(
                 taskId,
-                eventId,
                 description,
                 false
         );

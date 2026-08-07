@@ -4,9 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+
+import interface_adapter.checklist.create_task.CreateTaskController;
+import interface_adapter.checklist.load_checklist.LoadChecklistController;
+import use_case.task.load_checklist.LoadChecklistOutputBoundary;
 
 /**
  * Main application view containing navigation and feature views.
@@ -25,7 +27,9 @@ public class MainView extends JPanel {
      * @param calendarView the calendar feature view
      */
     public MainView(CalendarView calendarView, WeatherView weatherView,
-                    JPanel checklistView, Runnable onAddEventRequested,
+                    JPanel checklistView, CreateTaskController createTaskController,
+                    LoadChecklistController loadChecklistController,
+                    Runnable onAddEventRequested,
                     Runnable onEditEventRequested, Runnable onDeleteEventRequested) {
         setLayout(new BorderLayout());
 
@@ -51,7 +55,24 @@ public class MainView extends JPanel {
 
         rightContentPanel.add(eventPanel, EVENT_VIEW);
         rightContentPanel.add(weatherView, WEATHER_VIEW);
-        rightContentPanel.add(checklistView, CHECKLIST_VIEW);
+
+        /*
+         * Checklist view + task input, wrapped together so the
+         * "Checklist" nav card includes both.
+         */
+        final JPanel checklistPanel = new JPanel(new BorderLayout());
+        checklistPanel.add(checklistView, BorderLayout.CENTER);
+
+        final JTextField taskInput = new JTextField(20);
+        final JButton addTaskButton = new JButton("Add Task");
+
+        final JPanel addTaskPanel = new JPanel(new FlowLayout());
+        addTaskPanel.add(taskInput);
+        addTaskPanel.add(addTaskButton);
+        checklistPanel.add(addTaskPanel, BorderLayout.SOUTH);
+
+        rightContentPanel.add(checklistPanel, CHECKLIST_VIEW);
+
 
         final JPanel mainContentPanel = new JPanel(new BorderLayout());
 
@@ -88,6 +109,24 @@ public class MainView extends JPanel {
         checklistButton.addActionListener(
                 event -> showView(CHECKLIST_VIEW)
         );
+
+        /*
+         * Checklist task creation.
+         */
+        addTaskButton.addActionListener(event -> {
+            final String description = taskInput.getText();
+            if (!description.isBlank()) {
+                createTaskController.execute(description);
+                taskInput.setText("");
+            }
+        });
+        taskInput.addActionListener(event -> {
+            final String description = taskInput.getText();
+            if (!description.isBlank()) {
+                createTaskController.execute(description);
+                taskInput.setText("");
+            }
+        });
 
         /*
          * Event use cases.
