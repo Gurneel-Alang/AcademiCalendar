@@ -1,9 +1,9 @@
-package use_case.event_use_case.edit_event;
+package use_case.event.edit_event;
+
+import java.time.LocalDate;
 
 import entity.event.EventFactoryInterface;
 import entity.event.EventInterface;
-
-import java.time.LocalDate;
 
 /**
  * The Edit Event Use Case Interactor.
@@ -37,16 +37,20 @@ public class EditEventInteractor implements EditEventInputBoundary {
 
                 final EditEventOutputData editEventOutputData = new EditEventOutputData(false);
                 editEventPresenter.prepareSuccessView(editEventOutputData);
-            } else {
-                editEventPresenter.prepareFailView("Failed; event of given new title" +
-                        " already exists.");
             }
-        } else {
-            editEventPresenter.prepareFailView("Failed; event of given previous title" +
-                    " does not exist.");
+            else {
+                editEventPresenter.prepareFailView("Failed; event of given new title"
+                        + " already exists.");
+            }
+        }
+        else {
+            editEventPresenter.prepareFailView("Failed; event of given previous title"
+                    + " does not exist.");
         }
     }
 
     @Override
-    public void switchToMainView() { editEventPresenter.switchToMainView(); }
+    public void switchToMainView() {
+        editEventPresenter.switchToMainView();
+    }
 }

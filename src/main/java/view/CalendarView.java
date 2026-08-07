@@ -2,18 +2,16 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.time.LocalDate;
 import java.awt.Dimension;
+import java.time.LocalDate;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-
 import com.github.lgooddatepicker.components.CalendarPanel;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
-
 
 public class CalendarView extends JPanel {
     private static final int CALENDAR_WIDTH = 650;
@@ -45,10 +43,8 @@ public class CalendarView extends JPanel {
         add(calendarPanel, BorderLayout.CENTER);
     }
 
-
     /**
      * Returns the currently selected date.
-     *
      * @return the selected date
      */
     public LocalDate getSelectedDate() {

@@ -1,7 +1,7 @@
 package interface_adapter.event.add_event;
 
-import use_case.event_use_case.add_event.AddEventOutputBoundary;
-import use_case.event_use_case.add_event.AddEventOutputData;
+import use_case.event.add_event.AddEventOutputBoundary;
+import use_case.event.add_event.AddEventOutputData;
 
 /**
  * The presenter for the Add Event Use Case.

@@ -1,6 +1,7 @@
 package view.event_view;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 /**
  * Allows for viewing the Add Event view on a separate window.

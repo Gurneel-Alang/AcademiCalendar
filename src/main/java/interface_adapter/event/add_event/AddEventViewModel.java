@@ -14,9 +14,13 @@ public class AddEventViewModel {
     private AddEventState state = new AddEventState();
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public AddEventState getState() { return state; }
+    public AddEventState getState() {
+        return state;
+    }
 
-    public void setState(AddEventState state) { this.state = state; }
+    public void setState(AddEventState state) {
+        this.state = state;
+    }
 
     /**
      * Notify listeners when a property has changed.

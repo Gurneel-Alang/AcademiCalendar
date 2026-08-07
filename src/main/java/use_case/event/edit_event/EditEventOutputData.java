@@ -1,11 +1,11 @@
-package use_case.event_use_case.edit_event;
+package use_case.event.edit_event;
 
 /**
  * The output data for the Edit Event Use Case.
  */
 public class EditEventOutputData {
 
-    public final boolean useCaseFailed;
+    private final boolean useCaseFailed;
 
     public EditEventOutputData(boolean useCaseFailed) {
         this.useCaseFailed = useCaseFailed;

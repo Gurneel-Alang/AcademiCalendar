@@ -9,7 +9,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Calls the OpenWeather Geocoding and Forecast APIs
+ * Calls the OpenWeather Geocoding and Forecast APIs.
  *
  */
 public class OpenWeatherApiClient implements WeatherApiClient {

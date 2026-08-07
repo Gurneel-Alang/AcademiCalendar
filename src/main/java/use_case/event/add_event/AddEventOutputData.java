@@ -1,4 +1,4 @@
-package use_case.event_use_case.add_event;
+package use_case.event.add_event;
 
 /**
  * The output data for the Add Event Use Case.

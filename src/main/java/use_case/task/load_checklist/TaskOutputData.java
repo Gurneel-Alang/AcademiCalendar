@@ -11,7 +11,7 @@ public class TaskOutputData {
         this.completed = completed;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 

@@ -1,4 +1,4 @@
-package use_case.event_use_case.delete_event;
+package use_case.event.delete_event;
 
 /**
  * The input data for the Delete Event Use Case.
@@ -7,7 +7,9 @@ public class DeleteEventInputData {
 
     private final String title;
 
-    public DeleteEventInputData(String title) { this.title = title; }
+    public DeleteEventInputData(String title) {
+        this.title = title;
+    }
 
     /**
      * Return the title.

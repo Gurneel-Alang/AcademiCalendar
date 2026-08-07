@@ -51,6 +51,7 @@ public final class OfflineFirstWeatherDataAccessObject
      * @param weatherCache local weather cache
      * @param clock clock used to determine cache freshness
      * @param cacheLifetime duration for which cached weather is fresh
+     * @throws IllegalArgumentException if cache liftime is negative
      */
     public OfflineFirstWeatherDataAccessObject(
             WeatherDataAccessInterface remoteDataAccessObject,

@@ -2,11 +2,11 @@ package interface_adapter.checklist.load_checklist;
 
 import java.util.List;
 
-import use_case.task.load_checklist.LoadChecklistOutputBoundary;
-import use_case.task.load_checklist.LoadChecklistOutputData;
 import interface_adapter.checklist.ChecklistState;
 import interface_adapter.checklist.ChecklistViewModel;
 import interface_adapter.checklist.TaskState;
+import use_case.task.load_checklist.LoadChecklistOutputBoundary;
+import use_case.task.load_checklist.LoadChecklistOutputData;
 
 public class LoadChecklistPresenter implements LoadChecklistOutputBoundary {
     private final ChecklistViewModel viewModel;

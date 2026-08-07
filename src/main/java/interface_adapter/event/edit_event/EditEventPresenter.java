@@ -1,13 +1,15 @@
 package interface_adapter.event.edit_event;
 
-import use_case.event_use_case.edit_event.EditEventOutputBoundary;
-import use_case.event_use_case.edit_event.EditEventOutputData;
+import use_case.event.edit_event.EditEventOutputBoundary;
+import use_case.event.edit_event.EditEventOutputData;
 
 public class EditEventPresenter implements EditEventOutputBoundary {
 
     private final EditEventViewModel editEventViewModel;
 
-    public EditEventPresenter(EditEventViewModel editEventViewModel) { this.editEventViewModel = editEventViewModel; }
+    public EditEventPresenter(EditEventViewModel editEventViewModel) {
+        this.editEventViewModel = editEventViewModel;
+    }
 
     @Override
     public void prepareSuccessView(EditEventOutputData outputData) {

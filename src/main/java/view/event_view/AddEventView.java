@@ -1,16 +1,17 @@
 package view.event_view;
 
-import data_access.ReminderScheduler;
-import entity.reminder.ReminderChoices;
-import interface_adapter.event.add_event.AddEventController;
-import interface_adapter.event.add_event.AddEventViewModel;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.Month;
+
+import javax.swing.*;
+
+import data_access.ReminderScheduler;
+import entity.reminder.ReminderChoices;
+import interface_adapter.event.add_event.AddEventController;
+import interface_adapter.event.add_event.AddEventViewModel;
 
 /**
  * The view for the Add Event Use Case.
@@ -40,10 +41,8 @@ public class AddEventView extends JPanel {
     private String pendingReminderTitle;
     private ReminderChoices pendingReminderOption;
 
-    private final JButton  addEventButton = new JButton("Add");
+    private final JButton addEventButton = new JButton("Add");
     private final JButton cancelButton = new JButton("Cancel");
-
-    private final JLabel errorLabel = new JLabel();
 
     public AddEventView(AddEventController addEventController,
                         AddEventViewModel addEventViewModel,
@@ -88,7 +87,6 @@ public class AddEventView extends JPanel {
         reminderInfo.add(new JLabel("Remind me:"));
         reminderInfo.add(reminderInputField);
 
-
         final JPanel buttons = new JPanel();
         buttons.add(addEventButton);
         buttons.add(cancelButton);
@@ -123,7 +121,7 @@ public class AddEventView extends JPanel {
 
         addEventViewModel.addPropertyChangeListener(evt -> {
             if (AddEventViewModel.CLOSE_PROPERTY.equals(evt.getPropertyName())) {
-                if (pendingReminderTitle != null){
+                if (pendingReminderTitle != null) {
                     reminderScheduler.schedule(
                             pendingReminderTitle,
                             pendingReminderOption,
@@ -135,7 +133,8 @@ public class AddEventView extends JPanel {
                 if (window != null) {
                     window.dispose();
                 }
-            } else if (AddEventViewModel.ERROR_PROPERTY.equals(evt.getPropertyName())) {
+            }
+            else if (AddEventViewModel.ERROR_PROPERTY.equals(evt.getPropertyName())) {
                 pendingReminderTitle = null;
                 pendingReminderOption = null;
                 final String message = addEventViewModel.getState().getErrorMessage();
@@ -157,8 +156,8 @@ public class AddEventView extends JPanel {
         final Object[] buttons = {"Remind me again in 1 hour", "Dismiss"};
         final int choice = JOptionPane.showOptionDialog(
                 null,
-                "Reminder: \"" + eventTitle + "\" (" + option.getPastLabel() + ")",  // message
-                "Reminder",                                                            // title
+                "Reminder: \"" + eventTitle + "\" (" + option.getPastLabel() + ")",
+                "Reminder",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,

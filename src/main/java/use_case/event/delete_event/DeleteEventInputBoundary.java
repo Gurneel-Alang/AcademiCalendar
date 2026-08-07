@@ -1,4 +1,4 @@
-package use_case.event_use_case.delete_event;
+package use_case.event.delete_event;
 
 /**
  * The input boundary for actions related to deleting events.

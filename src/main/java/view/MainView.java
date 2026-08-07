@@ -21,8 +21,12 @@ public class MainView extends JPanel {
 
     /**
      * Creates the main application view.
-     *
-     * @param calendarView the calendar feature view
+     * @param calendarView the calendar view
+     * @param weatherView the weather view
+     * @param checklistView the checklist view
+     * @param onAddEventRequested the thread for the add event dialog
+     * @param onEditEventRequested the thread for the edit event dialog
+     * @param onDeleteEventRequested the thread for the delete event dialog
      */
     public MainView(CalendarView calendarView, WeatherView weatherView,
                     JPanel checklistView, Runnable onAddEventRequested,

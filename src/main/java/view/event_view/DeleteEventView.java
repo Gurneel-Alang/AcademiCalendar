@@ -1,12 +1,13 @@
 package view.event_view;
 
-import interface_adapter.event.delete_event.DeleteEventController;
-import interface_adapter.event.delete_event.DeleteEventViewModel;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+import interface_adapter.event.delete_event.DeleteEventController;
+import interface_adapter.event.delete_event.DeleteEventViewModel;
 
 /**
  * The view for the Delete Event Use Case.
@@ -57,7 +58,8 @@ public class DeleteEventView extends JPanel {
                 if (window != null) {
                     window.dispose();
                 }
-            } else if (DeleteEventViewModel.ERROR_PROPERTY.equals(evt.getPropertyName())) {
+            }
+            else if (DeleteEventViewModel.ERROR_PROPERTY.equals(evt.getPropertyName())) {
                 final String message = deleteEventViewModel.getState().getErrorMessage();
                 JOptionPane.showMessageDialog(this, message);
             }

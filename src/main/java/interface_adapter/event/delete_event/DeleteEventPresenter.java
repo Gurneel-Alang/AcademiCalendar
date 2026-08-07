@@ -1,7 +1,7 @@
 package interface_adapter.event.delete_event;
 
-import use_case.event_use_case.delete_event.DeleteEventOutputBoundary;
-import use_case.event_use_case.delete_event.DeleteEventOutputData;
+import use_case.event.delete_event.DeleteEventOutputBoundary;
+import use_case.event.delete_event.DeleteEventOutputData;
 
 /**
  * The presenter for the Delete Event Use Case.
@@ -33,5 +33,7 @@ public class DeleteEventPresenter implements DeleteEventOutputBoundary {
     }
 
     @Override
-    public void switchToMainView() { deleteEventViewModel.firePropertyChanged(DeleteEventViewModel.CLOSE_PROPERTY); }
+    public void switchToMainView() {
+        deleteEventViewModel.firePropertyChanged(DeleteEventViewModel.CLOSE_PROPERTY);
+    }
 }
