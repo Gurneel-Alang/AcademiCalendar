@@ -38,11 +38,18 @@ import view.event_view.AddEventView;
 import view.event_view.*;
 import view.CalendarView;
 import view.MainView;
+import view.WeatherView;
 
 /**
  * Runs a preview of the application views.
  */
-public class CalendarPreviewMain {
+public final class CalendarPreviewMain {
+
+    private static final int FRAME_WIDTH = 1000;
+    private static final int FRAME_HEIGHT = 600;
+
+    private CalendarPreviewMain() {
+    }
 
     /**
      * Starts the preview application.
@@ -50,104 +57,33 @@ public class CalendarPreviewMain {
      * @param args command-line arguments
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            final JFrame frame = new JFrame("AcademiCalendar");
+        SwingUtilities.invokeLater(
+                CalendarPreviewMain::startApplication
+        );
+    }
 
-            final EventDataAccessObject eventDataAccessObject = new EventDataAccessObject();
+    private static void startApplication() {
+        final String apiKey =
+                System.getenv("OPENWEATHER_API_KEY");
 
-            final AddEventViewModel addEventViewModel = new AddEventViewModel();
-            final AddEventPresenter addEventPresenter = new AddEventPresenter(addEventViewModel);
-            final AddEventInteractor addEventInteractor = new AddEventInteractor(
-                    eventDataAccessObject, addEventPresenter, new EventFactory());
-            final AddEventController addEventController = new AddEventController(addEventInteractor);
-            final ReminderScheduler reminderScheduler = new ReminderScheduler();
-            final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel, reminderScheduler);
+        final JFrame frame =
+                new JFrame("AcademiCalendar");
 
-            final EditEventViewModel editEventViewModel = new EditEventViewModel();
-            final EditEventPresenter editEventPresenter = new EditEventPresenter(editEventViewModel);
-            final EditEventInteractor editEventInteractor = new EditEventInteractor(
-                    eventDataAccessObject, editEventPresenter, new EventFactory());
-            final EditEventController editEventController = new EditEventController(editEventInteractor);
-            final EditEventView editEventView = new EditEventView(editEventController, editEventViewModel);
+        final CalendarView calendarView =
+                new CalendarView();
 
-            final DeleteEventViewModel deleteEventViewModel = new DeleteEventViewModel();
-            final DeleteEventPresenter deleteEventPresenter = new DeleteEventPresenter(deleteEventViewModel);
-            final DeleteEventInteractor deleteEventInteractor = new DeleteEventInteractor(
-                    eventDataAccessObject, deleteEventPresenter);
-            final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
-            final DeleteEventView deleteEventView = new DeleteEventView(deleteEventController, deleteEventViewModel);
+        final WeatherView weatherView =
+                WeatherUseCaseFactory.create(apiKey);
 
-            /*
-             * Checklist use cases.
-             */
-            final CheckListDataAccessObject checkListDataAccessObject =
-                    new CheckListDataAccessObject();
+        final MainView mainView =
+                new MainView(calendarView, weatherView);
 
-            final ChecklistViewModel checklistViewModel =
-                    new ChecklistViewModel();
-
-
-
-            /*
-             * Create task.
-             */
-            final CreateTaskPresenter createTaskPresenter =
-                    new CreateTaskPresenter(checklistViewModel);
-
-            final CreateTaskInteractor createTaskInteractor =
-                    new CreateTaskInteractor(
-                            checkListDataAccessObject,
-                            createTaskPresenter,
-                            new CommonTaskFactory()
-                    );
-
-            final CreateTaskController createTaskController =
-                    new CreateTaskController(createTaskInteractor);
-            /*
-             * Toggle task.
-             */
-            final ToggleTaskPresenter toggleTaskPresenter =
-                    new ToggleTaskPresenter(checklistViewModel);
-
-            final ToggleTaskInteractor toggleTaskInteractor =
-                    new ToggleTaskInteractor(
-                            checkListDataAccessObject,
-                            toggleTaskPresenter
-                    );
-
-            final ToggleTaskController toggleTaskController = new ToggleTaskController(toggleTaskInteractor);
-
-            final ChecklistViewModel viewModel = new ChecklistViewModel();
-
-            final ChecklistView checklistView = new ChecklistView(viewModel, toggleTaskController);
-
-            final CalendarView calendarView = new CalendarView();
-
-            final MainView mainView = new MainView(
-                    calendarView,
-                    checklistView,
-                    () -> {
-                        final AddEventDialog dialog =
-                                new AddEventDialog(frame, addEventView);
-                        dialog.setVisible(true);
-                    },
-                    () -> {
-                        final EditEventDialog dialog =
-                                new EditEventDialog(frame, editEventView);
-                        dialog.setVisible(true);
-                    },
-                    () -> {
-                        final DeleteEventDialog dialog =
-                                new DeleteEventDialog(frame, deleteEventView);
-                        dialog.setVisible(true);
-                    }
-            );
-
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setContentPane(mainView);
-            frame.setSize(1000, 600);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
+        frame.setDefaultCloseOperation(
+                JFrame.EXIT_ON_CLOSE
+        );
+        frame.setContentPane(mainView);
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 }
