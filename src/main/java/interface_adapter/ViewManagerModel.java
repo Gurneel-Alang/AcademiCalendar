@@ -13,9 +13,13 @@ public class ViewManagerModel {
     private String activeView;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public String getActiveView() { return activeView; }
+    public String getActiveView() {
+        return activeView;
+    }
 
-    public void setActiveView(String activeView) { this.activeView = activeView; }
+    public void setActiveView(String activeView) {
+        this.activeView = activeView;
+    }
 
     /**
      * Notify listeners that the active view should change.
@@ -25,6 +29,6 @@ public class ViewManagerModel {
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-            support.addPropertyChangeListener(listener);
+        support.addPropertyChangeListener(listener);
     }
 }

@@ -1,12 +1,12 @@
 package data_access;
 
-import entity.event.EventInterface;
-import use_case.event_use_case.add_event.AddEventDataAccessInterface;
-import use_case.event_use_case.edit_event.EditEventDataAccessInterface;
-import use_case.event_use_case.delete_event.DeleteEventDataAccessInterface;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import entity.event.EventInterface;
+import use_case.event.add_event.AddEventDataAccessInterface;
+import use_case.event.delete_event.DeleteEventDataAccessInterface;
+import use_case.event.edit_event.EditEventDataAccessInterface;
 
 /**
  * The DAO for events.
@@ -35,6 +35,7 @@ public class EventDataAccessObject implements AddEventDataAccessInterface,
      * Helper method to gather the ID of an event given its title.
      * @param title the event title
      * @return the event's associated ID
+     * @throws RuntimeException if no ID is found
      */
     public int getIdByTitle(String title) {
         for (Integer i : events.keySet()) {
@@ -52,8 +53,8 @@ public class EventDataAccessObject implements AddEventDataAccessInterface,
             events.put(id, other);
             other.setId(id);
         }
-        catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        catch (RuntimeException exception) {
+            throw new RuntimeException(exception);
         }
     }
 
@@ -63,8 +64,8 @@ public class EventDataAccessObject implements AddEventDataAccessInterface,
             int id = getIdByTitle(title);
             events.remove(id);
         }
-        catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        catch (RuntimeException exception) {
+            throw new RuntimeException(exception);
         }
     }
 }

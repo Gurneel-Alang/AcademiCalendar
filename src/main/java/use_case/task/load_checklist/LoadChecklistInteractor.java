@@ -9,10 +9,8 @@ public class LoadChecklistInteractor implements LoadChecklistInputBoundary {
     private final TaskDataAccessInterface taskDataAccessObject;
     private final LoadChecklistOutputBoundary presenter;
 
-    public LoadChecklistInteractor(
-            TaskDataAccessInterface taskDataAccessObject,
-            LoadChecklistOutputBoundary presenter
-    ){
+    public LoadChecklistInteractor(TaskDataAccessInterface taskDataAccessObject,
+                                   LoadChecklistOutputBoundary presenter) {
         this.taskDataAccessObject = taskDataAccessObject;
         this.presenter = presenter;
     }

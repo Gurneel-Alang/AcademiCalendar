@@ -1,17 +1,21 @@
 package use_case.weather;
 
-import entity.weather.Weather;
-
 import java.io.IOException;
 import java.time.LocalDate;
 
-public class WeatherInteractor implements WeatherInputBoundary{
+import entity.weather.Weather;
+
+public class WeatherInteractor implements WeatherInputBoundary {
+
     private final WeatherDataAccessInterface weatherDataAccessObject;
     private final WeatherOutputBoundary weatherPresenter;
-    public WeatherInteractor(WeatherDataAccessInterface weatherDataAccessObject, WeatherOutputBoundary weatherPresenter) {
+
+    public WeatherInteractor(WeatherDataAccessInterface weatherDataAccessObject,
+                             WeatherOutputBoundary weatherPresenter) {
         this.weatherDataAccessObject = weatherDataAccessObject;
         this.weatherPresenter = weatherPresenter;
     }
+
     @Override
     public void execute(WeatherInputData inputData) {
         if (inputData == null) {
@@ -65,6 +69,7 @@ public class WeatherInteractor implements WeatherInputBoundary{
             );
         }
     }
+
     private String generateAdvice(Weather weather) {
         if ("Rain".equalsIgnoreCase(weather.getCondition())) {
             return "Bring an umbrella.";
@@ -78,4 +83,5 @@ public class WeatherInteractor implements WeatherInputBoundary{
         else {
             return "No special preparation is needed.";
         }
-    }}
+    }
+}

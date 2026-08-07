@@ -1,9 +1,9 @@
-package use_case.event_use_case.add_event;
+package use_case.event.add_event;
+
+import java.time.LocalDate;
 
 import entity.event.EventFactoryInterface;
 import entity.event.EventInterface;
-
-import java.time.LocalDate;
 
 /**
  * The Add Event Use Case Interactor.
@@ -30,7 +30,8 @@ public class AddEventInteractor implements AddEventInputBoundary {
 
         if (eventDataAccessObject.existsByTitle(title)) {
             addEventPresenter.prepareFailView("Failed; event of given title already exists.");
-        } else {
+        }
+        else {
             final EventInterface event = eventFactory.create(title, description, startDate, endDate);
             eventDataAccessObject.addEvent(event);
 
@@ -40,5 +41,7 @@ public class AddEventInteractor implements AddEventInputBoundary {
     }
 
     @Override
-    public void switchToMainView() { addEventPresenter.switchToMainView(); }
+    public void switchToMainView() {
+        addEventPresenter.switchToMainView();
+    }
 }

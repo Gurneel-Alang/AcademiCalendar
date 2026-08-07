@@ -1,4 +1,4 @@
-package use_case.event_use_case.delete_event;
+package use_case.event.delete_event;
 
 /**
  * The DAO for the Delete Event Use Case.
@@ -13,7 +13,7 @@ public interface DeleteEventDataAccessInterface {
     boolean existsByTitle(String title);
 
     /**
-     * Delete an event of the given title
+     * Delete an event of the given title.
      * @param title the title of the event to delete
      */
     void deleteEvent(String title);

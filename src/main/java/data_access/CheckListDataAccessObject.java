@@ -15,7 +15,8 @@ import use_case.task.TaskDataAccessInterface;
  */
 public class CheckListDataAccessObject implements TaskDataAccessInterface {
 
-    private final Map<String, Task> tasksById = new LinkedHashMap<>(); //linked hashmap preserves insertion order, so tasks appear in the order the user added them.
+    private final Map<String, Task> tasksById = new LinkedHashMap<>();
+    // Linked HashMap preserves insertion order, so tasks appear in the order the user added them.
 
     @Override
     public void save(Task task) {
@@ -47,7 +48,7 @@ public class CheckListDataAccessObject implements TaskDataAccessInterface {
     }
 
     @Override
-    public void update(Task task){
+    public void update(Task task) {
         if (!tasksById.containsKey(task.getId())) {
             throw new NoSuchElementException(
                     "Cannot update missing task: " + task.getId()

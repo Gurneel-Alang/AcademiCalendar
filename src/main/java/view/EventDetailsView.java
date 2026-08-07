@@ -85,6 +85,9 @@ public class EventDetailsView extends JPanel {
 
     /**
      * Changes this view to display a particular event.
+     * @param eventId the event's ID
+     * @param eventTitle the event's title
+     * @param eventDate the date
      */
     public void displayEvent(
             String eventId,

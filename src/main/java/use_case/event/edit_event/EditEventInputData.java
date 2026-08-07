@@ -1,4 +1,4 @@
-package use_case.event_use_case.edit_event;
+package use_case.event.edit_event;
 
 import java.time.LocalDate;
 

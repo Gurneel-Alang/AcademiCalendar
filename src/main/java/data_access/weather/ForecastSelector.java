@@ -10,10 +10,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
 import data_access.weather.dto.ForecastResponse;
-import data_access.weather.dto.LocationResponse;
-import entity.weather.Weather;
 import data_access.weather.dto.ForecastResponse.ForecastEntry;
 import data_access.weather.dto.ForecastResponse.WeatherDescription;
+import data_access.weather.dto.LocationResponse;
+import entity.weather.Weather;
+
 /**
  * Selects a representative forecast for a requested date.
  */

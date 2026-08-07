@@ -1,14 +1,15 @@
 package view.event_view;
 
-import interface_adapter.event.edit_event.EditEventController;
-import interface_adapter.event.edit_event.EditEventViewModel;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.Month;
+
+import javax.swing.*;
+
+import interface_adapter.event.edit_event.EditEventController;
+import interface_adapter.event.edit_event.EditEventViewModel;
 
 /**
  * The view for the Edit Event Use Case.
@@ -108,7 +109,8 @@ public class EditEventView extends JPanel {
                 if (window != null) {
                     window.dispose();
                 }
-            } else if (EditEventViewModel.ERROR_PROPERTY.equals(evt.getPropertyName())) {
+            }
+            else if (EditEventViewModel.ERROR_PROPERTY.equals(evt.getPropertyName())) {
                 final String message = editEventViewModel.getState().getErrorMessage();
                 JOptionPane.showMessageDialog(this, message);
             }

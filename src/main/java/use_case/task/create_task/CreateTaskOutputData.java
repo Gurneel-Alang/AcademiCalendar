@@ -18,19 +18,19 @@ public class CreateTaskOutputData {
         this.completed = completed;
     }
 
-    public String getTaskId(){
+    public String getTaskId() {
         return taskId;
     }
 
-    public String getEventId(){
+    public String getEventId() {
         return eventId;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
-    public boolean isCompleted(){
+    public boolean isCompleted() {
         return completed;
     }
 }

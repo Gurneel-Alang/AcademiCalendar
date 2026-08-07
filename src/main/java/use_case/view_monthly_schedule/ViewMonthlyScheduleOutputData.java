@@ -27,8 +27,6 @@ public class ViewMonthlyScheduleOutputData {
         return events;
     }
 
-
-
     /**
      * Data for one event displayed in the monthly calendar.
      */
