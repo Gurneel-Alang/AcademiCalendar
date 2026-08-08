@@ -16,11 +16,17 @@ Features
 
     Reminders 
 
-Installation Instructions - openweatherAPI key: under configurations for CalendarPreviewMain
+Installation Instructions - openweatherAPI key  under configurations for CalendarPreviewMain
 Instructions for API: 
 
 Usage Guide 
 - weather: make sure that the date is the same as the city you are searching (i.e Bejing's date would be one day ahead of Toronto's)
+- It automatically creates a local SQLite database at:
+
+- macOS/Linux: `~/.academicalendar/academicalendar.db`
+- Windows: `%USERPROFILE%\.academicalendar\academicalendar.db`
+
+The database is generated automatically. Weather data must be fetched online at least once before it is available offline.
 
 Feedback
 
