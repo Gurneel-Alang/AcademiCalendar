@@ -1,5 +1,6 @@
 package entity.task;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -8,10 +9,11 @@ import java.util.Objects;
 public class Task {
     private final String taskId;
     private final String description;
+    private final LocalDate dueDate;
     private boolean completed;
 
-    public Task(String taskId, String description, boolean completed) {
-        if (taskId == null || taskId.isBlank()) {
+    public Task(String taskId, String description, LocalDate dueDate, boolean completed) {
+        if (taskId == null || taskId.isBlank()){
             throw new IllegalArgumentException("Task ID cannot be blank.");
         }
 
@@ -20,6 +22,7 @@ public class Task {
         }
         this.taskId = taskId;
         this.description = description;
+        this.dueDate = dueDate;
         this.completed = completed;
     }
 
@@ -39,10 +42,9 @@ public class Task {
         return description;
     }
 
-    /**
-     * Return whether this task is completed or not.
-     * @return whether this task is completed or not
-     */
+    public LocalDate getDueDate(){
+        return dueDate;}
+
     public boolean isCompleted() {
         return completed;
     }

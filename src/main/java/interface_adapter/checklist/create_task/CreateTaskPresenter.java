@@ -23,6 +23,7 @@ public class CreateTaskPresenter
                 new TaskState(
                         outputData.getTaskId(),
                         outputData.getDescription(),
+                        outputData.getDueDate(),
                         outputData.isCompleted()
                 )
         );

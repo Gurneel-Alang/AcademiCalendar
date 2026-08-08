@@ -94,13 +94,16 @@ public class ChecklistView extends JPanel
     }
 
     private String formatTaskText(TaskState task) {
+        final String dateSuffix = task.getDueDate()!= null
+                ? " (due " + task.getDueDate() + ")"
+                : "";
         if (task.isCompleted()) {
             return "<html><strike>"
                     + escapeHtml(task.getDescription())
                     + "</strike></html>";
         }
 
-        return task.getDescription();
+        return task.getDescription() + dateSuffix;
     }
 
     private void styleTask(

@@ -1,14 +1,10 @@
 package entity.task;
 
+import java.time.LocalDate;
+
 /**
  * Creates Task entities.
  */
 public interface TaskFactory {
-
-    /**
-     * Return a new task.
-     * @param description the task's description
-     * @return a new task
-     */
-    Task create(String description);
+    Task create(String description, LocalDate dueDate);
 }
