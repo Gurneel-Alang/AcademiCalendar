@@ -1,9 +1,12 @@
 package data_access;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import entity.event.EventInterface;
+import interface_adapter.event.view_events.EventsGateway;
 import use_case.event.add_event.AddEventDataAccessInterface;
 import use_case.event.delete_event.DeleteEventDataAccessInterface;
 import use_case.event.edit_event.EditEventDataAccessInterface;
@@ -12,7 +15,7 @@ import use_case.event.edit_event.EditEventDataAccessInterface;
  * The DAO for events.
  */
 public class EventDataAccessObject implements AddEventDataAccessInterface,
-    EditEventDataAccessInterface, DeleteEventDataAccessInterface {
+    EditEventDataAccessInterface, DeleteEventDataAccessInterface, EventsGateway {
 
     private final Map<Integer, EventInterface> events = new HashMap<>();
 
@@ -67,5 +70,10 @@ public class EventDataAccessObject implements AddEventDataAccessInterface,
         catch (RuntimeException exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    @Override
+    public List<EventInterface> getAllEvents() {
+        return new ArrayList<>(events.values());
     }
 }

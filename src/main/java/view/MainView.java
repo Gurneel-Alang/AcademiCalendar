@@ -8,7 +8,9 @@ import javax.swing.*;
 
 import interface_adapter.checklist.create_task.CreateTaskController;
 import interface_adapter.checklist.load_checklist.LoadChecklistController;
+import interface_adapter.event.view_events.ViewEventsController;
 import use_case.task.load_checklist.LoadChecklistOutputBoundary;
+import view.event_view.EventListView;
 
 /**
  * Main application view containing navigation and feature views.
@@ -26,13 +28,17 @@ public class MainView extends JPanel {
      * @param calendarView the calendar view
      * @param weatherView the weather view
      * @param checklistView the checklist view
+     * @param eventListView the event list view
+     * @param createTaskController the controller for creating tasks
+     * @param loadChecklistController the controller for loading the checklist
+     * @param viewEventsController the controller for loading events on a date
      * @param onAddEventRequested the thread for the add event dialog
      * @param onEditEventRequested the thread for the edit event dialog
      * @param onDeleteEventRequested the thread for the delete event dialog
      */
-    public MainView(CalendarView calendarView, WeatherView weatherView,
-                    JPanel checklistView, CreateTaskController createTaskController,
-                    LoadChecklistController loadChecklistController,
+    public MainView(CalendarView calendarView, WeatherView weatherView, JPanel checklistView,
+                    EventListView eventListView, CreateTaskController createTaskController,
+                    LoadChecklistController loadChecklistController, ViewEventsController viewEventsController,
                     Runnable onAddEventRequested,
                     Runnable onEditEventRequested, Runnable onDeleteEventRequested) {
         setLayout(new BorderLayout());
@@ -41,8 +47,7 @@ public class MainView extends JPanel {
         final JButton weatherButton = new JButton("Weather");
         final JButton checklistButton = new JButton("Checklist");
 
-        final JPanel navigationPanel =
-                new JPanel(new FlowLayout(FlowLayout.LEFT));
+        final JPanel navigationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         navigationPanel.add(eventButton);
         navigationPanel.add(weatherButton);
@@ -51,13 +56,7 @@ public class MainView extends JPanel {
         rightCardLayout = new CardLayout();
         rightContentPanel = new JPanel(rightCardLayout);
 
-        /*
-         * Temporary event and weather panels.
-         */
-        final JPanel eventPanel = new JPanel();
-        eventPanel.add(new JLabel("Events for the selected date"));
-
-        rightContentPanel.add(eventPanel, EVENT_VIEW);
+        rightContentPanel.add(eventListView, EVENT_VIEW);
         rightContentPanel.add(weatherView, WEATHER_VIEW);
 
         /*
@@ -76,7 +75,6 @@ public class MainView extends JPanel {
         checklistPanel.add(addTaskPanel, BorderLayout.SOUTH);
 
         rightContentPanel.add(checklistPanel, CHECKLIST_VIEW);
-
 
         final JPanel mainContentPanel = new JPanel(new BorderLayout());
 
@@ -98,9 +96,10 @@ public class MainView extends JPanel {
         /*
          * Navigation
          */
-        eventButton.addActionListener(
-                event -> showView(EVENT_VIEW)
-        );
+        eventButton.addActionListener(event -> {
+            viewEventsController.execute(calendarView.getSelectedDate());
+            showView(EVENT_VIEW);
+        });
 
         weatherButton.addActionListener(event -> {
             weatherView.setSelectedDate(
