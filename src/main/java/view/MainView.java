@@ -116,14 +116,14 @@ public class MainView extends JPanel {
         addTaskButton.addActionListener(event -> {
             final String description = taskInput.getText();
             if (!description.isBlank()) {
-                createTaskController.execute(description);
+                createTaskController.execute(description, calendarView.getSelectedDate());
                 taskInput.setText("");
             }
         });
         taskInput.addActionListener(event -> {
             final String description = taskInput.getText();
             if (!description.isBlank()) {
-                createTaskController.execute(description);
+                createTaskController.execute(description, calendarView.getSelectedDate());
                 taskInput.setText("");
             }
         });

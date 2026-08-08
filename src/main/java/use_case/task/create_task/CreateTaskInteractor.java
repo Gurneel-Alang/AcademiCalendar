@@ -28,12 +28,13 @@ public class CreateTaskInteractor implements CreateTaskInputBoundary {
             return;
         }
 
-        final Task task = taskFactory.create(description);
+        final Task task = taskFactory.create(description, inputData.getDueDate());
         taskDataAccessObject.save(task);
 
         final CreateTaskOutputData outputData = new CreateTaskOutputData(
                 task.getId(),
                 task.getDescription(),
+                tasl.getDueDate(),
                 task.isCompleted()
         );
 

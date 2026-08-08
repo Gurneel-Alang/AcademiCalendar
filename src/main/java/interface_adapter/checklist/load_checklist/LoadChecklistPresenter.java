@@ -21,7 +21,7 @@ public class LoadChecklistPresenter implements LoadChecklistOutputBoundary {
     @Override
     public void prepareSuccessView(LoadChecklistOutputData outputData) {
         final List<TaskState> taskStates = outputData.getTasks().stream()
-                .map(t -> new TaskState(t.getId(), t.getDescription(), t.isCompleted()))
+                .map(t -> new TaskState(t.getId(), t.getDescription(), t.getDueDate(), t.isCompleted()))
                 .collect(Collectors.toList());
 
         final ChecklistState state = viewModel.getState();
