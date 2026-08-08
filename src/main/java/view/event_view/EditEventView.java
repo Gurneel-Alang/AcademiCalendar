@@ -128,10 +128,11 @@ public class EditEventView extends JPanel {
 
     private void populateDateFields() {
         int currentYear = LocalDate.now().getYear();
-        for (int y = currentYear - 3; y <= currentYear + 3; y++) {
-            newStartYearInputField.addItem(y);
-            newEndYearInputField.addItem(y);
-        }
+        newStartYearInputField.addItem(currentYear);
+        newStartYearInputField.addItem(currentYear + 1);
+        newEndYearInputField.addItem(currentYear);
+        newEndYearInputField.addItem(currentYear + 1);
+
         for (Month m : Month.values()) {
             newStartMonthInputField.addItem(m);
             newEndMonthInputField.addItem(m);

@@ -23,6 +23,8 @@ import interface_adapter.event.delete_event.DeleteEventViewModel;
 import interface_adapter.event.edit_event.EditEventController;
 import interface_adapter.event.edit_event.EditEventPresenter;
 import interface_adapter.event.edit_event.EditEventViewModel;
+import interface_adapter.event.view_events.ViewEventsController;
+import interface_adapter.event.view_events.ViewEventsViewModel;
 import use_case.event.add_event.AddEventInteractor;
 import use_case.event.delete_event.DeleteEventInteractor;
 import use_case.event.edit_event.EditEventInteractor;
@@ -33,12 +35,7 @@ import view.CalendarView;
 import view.ChecklistView;
 import view.MainView;
 import view.WeatherView;
-import view.event_view.AddEventDialog;
-import view.event_view.AddEventView;
-import view.event_view.DeleteEventDialog;
-import view.event_view.DeleteEventView;
-import view.event_view.EditEventDialog;
-import view.event_view.EditEventView;
+import view.event_view.*;
 
 /**
  * Builder class to attach use cases and views to - and return - a MainView.
@@ -55,10 +52,12 @@ public class MainViewBuilder {
 
     private CreateTaskController createTaskController;
     private LoadChecklistController loadChecklistController;
+    private ViewEventsController viewEventsController;
 
     private CalendarView calendarView;
     private WeatherView weatherView;
     private ChecklistView checklistView;
+    private EventListView eventListView;
     private AddEventView addEventView;
     private EditEventView editEventView;
     private DeleteEventView deleteEventView;
@@ -112,6 +111,18 @@ public class MainViewBuilder {
     }
 
     /**
+     * Add the "view events on a given date" view.
+     * @return this builder
+     */
+    public MainViewBuilder addEventListView() {
+        final ViewEventsViewModel viewEventsViewModel = new ViewEventsViewModel();
+        viewEventsController = new ViewEventsController(
+                eventDataAccessObject, viewEventsViewModel);
+        eventListView = new EventListView(viewEventsViewModel);
+        return this;
+    }
+
+    /**
      * Add the Add Event Use Case and view.
      * @return this builder
      */
@@ -159,8 +170,8 @@ public class MainViewBuilder {
      * @return the MainView
      */
     public MainView build() {
-        return new MainView(calendarView, weatherView, checklistView,
-                createTaskController, loadChecklistController,
+        return new MainView(calendarView, weatherView, checklistView, eventListView,
+                createTaskController, loadChecklistController, viewEventsController,
                 () -> {
                     final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
                     dialog.setVisible(true);

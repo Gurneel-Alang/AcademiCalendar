@@ -42,4 +42,11 @@ public interface EventInterface {
      * @return the end date of this event
      */
     LocalDate getEndDate();
+
+    /**
+     * Return if this event occurs on a given date.
+     * @param date the date
+     * @return if this event occurs on the given date
+     */
+    boolean occursOn(LocalDate date);
 }

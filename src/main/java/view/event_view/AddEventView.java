@@ -170,10 +170,11 @@ public class AddEventView extends JPanel {
 
     private void populateDateFields() {
         int currentYear = LocalDate.now().getYear();
-        for (int y = currentYear - 3; y <= currentYear + 3; y++) {
-            startYearInputField.addItem(y);
-            endYearInputField.addItem(y);
-        }
+        startYearInputField.addItem(currentYear);
+        startYearInputField.addItem(currentYear + 1);
+        endYearInputField.addItem(currentYear);
+        endYearInputField.addItem(currentYear + 1);
+
         for (Month m : Month.values()) {
             startMonthInputField.addItem(m);
             endMonthInputField.addItem(m);

@@ -53,4 +53,9 @@ public class Event implements EventInterface {
     public LocalDate getEndDate() {
         return endDate;
     }
+
+    @Override
+    public boolean occursOn(LocalDate date) {
+        return !date.isBefore(startDate) && !date.isAfter(endDate);
+    }
 }

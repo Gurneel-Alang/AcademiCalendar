@@ -31,11 +31,12 @@ public final class CalendarPreviewMain {
         final MainViewBuilder mainViewBuilder = new MainViewBuilder(frame);
         final MainView mainView = mainViewBuilder.addCalendarView()
                         .addWeatherView()
+                            .addEventListView()
                                 .addCheckListView()
-                                        .addAddEventView()
-                                                .addEditEventView()
-                                                        .addDeleteEventView()
-                                                                .build();
+                                    .addAddEventView()
+                                        .addEditEventView()
+                                            .addDeleteEventView()
+                                                .build();
 
         frame.setDefaultCloseOperation(
                 JFrame.EXIT_ON_CLOSE
