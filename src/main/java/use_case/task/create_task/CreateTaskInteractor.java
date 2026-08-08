@@ -34,7 +34,7 @@ public class CreateTaskInteractor implements CreateTaskInputBoundary {
         final CreateTaskOutputData outputData = new CreateTaskOutputData(
                 task.getId(),
                 task.getDescription(),
-                tasl.getDueDate(),
+                task.getDueDate(),
                 task.isCompleted()
         );
 

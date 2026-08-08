@@ -25,6 +25,7 @@ public class ToggleTaskPresenter
                         new TaskState(
                                 task.getId(),
                                 task.getDescription(),
+                                task.getDueDate(),
                                 outputData.isCompleted()
                         )
                 );
