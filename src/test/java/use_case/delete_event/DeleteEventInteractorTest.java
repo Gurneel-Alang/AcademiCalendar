@@ -5,7 +5,7 @@ import entity.event.EventFactory;
 import entity.event.EventFactoryInterface;
 import entity.event.EventInterface;
 import org.junit.jupiter.api.Test;
-import use_case.event_use_case.delete_event.*;
+import use_case.event.delete_event.*;
 
 import java.time.LocalDate;
 import java.time.Month;

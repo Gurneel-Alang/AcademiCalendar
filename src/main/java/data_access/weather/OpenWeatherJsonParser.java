@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-
 import data_access.weather.dto.ForecastResponse;
 import data_access.weather.dto.LocationResponse;
 

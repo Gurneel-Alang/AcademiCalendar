@@ -3,44 +3,7 @@ package app;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import data_access.CheckListDataAccessObject;
-import data_access.EventDataAccessObject;
-import data_access.ReminderScheduler;
-
-import entity.event.EventFactory;
-import entity.task.CommonTaskFactory;
-
-import interface_adapter.checklist.ChecklistViewModel;
-import interface_adapter.checklist.create_task.CreateTaskController;
-import interface_adapter.checklist.create_task.CreateTaskPresenter;
-import interface_adapter.checklist.load_checklist.LoadChecklistController;
-import interface_adapter.checklist.load_checklist.LoadChecklistPresenter;
-import interface_adapter.checklist.toggle_task.ToggleTaskController;
-import interface_adapter.checklist.toggle_task.ToggleTaskPresenter;
-import use_case.task.create_task.CreateTaskInteractor;
-import use_case.task.load_checklist.LoadChecklistInteractor;
-import use_case.task.toggle_task.ToggleTaskInteractor;
-
-import interface_adapter.event.add_event.AddEventController;
-import interface_adapter.event.add_event.AddEventPresenter;
-import interface_adapter.event.add_event.AddEventViewModel;
-import interface_adapter.event.delete_event.DeleteEventController;
-import interface_adapter.event.delete_event.DeleteEventPresenter;
-import interface_adapter.event.delete_event.DeleteEventViewModel;
-import interface_adapter.event.edit_event.EditEventController;
-import interface_adapter.event.edit_event.EditEventPresenter;
-import interface_adapter.event.edit_event.EditEventViewModel;
-import use_case.event_use_case.add_event.AddEventInteractor;
-import use_case.event_use_case.delete_event.DeleteEventInteractor;
-import use_case.event_use_case.edit_event.EditEventInteractor;
-
-import view.ChecklistView;
-import view.event_view.AddEventDialog;
-import view.event_view.AddEventView;
-import view.event_view.*;
-import view.CalendarView;
 import view.MainView;
-import view.WeatherView;
 
 /**
  * Runs a preview of the application views.
@@ -55,7 +18,6 @@ public final class CalendarPreviewMain {
 
     /**
      * Starts the preview application.
-     *
      * @param args command-line arguments
      */
     public static void main(String[] args) {
@@ -65,77 +27,15 @@ public final class CalendarPreviewMain {
     }
 
     private static void startApplication() {
-        final String apiKey = System.getenv("OPENWEATHER_API_KEY");
         final JFrame frame = new JFrame("AcademiCalendar");
-        final CalendarView calendarView = new CalendarView();
-        final WeatherView weatherView = WeatherUseCaseFactory.create(apiKey);
-
-        // Event use cases
-
-        final EventDataAccessObject eventDataAccessObject= new EventDataAccessObject();
-
-        final AddEventViewModel addEventViewModel = new AddEventViewModel();
-        final AddEventPresenter addEventPresenter = new AddEventPresenter(addEventViewModel);
-        final AddEventInteractor addEventInteractor = new AddEventInteractor(
-                eventDataAccessObject, addEventPresenter, new EventFactory());
-        final AddEventController addEventController = new AddEventController(addEventInteractor);
-        final ReminderScheduler reminderScheduler = new ReminderScheduler();
-        final AddEventView addEventView = new AddEventView(addEventController, addEventViewModel,
-                reminderScheduler);
-
-        final EditEventViewModel editEventViewModel = new EditEventViewModel();
-        final EditEventPresenter editEventPresenter = new EditEventPresenter(editEventViewModel);
-        final EditEventInteractor editEventInteractor = new EditEventInteractor(
-                eventDataAccessObject, editEventPresenter, new EventFactory());
-        final EditEventController editEventController = new EditEventController(editEventInteractor);
-        final EditEventView editEventView = new EditEventView(editEventController, editEventViewModel);
-
-        final DeleteEventViewModel deleteEventViewModel = new DeleteEventViewModel();
-        final DeleteEventPresenter deleteEventPresenter = new DeleteEventPresenter(deleteEventViewModel);
-        final DeleteEventInteractor deleteEventInteractor = new DeleteEventInteractor(
-                eventDataAccessObject, deleteEventPresenter);
-        final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
-        final DeleteEventView deleteEventView = new DeleteEventView(deleteEventController, deleteEventViewModel);
-
-        // Checklist and task use cases (event-independent)
-
-        final CheckListDataAccessObject checkListDataAccessObject = new CheckListDataAccessObject();
-        final ChecklistViewModel checklistViewModel = new ChecklistViewModel();
-
-        final CreateTaskPresenter createTaskPresenter = new CreateTaskPresenter(checklistViewModel);
-        final CreateTaskInteractor createTaskInteractor = new CreateTaskInteractor(
-                checkListDataAccessObject, createTaskPresenter, new CommonTaskFactory());
-        final CreateTaskController createTaskController = new CreateTaskController(createTaskInteractor);
-
-        final ToggleTaskPresenter toggleTaskPresenter = new ToggleTaskPresenter(checklistViewModel);
-        final ToggleTaskInteractor toggleTaskInteractor = new ToggleTaskInteractor(
-                checkListDataAccessObject, toggleTaskPresenter);
-        final ToggleTaskController toggleTaskController = new ToggleTaskController(toggleTaskInteractor);
-
-        final LoadChecklistPresenter loadChecklistPresenter = new LoadChecklistPresenter(checklistViewModel);
-        final LoadChecklistInteractor loadChecklistInteractor = new LoadChecklistInteractor(
-                checkListDataAccessObject, loadChecklistPresenter);
-        final LoadChecklistController loadChecklistController = new LoadChecklistController(loadChecklistInteractor);
-
-        final ChecklistView checklistView = new ChecklistView(checklistViewModel, toggleTaskController);
-
-        // MainView constructor call
-
-        final MainView mainView = new MainView(calendarView, weatherView, checklistView,
-                createTaskController, loadChecklistController,
-                () -> {
-                    final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
-                    dialog.setVisible(true);
-                },
-                () -> {
-                    final EditEventDialog dialog = new EditEventDialog(frame, editEventView);
-                    dialog.setVisible(true);
-                },
-                () -> {
-                    final DeleteEventDialog dialog = new DeleteEventDialog(frame, deleteEventView);
-                    dialog.setVisible(true);
-                }
-        );
+        final MainViewBuilder mainViewBuilder = new MainViewBuilder(frame);
+        final MainView mainView = mainViewBuilder.addCalendarView()
+                        .addWeatherView()
+                                .addCheckListView()
+                                        .addAddEventView()
+                                                .addEditEventView()
+                                                        .addDeleteEventView()
+                                                                .build();
 
         frame.setDefaultCloseOperation(
                 JFrame.EXIT_ON_CLOSE

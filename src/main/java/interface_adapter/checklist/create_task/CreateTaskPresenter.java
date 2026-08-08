@@ -1,7 +1,7 @@
 package interface_adapter.checklist.create_task;
 
-import interface_adapter.checklist.ChecklistViewModel;
 import interface_adapter.checklist.ChecklistState;
+import interface_adapter.checklist.ChecklistViewModel;
 import interface_adapter.checklist.TaskState;
 import use_case.task.create_task.CreateTaskOutputBoundary;
 import use_case.task.create_task.CreateTaskOutputData;

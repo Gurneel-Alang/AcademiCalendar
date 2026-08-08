@@ -14,9 +14,13 @@ public class DeleteEventViewModel {
     private DeleteEventState state = new DeleteEventState();
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public DeleteEventState getState() { return state; }
+    public DeleteEventState getState() {
+        return state;
+    }
 
-    public void setState(DeleteEventState state) { this.state = state; }
+    public void setState(DeleteEventState state) {
+        this.state = state;
+    }
 
     /**
      * Notify listeners when a property has changed.

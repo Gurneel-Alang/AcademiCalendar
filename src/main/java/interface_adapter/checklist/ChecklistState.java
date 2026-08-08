@@ -28,10 +28,18 @@ public class ChecklistState {
         }
     }
 
+    /**
+     * Return the error message.
+     * @return the error message
+     */
     public String getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     * Set the error message.
+     * @param errorMessage the error message to set
+     */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }

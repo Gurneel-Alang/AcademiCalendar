@@ -5,7 +5,7 @@ import use_case.task.load_checklist.LoadChecklistInputBoundary;
 public class LoadChecklistController {
     private final LoadChecklistInputBoundary interactor;
 
-    public LoadChecklistController(LoadChecklistInputBoundary interactor){
+    public LoadChecklistController(LoadChecklistInputBoundary interactor) {
         this.interactor = interactor;
     }
 

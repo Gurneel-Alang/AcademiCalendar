@@ -17,7 +17,7 @@ public class Task {
             throw new IllegalArgumentException("Task ID cannot be blank.");
         }
 
-        if (description ==  null || description.isBlank()){
+        if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("Task description cannot be blank.");
         }
         this.taskId = taskId;
@@ -26,10 +26,18 @@ public class Task {
         this.completed = completed;
     }
 
+    /**
+     * Return this task's ID.
+     * @return this task's ID
+     */
     public String getId() {
         return taskId;
     }
 
+    /**
+     * Return this task's description.
+     * @return this task's description
+     */
     public String getDescription() {
         return description;
     }
@@ -41,11 +49,18 @@ public class Task {
         return completed;
     }
 
+    /**
+     * Switch this task's completion status.
+     */
     public void toggleCompleted() {
         completed = !completed;
     }
 
-    public void setCompleted(boolean completed){
+    /**
+     * Set this task's completion status.
+     * @param completed the completion status
+     */
+    public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
@@ -63,7 +78,7 @@ public class Task {
     }
 
     /**
-     * generates hash code for Task based on its id
+     * Generates hash code for a task based on its ID.
      * matters bc equals method above says two tasks are equal when IDs match
      */
     @Override

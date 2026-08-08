@@ -4,7 +4,7 @@ import java.util.List;
 import entity.task.Task;
 
 /**
- * this lets same DAO support all three use cases.
+ * This lets same DAO support all three use cases.
  */
 public interface TaskDataAccessInterface {
 

@@ -47,13 +47,13 @@ public final class WeatherUseCaseFactory {
 
     /**
      * Creates the weather view using a specified database path.
-     *
      * The database-path parameter makes integration testing easier,
      * because tests can use a temporary database.
      *
      * @param apiKey OpenWeather API key
      * @param databasePath location of the SQLite database
      * @return fully configured weather view
+     * @throws IllegalStateException if the weather database cannot be initialized
      */
     public static WeatherView create(
             String apiKey,

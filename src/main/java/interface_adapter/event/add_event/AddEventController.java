@@ -1,9 +1,9 @@
 package interface_adapter.event.add_event;
 
-import use_case.event_use_case.add_event.AddEventInputBoundary;
-import use_case.event_use_case.add_event.AddEventInputData;
-
 import java.time.LocalDate;
+
+import use_case.event.add_event.AddEventInputBoundary;
+import use_case.event.add_event.AddEventInputData;
 
 /**
  * The controller for the Add Event Use Case.
@@ -32,5 +32,7 @@ public class AddEventController {
     /**
      * Execute the "switch to main view" Use Case.
      */
-    public void switchToMainView() { addEventUseCaseInteractor.switchToMainView(); }
+    public void switchToMainView() {
+        addEventUseCaseInteractor.switchToMainView();
+    }
 }

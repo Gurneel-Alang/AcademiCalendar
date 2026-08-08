@@ -6,6 +6,7 @@ import use_case.task.create_task.CreateTaskInputBoundary;
 import use_case.task.create_task.CreateTaskInputData;
 
 public class CreateTaskController {
+
     private final CreateTaskInputBoundary interactor;
 
     public CreateTaskController(CreateTaskInputBoundary interactor) {

@@ -1,4 +1,5 @@
 package use_case.view_monthly_schedule;
+
 import java.time.YearMonth;
 
 public class ViewMonthlyScheduleInputData {

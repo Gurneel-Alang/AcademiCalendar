@@ -110,8 +110,6 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
         return informationPanel;
     }
 
-
-
     private void requestWeather() {
         final LocalDate selectedDate;
         try {
@@ -120,11 +118,13 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
         }
         catch (DateTimeParseException exception) {
             errorLabel.setText("Please enter the date as YYYY-MM-DD");
-            return;}
+            return;
+        }
         final String city = cityField.getText().trim();
         if (city.isEmpty()) {
             errorLabel.setText("Please enter a city.");
-            return;}
+            return;
+        }
         errorLabel.setText("Loading weather...");
         searchButton.setEnabled(false);
 
@@ -135,12 +135,15 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
                         weatherController.execute(
                                 city,
                                 selectedDate);
-                        return null;}
+                        return null;
+                    }
+
                     @Override
                     protected void done() {
                         searchButton.setEnabled(true);
                     }
-        };worker.execute();
+        };
+        worker.execute();
     }
 
     /**
@@ -239,4 +242,5 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
             return;
         }
         showWeatherInformation(state);
-    }}
+    }
+}

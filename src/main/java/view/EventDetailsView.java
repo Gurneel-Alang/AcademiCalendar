@@ -24,6 +24,12 @@ public class EventDetailsView extends JPanel {
         add(informationPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Changes this view to display a particular event.
+     * @param eventId the event's ID
+     * @param eventTitle the event's title
+     * @param eventDate the date
+     */
     public void displayEvent(String eventId, String eventTitle, String eventDate) {
         eventTitleLabel.setText("Event: " + eventTitle);
         eventDateLabel.setText("Date: " + eventDate);

@@ -16,16 +16,12 @@ public class ReminderScheduler {
     private static final int MILLIS_PER_SECOND = 1000;
 
     /**
-     * Event action when timer finished countdown.
+     * Initialize a reminder for an event that was created.
+     * @param eventTitle the event's title
+     * @param option the reminder option
+     * @param onFire the action
      */
-    public interface FinishedCountdown {
-        void fire(String eventTitle, ReminderChoices option);
-    }
-
-    /**
-     * Initialize a reminder for event that was created
-     */
-    public void schedule(String eventTitle, ReminderChoices option, FinishedCountdown onFire){
+    public void schedule(String eventTitle, ReminderChoices option, FinishedCountdown onFire) {
         final long scaledSeconds = option.getOffsetTime() / REAL_SECONDS_PER_SCHEDULED_SECOND;
         final long scaledMillis = scaledSeconds * MILLIS_PER_SECOND;
         final int delay = (int) Math.min(scaledMillis, Integer.MAX_VALUE);
@@ -35,5 +31,10 @@ public class ReminderScheduler {
         timer.start();
     }
 
-
+    /**
+     * Event action when timer finished countdown.
+     */
+    public interface FinishedCountdown {
+        void fire(String eventTitle, ReminderChoices option);
+    }
 }

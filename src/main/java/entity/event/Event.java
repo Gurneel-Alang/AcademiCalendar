@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * An implementation of the EventInterface interface.
  */
-public class Event implements EventInterface{
+public class Event implements EventInterface {
 
     private static int nextId = 1;
     private int id;
@@ -25,20 +25,32 @@ public class Event implements EventInterface{
     }
 
     @Override
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     @Override
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
     @Override
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
     @Override
-    public LocalDate getStartDate() { return startDate; }
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
     @Override
-    public LocalDate getEndDate() { return endDate; }
+    public LocalDate getEndDate() {
+        return endDate;
+    }
 }

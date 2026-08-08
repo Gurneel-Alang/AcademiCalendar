@@ -1,9 +1,9 @@
 package interface_adapter.event.edit_event;
 
-import use_case.event_use_case.edit_event.EditEventInputBoundary;
-import use_case.event_use_case.edit_event.EditEventInputData;
-
 import java.time.LocalDate;
+
+import use_case.event.edit_event.EditEventInputBoundary;
+import use_case.event.edit_event.EditEventInputData;
 
 /**
  * The controller for the Edit Event Use Case.
@@ -34,5 +34,7 @@ public class EditEventController {
     /**
      * Execute the "switch to main view" Use Case.
      */
-    public void switchToMainView() { editEventUseCaseInteractor.switchToMainView(); }
+    public void switchToMainView() {
+        editEventUseCaseInteractor.switchToMainView();
+    }
 }

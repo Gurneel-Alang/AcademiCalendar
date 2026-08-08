@@ -4,7 +4,7 @@ public class ToggleTaskOutputData {
     private final String taskId;
     private final boolean completed;
 
-    public ToggleTaskOutputData(String taskId, boolean completed){
+    public ToggleTaskOutputData(String taskId, boolean completed) {
         this.taskId = taskId;
         this.completed = completed;
     }

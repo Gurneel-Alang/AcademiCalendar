@@ -1,7 +1,4 @@
-package use_case.event_use_case.delete_event;
-
-import use_case.event_use_case.add_event.AddEventDataAccessInterface;
-import use_case.event_use_case.add_event.AddEventOutputBoundary;
+package use_case.event.delete_event;
 
 /**
  * The Delete Event Use Case Interactor.
@@ -26,11 +23,14 @@ public class DeleteEventInteractor implements DeleteEventInputBoundary {
 
             final DeleteEventOutputData deleteEventOutputData = new DeleteEventOutputData(false);
             deleteEventPresenter.prepareSuccessView(deleteEventOutputData);
-        } else {
+        }
+        else {
             deleteEventPresenter.prepareFailView("Failed; event of given title does not exist.");
         }
     }
 
     @Override
-    public void switchToMainView() { deleteEventPresenter.switchToMainView(); }
+    public void switchToMainView() {
+        deleteEventPresenter.switchToMainView();
+    }
 }

@@ -20,11 +20,11 @@ public class CreateTaskOutputData {
         this.completed = completed;
     }
 
-    public String getTaskId(){
+    public String getTaskId() {
         return taskId;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
