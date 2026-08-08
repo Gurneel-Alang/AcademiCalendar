@@ -36,18 +36,6 @@ public class CheckListDataAccessObject implements TaskDataAccessInterface {
     }
 
     @Override
-    public List<Task> getTasksForEvent(String eventId) {
-        final List<Task> result = new ArrayList<>();
-
-        for (Task task : tasksById.values()) {
-            if (task.getEventId().equals(eventId)) {
-                result.add(task);
-            }
-        }
-        return result;
-    }
-
-    @Override
     public void update(Task task) {
         if (!tasksById.containsKey(task.getId())) {
             throw new NoSuchElementException(
@@ -55,5 +43,9 @@ public class CheckListDataAccessObject implements TaskDataAccessInterface {
             );
         }
         tasksById.put(task.getId(), task);
+    }
+
+    public List<Task> getAll(){
+        return new ArrayList<>(tasksById.values());
     }
 }

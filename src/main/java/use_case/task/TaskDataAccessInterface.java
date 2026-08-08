@@ -1,7 +1,6 @@
 package use_case.task;
 
 import java.util.List;
-
 import entity.task.Task;
 
 /**
@@ -10,10 +9,7 @@ import entity.task.Task;
 public interface TaskDataAccessInterface {
 
     void save(Task task);
-
     Task getById(String taskId);
-
-    List<Task> getTasksForEvent(String eventId);
-
     void update(Task task);
+    List<Task> getAll();
 }

@@ -1,22 +1,22 @@
 package interface_adapter.checklist;
 
 public class TaskState {
-    private final String id;
+    private final String taskId;
     private final String description;
     private final boolean completed;
 
     public TaskState(
-            String id,
+            String taskId,
             String description,
             boolean completed
     ) {
-        this.id = id;
+        this.taskId = taskId;
         this.description = description;
         this.completed = completed;
     }
 
     public String getId() {
-        return id;
+        return taskId;
     }
 
     public String getDescription() {

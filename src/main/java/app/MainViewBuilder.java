@@ -10,6 +10,8 @@ import entity.task.CommonTaskFactory;
 import interface_adapter.checklist.ChecklistViewModel;
 import interface_adapter.checklist.create_task.CreateTaskController;
 import interface_adapter.checklist.create_task.CreateTaskPresenter;
+import interface_adapter.checklist.load_checklist.LoadChecklistController;
+import interface_adapter.checklist.load_checklist.LoadChecklistPresenter;
 import interface_adapter.checklist.toggle_task.ToggleTaskController;
 import interface_adapter.checklist.toggle_task.ToggleTaskPresenter;
 import interface_adapter.event.add_event.AddEventController;
@@ -25,6 +27,7 @@ import use_case.event.add_event.AddEventInteractor;
 import use_case.event.delete_event.DeleteEventInteractor;
 import use_case.event.edit_event.EditEventInteractor;
 import use_case.task.create_task.CreateTaskInteractor;
+import use_case.task.load_checklist.LoadChecklistInteractor;
 import use_case.task.toggle_task.ToggleTaskInteractor;
 import view.CalendarView;
 import view.ChecklistView;
@@ -49,6 +52,9 @@ public class MainViewBuilder {
 
     private final CheckListDataAccessObject checkListDataAccessObject = new CheckListDataAccessObject();
     private final EventDataAccessObject eventDataAccessObject = new EventDataAccessObject();
+
+    private CreateTaskController createTaskController;
+    private LoadChecklistController loadChecklistController;
 
     private CalendarView calendarView;
     private WeatherView weatherView;
@@ -85,14 +91,22 @@ public class MainViewBuilder {
      */
     public MainViewBuilder addCheckListView() {
         final ChecklistViewModel checklistViewModel = new ChecklistViewModel();
+
         final CreateTaskPresenter createTaskPresenter = new CreateTaskPresenter(checklistViewModel);
         final CreateTaskInteractor createTaskInteractor = new CreateTaskInteractor(
                 checkListDataAccessObject, createTaskPresenter, new CommonTaskFactory());
-        final CreateTaskController createTaskController = new CreateTaskController(createTaskInteractor);
+        createTaskController = new CreateTaskController(createTaskInteractor);
+
         final ToggleTaskPresenter toggleTaskPresenter = new ToggleTaskPresenter(checklistViewModel);
         final ToggleTaskInteractor toggleTaskInteractor = new ToggleTaskInteractor(
                 checkListDataAccessObject, toggleTaskPresenter);
         final ToggleTaskController toggleTaskController = new ToggleTaskController(toggleTaskInteractor);
+
+        final LoadChecklistPresenter loadChecklistPresenter = new LoadChecklistPresenter(checklistViewModel);
+        final LoadChecklistInteractor loadChecklistInteractor = new LoadChecklistInteractor(
+                checkListDataAccessObject, loadChecklistPresenter);
+        loadChecklistController = new LoadChecklistController(loadChecklistInteractor);
+
         checklistView = new ChecklistView(checklistViewModel, toggleTaskController);
         return this;
     }
@@ -146,6 +160,7 @@ public class MainViewBuilder {
      */
     public MainView build() {
         return new MainView(calendarView, weatherView, checklistView,
+                createTaskController, loadChecklistController,
                 () -> {
                     final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
                     dialog.setVisible(true);

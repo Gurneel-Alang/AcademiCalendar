@@ -1,21 +1,16 @@
 package use_case.task.load_checklist;
 
 import java.util.List;
+import entity.task.Task;
 
 public class LoadChecklistOutputData {
-    private final String eventId;
-    private final List<TaskOutputData> tasks;
+    private final List<Task> tasks;
 
-    public LoadChecklistOutputData(String eventId, List<TaskOutputData> tasks) {
-        this.eventId = eventId;
-        this.tasks = List.copyOf(tasks);
+    public LoadChecklistOutputData(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
-    public String getEventId() {
-        return eventId;
-    }
-
-    public List<TaskOutputData> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 }

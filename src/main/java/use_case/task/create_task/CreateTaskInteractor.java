@@ -21,24 +21,18 @@ public class CreateTaskInteractor implements CreateTaskInputBoundary {
 
     @Override
     public void execute(CreateTaskInputData inputData) {
-        final String eventId = inputData.getEventId();
         final String description = inputData.getDescription();
-
-        if (eventId == null || eventId.isBlank()) {
-            presenter.prepareFailView("No event was selected.");
-            return;
-        }
 
         if (description == null || description.isBlank()) {
             presenter.prepareFailView("Task description cannot be empty.");
             return;
         }
 
-        final Task task = taskFactory.create(eventId, description);
+        final Task task = taskFactory.create(description);
         taskDataAccessObject.save(task);
 
-        final CreateTaskOutputData outputData = new CreateTaskOutputData( task.getId(),
-                task.getEventId(),
+        final CreateTaskOutputData outputData = new CreateTaskOutputData(
+                task.getId(),
                 task.getDescription(),
                 task.isCompleted()
         );
