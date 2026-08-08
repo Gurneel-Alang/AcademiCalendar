@@ -103,7 +103,7 @@ public class ChecklistView extends JPanel
                     + "</strike></html>";
         }
 
-        return task.getDescription();
+        return task.getDescription() + dateSuffix;
     }
 
     private void styleTask(
