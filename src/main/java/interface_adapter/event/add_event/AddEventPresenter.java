@@ -19,8 +19,6 @@ public class AddEventPresenter implements AddEventOutputBoundary {
         final AddEventState state = addEventViewModel.getState();
         state.setErrorMessage(null);
         addEventViewModel.setState(state);
-        addEventViewModel.firePropertyChanged(AddEventViewModel.CLOSE_PROPERTY);
-
         switchToMainView();
     }
 
