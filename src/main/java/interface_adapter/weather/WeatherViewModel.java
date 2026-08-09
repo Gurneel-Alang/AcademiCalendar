@@ -9,9 +9,7 @@ import java.beans.PropertyChangeSupport;
 public class WeatherViewModel {
 
     public static final String PROPERTY_NAME = "weather";
-
-    private final PropertyChangeSupport support =
-            new PropertyChangeSupport(this);
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     private WeatherState state = new WeatherState();
 
