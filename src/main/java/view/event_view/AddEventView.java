@@ -29,10 +29,15 @@ public class AddEventView extends JPanel {
     private final JComboBox<Month> endMonthInputField = new JComboBox<>();
     private final JComboBox<Integer> endDayInputField = new JComboBox<>();
 
-    // Added Reminder setup for AddEvent here
-
     private final JComboBox<ReminderChoices> reminderInputField =
             new JComboBox<>(ReminderChoices.all());
+
+    private final JCheckBox useCustomReminders =
+            new JCheckBox("Use custom reminder instead:");
+
+    // Allow users to put input custom hours, with maximum of a month
+    private final JSpinner customJSpinnerHours =
+            new JSpinner(new SpinnerNumberModel(1, 1, 720, 1));
 
     private final AddEventController addEventController;
     private final AddEventViewModel addEventViewModel;
@@ -82,10 +87,17 @@ public class AddEventView extends JPanel {
         endDateInfo.add(new JLabel("Enter end date:"));
         endDateInfo.add(endDateFields);
 
-        // Added Reminder setup here
         final JPanel reminderInfo = new JPanel();
         reminderInfo.add(new JLabel("Remind me:"));
         reminderInfo.add(reminderInputField);
+
+        customJSpinnerHours.setEnabled(false);
+        useCustomReminders.addActionListener(
+                event -> customJSpinnerHours.setEnabled(useCustomReminders.isSelected()));
+        final JPanel customReminderInfo = new JPanel();
+        customReminderInfo.add(useCustomReminders);
+        customReminderInfo.add(customJSpinnerHours);
+        customReminderInfo.add(new JLabel("hours"));
 
         final JPanel buttons = new JPanel();
         buttons.add(addEventButton);
@@ -108,7 +120,13 @@ public class AddEventView extends JPanel {
 
                             // Added reminders schedule queue
                             pendingReminderTitle = title;
-                            pendingReminderOption = (ReminderChoices) reminderInputField.getSelectedItem();
+                            if (useCustomReminders.isSelected()) {
+                                final int hours = (Integer) customJSpinnerHours.getValue();
+                                pendingReminderOption = ReminderChoices.customHours(hours);
+                            }
+                            else {
+                                pendingReminderOption = (ReminderChoices) reminderInputField.getSelectedItem();
+                            }
 
                             addEventController.execute(title, description, startDate, endDate);
                         }
@@ -149,6 +167,7 @@ public class AddEventView extends JPanel {
         this.add(startDateInfo);
         this.add(endDateInfo);
         this.add(reminderInfo);
+        this.add(customReminderInfo);
         this.add(buttons);
     }
 
