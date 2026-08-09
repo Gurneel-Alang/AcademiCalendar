@@ -143,6 +143,7 @@ public class MainView extends JPanel {
             final String description = taskInput.getText();
             if (!description.isBlank()) {
                 createTaskController.execute(description, calendarView.getSelectedDate());
+                loadChecklistController.execute();
                 taskInput.setText("");
             }
         });
@@ -150,6 +151,7 @@ public class MainView extends JPanel {
             final String description = taskInput.getText();
             if (!description.isBlank()) {
                 createTaskController.execute(description, calendarView.getSelectedDate());
+                loadChecklistController.execute();
                 taskInput.setText("");
             }
         });

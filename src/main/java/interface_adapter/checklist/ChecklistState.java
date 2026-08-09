@@ -28,6 +28,11 @@ public class ChecklistState {
         }
     }
 
+    public String getProgressSummary(){
+        final long completedCount = tasks.stream().filter(TaskState::isCompleted).count();
+        return completedCount + " of " + tasks.size() + " done";
+    }
+
     /**
      * Return the error message.
      * @return the error message
