@@ -12,6 +12,8 @@ import data_access.ReminderScheduler;
 import entity.reminder.ReminderChoices;
 import interface_adapter.event.add_event.AddEventController;
 import interface_adapter.event.add_event.AddEventViewModel;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderController;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderViewModel;
 
 /**
  * The view for the Add Event Use Case.
@@ -41,7 +43,8 @@ public class AddEventView extends JPanel {
 
     private final AddEventController addEventController;
     private final AddEventViewModel addEventViewModel;
-    private final ReminderScheduler reminderScheduler;
+    private final ScheduleReminderController scheduleReminderController;
+    private final ScheduleReminderViewModel scheduleReminderViewModel;
 
     private String pendingReminderTitle;
     private ReminderChoices pendingReminderOption;
@@ -51,10 +54,12 @@ public class AddEventView extends JPanel {
 
     public AddEventView(AddEventController addEventController,
                         AddEventViewModel addEventViewModel,
-                        ReminderScheduler reminderScheduler) {
+                        ScheduleReminderController scheduleReminderController,
+                        ScheduleReminderViewModel scheduleReminderViewModel) {
         this.addEventController = addEventController;
         this.addEventViewModel = addEventViewModel;
-        this.reminderScheduler = reminderScheduler;
+        this.scheduleReminderController = scheduleReminderController;
+        this.scheduleReminderViewModel = scheduleReminderViewModel;
 
         populateDateFields();
 
@@ -140,10 +145,7 @@ public class AddEventView extends JPanel {
         addEventViewModel.addPropertyChangeListener(evt -> {
             if (AddEventViewModel.CLOSE_PROPERTY.equals(evt.getPropertyName())) {
                 if (pendingReminderTitle != null) {
-                    reminderScheduler.schedule(
-                            pendingReminderTitle,
-                            pendingReminderOption,
-                            this::showReminder);
+                    scheduleReminderController.schedule(pendingReminderTitle, pendingReminderOption);
                     pendingReminderTitle = null;
                     pendingReminderOption = null;
                 }
@@ -160,6 +162,18 @@ public class AddEventView extends JPanel {
             }
         });
 
+        scheduleReminderViewModel.addPropertyChangeListener(evt -> {
+            if (ScheduleReminderViewModel.CONFIRM_PROPERTY.equals(evt.getPropertyName())) {
+                JOptionPane.showMessageDialog(this,
+                        scheduleReminderViewModel.getState().getConfirmationMessage());
+            }
+            else if (ScheduleReminderViewModel.FIRED_PROPERTY.equals(evt.getPropertyName())) {
+                showReminderPopup(
+                        scheduleReminderViewModel.getState().getFiredEventTitle(),
+                        scheduleReminderViewModel.getState().getFiredPastLabel());
+            }
+        });
+
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(viewTitle);
         this.add(titleInfo);
@@ -171,19 +185,20 @@ public class AddEventView extends JPanel {
         this.add(buttons);
     }
 
-    private void showReminder(String eventTitle, ReminderChoices option) {
-        final Object[] buttons = {"Remind me again in 1 hour", "Dismiss"};
+    private void showReminderPopup(String eventTitle, String pastLabel) {
+        final Object[] options = {"Remind me again in 1 hour", "Dismiss"};
         final int choice = JOptionPane.showOptionDialog(
                 null,
-                "Reminder: \"" + eventTitle + "\" (" + option.getPastLabel() + ")",
+                "Reminder: \"" + eventTitle + "\" (" + pastLabel + ")",
                 "Reminder",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
-                buttons,
-                buttons[0]);
+                options,
+                options[0]);
         if (choice == 0) {
-            reminderScheduler.schedule(eventTitle, ReminderChoices.oneHour(), this::showReminder);
+            // Snooze also goes back through the use case.
+            scheduleReminderController.schedule(eventTitle, ReminderChoices.oneHour());
         }
     }
 
