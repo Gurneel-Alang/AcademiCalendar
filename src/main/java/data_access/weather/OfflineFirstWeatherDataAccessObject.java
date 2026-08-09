@@ -19,7 +19,6 @@ public final class OfflineFirstWeatherDataAccessObject
 
     private static final Duration DEFAULT_CACHE_LIFETIME =
             Duration.ofHours(3);
-
     private final WeatherDataAccessInterface remoteDataAccessObject;
     private final WeatherCache weatherCache;
     private final Clock clock;
@@ -35,7 +34,6 @@ public final class OfflineFirstWeatherDataAccessObject
     public OfflineFirstWeatherDataAccessObject(
             WeatherDataAccessInterface remoteDataAccessObject,
             WeatherCache weatherCache) {
-
         this(
                 remoteDataAccessObject,
                 weatherCache,
@@ -89,13 +87,9 @@ public final class OfflineFirstWeatherDataAccessObject
 
         Optional<CachedWeather> cachedWeather =
                 Optional.empty();
-
         IOException cacheReadFailure = null;
-
-        try {
-            cachedWeather =
-                    weatherCache.find(city, date);
-        }
+        try {cachedWeather =
+                    weatherCache.find(city, date);}
         catch (IOException exception) {
             cacheReadFailure = exception;
         }

@@ -60,7 +60,6 @@ public class OpenWeatherJsonParser {
      */
     public ForecastResponse parseForecast(String json)
             throws IOException {
-
         try {
             final ForecastResponse response =
                     gson.fromJson(
@@ -73,7 +72,6 @@ public class OpenWeatherJsonParser {
                         "OpenWeather returned an empty forecast response."
                 );
             }
-
             return response;
         }
         catch (JsonParseException exception) {

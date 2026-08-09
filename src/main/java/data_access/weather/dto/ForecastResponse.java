@@ -1,36 +1,49 @@
 package data_access.weather.dto;
 
 import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
-public class ForecastResponse {
+/**
+ * Represents the response from the OpenWeather forecast API.
+ */
+public final class ForecastResponse {
 
-    @SerializedName("list")
-    private List<ForecastEntry> forecasts;
+    private List<ForecastEntry> list;
+    private CityData city;
 
-    private ForecastCity city;
-
-    public List<ForecastEntry> getForecasts() {
-        return forecasts;
+    public List<ForecastEntry> getList() {
+        return list;
     }
 
-    public ForecastCity getCity() {
+    public CityData getCity() {
         return city;
     }
 
-    public static class ForecastEntry {
+    /**
+     * Represents one forecast entry from OpenWeather.
+     */
+    public static final class ForecastEntry {
+
         @SerializedName("dt")
         private long timestamp;
 
-        private ForecastMain main;
+        private MainWeatherData main;
         private List<WeatherDescription> weather;
         private WindData wind;
+
+        /**
+         * Probability of precipitation.
+         *
+         * <p>OpenWeather returns this value between 0.0 and 1.0.</p>
+         */
+        private double pop;
 
         public long getTimestamp() {
             return timestamp;
         }
 
-        public ForecastMain getMain() {
+        public MainWeatherData getMain() {
             return main;
         }
 
@@ -41,19 +54,26 @@ public class ForecastResponse {
         public WindData getWind() {
             return wind;
         }
+
+        public double getPop() {
+            return pop;
+        }
     }
 
-    public static class ForecastMain {
-        @SerializedName("temp")
-        private double temperature;
+    /**
+     * Represents temperature and humidity data.
+     */
+    public static final class MainWeatherData {
+
+        private double temp;
 
         @SerializedName("feels_like")
         private double feelsLike;
 
         private int humidity;
 
-        public double getTemperature() {
-            return temperature;
+        public double getTemp() {
+            return temp;
         }
 
         public double getFeelsLike() {
@@ -65,22 +85,16 @@ public class ForecastResponse {
         }
     }
 
-    public static class ForecastCity {
-        private int timezone;
+    /**
+     * Represents weather condition information.
+     */
+    public static final class WeatherDescription {
 
-        public int getTimezone() {
-            return timezone;
-        }
-    }
-
-    public static class WeatherDescription {
-        @SerializedName("main")
-        private String condition;
-
+        private String main;
         private String description;
 
-        public String getCondition() {
-            return condition;
+        public String getMain() {
+            return main;
         }
 
         public String getDescription() {
@@ -88,11 +102,37 @@ public class ForecastResponse {
         }
     }
 
-    public static class WindData {
+    /**
+     * Represents wind information.
+     */
+    public static final class WindData {
+
         private double speed;
 
         public double getSpeed() {
             return speed;
+        }
+    }
+
+    /**
+     * Represents city information included in the forecast response.
+     */
+    public static final class CityData {
+
+        private String name;
+        private String country;
+        private int timezone;
+
+        public String getName() {
+            return name;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public int getTimezone() {
+            return timezone;
         }
     }
 }

@@ -7,12 +7,15 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import data_access.weather.dto.ForecastResponse;
 import data_access.weather.dto.ForecastResponse.ForecastEntry;
 import data_access.weather.dto.ForecastResponse.WeatherDescription;
 import data_access.weather.dto.LocationResponse;
+import entity.weather.ForecastSlot;
 import entity.weather.Weather;
 
 /**
@@ -36,130 +39,103 @@ public class ForecastSelector {
             ForecastResponse response,
             LocationResponse location,
             LocalDate selectedDate) throws IOException {
+                if (response == null
+                        || response.getList() == null
+                        || response.getCity() == null) {
 
-        validateResponse(response, location, selectedDate);
+                    throw new IOException(
+                            "Invalid forecast response."
+                    );
+                }
 
-        final int timezoneOffset =
-                response.getCity().getTimezone();
+                final ZoneOffset cityOffset =
+                        ZoneOffset.ofTotalSeconds(
+                                response.getCity().getTimezone()
+                        );
 
-        final ForecastEntry selectedForecast =
-                response.getForecasts()
-                        .stream()
-                        .filter(this::hasRequiredData)
-                        .filter(entry ->
-                                selectedDate.equals(
-                                        toLocalDate(
-                                                entry.getTimestamp(),
-                                                timezoneOffset
-                                        )
+                final List<ForecastSlot> forecastSlots = new ArrayList<>();
+
+                for (ForecastResponse.ForecastEntry entry
+                        : response.getList()) {
+
+                    final LocalDateTime localDateTime =
+                            Instant.ofEpochSecond(
+                                            entry.getTimestamp()
+                                    )
+                                    .atOffset(cityOffset)
+                                    .toLocalDateTime();
+
+                    if (localDateTime.toLocalDate()
+                            .equals(selectedDate)) {
+
+                        forecastSlots.add(
+                                createForecastSlot(
+                                        entry,
+                                        localDateTime
                                 )
+                        );
+                    }
+                }
+
+                if (forecastSlots.isEmpty()) {
+                    throw new IOException(
+                            "Weather is not available for the selected date."
+                    );
+                }
+
+                forecastSlots.sort(
+                        Comparator.comparing(
+                                ForecastSlot::getDateTime
                         )
-                        .min(Comparator.comparingLong(entry ->
-                                distanceFromNoon(
-                                        entry.getTimestamp(),
-                                        timezoneOffset
-                                )
-                        ))
-                        .orElseThrow(() -> new IOException(
-                                "Forecast is not available "
-                                        + "for the selected date."
-                        ));
+                );
 
-        final WeatherDescription weatherDescription =
-                selectedForecast.getWeather().get(0);
+                final String displayCity =
+                        response.getCity().getName()
+                                + ", "
+                                + response.getCity().getCountry();
 
-        return new Weather(
-                createLocationName(location),
-                selectedDate,
-                selectedForecast.getMain().getTemperature(),
-                selectedForecast.getMain().getFeelsLike(),
-                weatherDescription.getCondition(),
-                weatherDescription.getDescription(),
-                selectedForecast.getMain().getHumidity(),
-                selectedForecast.getWind().getSpeed()
-        );
-    }
+                return new Weather(
+                        displayCity,
+                        selectedDate,
+                        forecastSlots
+                );
+            }
 
-    private void validateResponse(
-            ForecastResponse response,
-            LocationResponse location,
-            LocalDate selectedDate) throws IOException {
+            /**
+             * Converts one OpenWeather forecast entry into a domain ForecastSlot.
+             *
+             * @param entry OpenWeather forecast entry
+             * @param localDateTime forecast time in the city's local time
+             * @return application forecast slot
+             * @throws IOException if required forecast data is missing
+             */
+            private ForecastSlot createForecastSlot(
+                    ForecastResponse.ForecastEntry entry,
+                    LocalDateTime localDateTime) throws IOException {
 
-        if (location == null) {
-            throw new IOException(
-                    "Location information is missing."
-            );
+                if (entry.getMain() == null
+                        || entry.getWeather() == null
+                        || entry.getWeather().isEmpty()
+                        || entry.getWind() == null) {
+
+                    throw new IOException(
+                            "Incomplete weather forecast data."
+                    );
+                }
+
+                final ForecastResponse.WeatherDescription
+                        weatherDescription =
+                        entry.getWeather().get(0);
+
+                return new ForecastSlot(
+                        localDateTime,
+                        entry.getMain().getTemp(),
+                        entry.getMain().getFeelsLike(),
+                        weatherDescription.getMain(),
+                        weatherDescription.getDescription(),
+                        entry.getMain().getHumidity(),
+                        entry.getWind().getSpeed(),
+                        entry.getPop()
+                );
+            }
         }
-
-        if (selectedDate == null) {
-            throw new IOException(
-                    "A date must be selected."
-            );
-        }
-
-        if (response == null
-                || response.getCity() == null
-                || response.getForecasts() == null) {
-            throw new IOException(
-                    "OpenWeather returned an invalid forecast response."
-            );
-        }
-    }
-
-    private boolean hasRequiredData(ForecastEntry entry) {
-        return entry != null
-                && entry.getMain() != null
-                && entry.getWind() != null
-                && entry.getWeather() != null
-                && !entry.getWeather().isEmpty();
-    }
-
-    private LocalDate toLocalDate(
-            long timestamp,
-            int timezoneOffset) {
-
-        return LocalDateTime.ofInstant(
-                Instant.ofEpochSecond(timestamp),
-                ZoneOffset.ofTotalSeconds(timezoneOffset)
-        ).toLocalDate();
-    }
-
-    private long distanceFromNoon(
-            long timestamp,
-            int timezoneOffset) {
-
-        final LocalTime forecastTime =
-                LocalDateTime.ofInstant(
-                        Instant.ofEpochSecond(timestamp),
-                        ZoneOffset.ofTotalSeconds(timezoneOffset)
-                ).toLocalTime();
-
-        return Math.abs(
-                ChronoUnit.MINUTES.between(
-                        REPRESENTATIVE_TIME,
-                        forecastTime
-                )
-        );
-    }
-
-    private String createLocationName(
-            LocationResponse location) {
-
-        final StringBuilder result =
-                new StringBuilder(location.getName());
-
-        if (location.getState() != null
-                && !location.getState().isBlank()) {
-            result.append(", ")
-                    .append(location.getState());
-        }
-
-        if (location.getCountry() != null
-                && !location.getCountry().isBlank()) {
-            result.append(", ")
-                    .append(location.getCountry());
-        }
-
-        return result.toString();
-    }
-}

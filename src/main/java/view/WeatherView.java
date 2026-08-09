@@ -1,13 +1,18 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import interface_adapter.weather.WeatherController;
 import interface_adapter.weather.WeatherState;
@@ -16,20 +21,22 @@ import interface_adapter.weather.WeatherViewModel;
 /**
  * Displays the weather-search form and weather result.
  */
-public class WeatherView extends JPanel implements PropertyChangeListener {
+public class WeatherView extends JPanel
+        implements PropertyChangeListener {
 
-    private static final int INFORMATION_ROWS = 8;
+    private static final int INFORMATION_ROWS = 9;
     private static final int INFORMATION_COLUMNS = 1;
     private static final int TEXT_FIELD_COLUMNS = 15;
 
     private final WeatherViewModel weatherViewModel;
     private final WeatherController weatherController;
 
+    private final TemperatureChartPanel temperatureChartPanel =
+            new TemperatureChartPanel();
     private final JTextField cityField =
             new JTextField(TEXT_FIELD_COLUMNS);
     private final JTextField dateField =
             new JTextField(TEXT_FIELD_COLUMNS);
-
     private final JLabel locationLabel =
             new JLabel("Location:");
     private final JLabel dateLabel =
@@ -46,25 +53,37 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
             new JLabel("Humidity:");
     private final JLabel windSpeedLabel =
             new JLabel("Wind:");
-
+    private final JLabel adviceLabel =
+            new JLabel("Advice:");
     private final JLabel errorLabel =
             new JLabel();
-
     private final JButton searchButton =
             new JButton("Search");
 
+    /**
+     * Creates the weather view.
+     *
+     * @param weatherViewModel weather view model
+     * @param weatherController weather controller
+     */
     public WeatherView(
             WeatherViewModel weatherViewModel,
             WeatherController weatherController) {
         this.weatherViewModel = weatherViewModel;
         this.weatherController = weatherController;
+
         weatherViewModel.addPropertyChangeListener(this);
         setLayout(new BorderLayout());
         setBorder(
-                BorderFactory.createTitledBorder("Weather")
-        );
+                BorderFactory.createTitledBorder(
+                        "Weather"));
 
-        dateField.setText(LocalDate.now().toString());
+        dateField.setText(
+                LocalDate.now().toString()
+        );
+        adviceLabel.setFont(
+                adviceLabel.getFont().deriveFont(Font.BOLD, 14f)
+        );
 
         final JPanel inputPanel =
                 createInputPanel();
@@ -72,32 +91,64 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
         final JPanel informationPanel =
                 createInformationPanel();
 
-        add(inputPanel, BorderLayout.NORTH);
-        add(informationPanel, BorderLayout.SOUTH);
-        add(errorLabel, BorderLayout.CENTER);
+        final JPanel weatherDisplayPanel =
+                new JPanel(new BorderLayout());
+
+        weatherDisplayPanel.add(
+                informationPanel,
+                BorderLayout.NORTH
+        );
+
+        weatherDisplayPanel.add(
+                temperatureChartPanel,
+                BorderLayout.CENTER
+        );
+
+        add(inputPanel,
+                BorderLayout.NORTH);
+        add(weatherDisplayPanel,
+                BorderLayout.CENTER);
+        add(errorLabel, BorderLayout.SOUTH);
     }
 
     private JPanel createInputPanel() {
         final JPanel inputPanel =
-                new JPanel(new GridLayout(3, 2));
-        inputPanel.add(new JLabel("City:"));
+                new JPanel(
+                        new GridLayout(3, 2)
+                );
+
+        inputPanel.add(
+                new JLabel("City:")
+        );
+
         inputPanel.add(cityField);
-        inputPanel.add(new JLabel("Date (YYYY-MM-DD):"));
+
+        inputPanel.add(
+                new JLabel(
+                        "Date (YYYY-MM-DD):"
+                )
+        );
+
         inputPanel.add(dateField);
         inputPanel.add(new JLabel());
         inputPanel.add(searchButton);
+
         searchButton.addActionListener(
                 event -> requestWeather()
         );
+
         return inputPanel;
     }
 
     private JPanel createInformationPanel() {
         final JPanel informationPanel =
-                new JPanel(new GridLayout(
+                new JPanel(
+                        new GridLayout(
                                 INFORMATION_ROWS,
-                                INFORMATION_COLUMNS)
+                                INFORMATION_COLUMNS
+                        )
                 );
+
         informationPanel.add(locationLabel);
         informationPanel.add(dateLabel);
         informationPanel.add(temperatureLabel);
@@ -106,35 +157,55 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
         informationPanel.add(descriptionLabel);
         informationPanel.add(humidityLabel);
         informationPanel.add(windSpeedLabel);
+        informationPanel.add(adviceLabel);
 
         return informationPanel;
     }
 
     private void requestWeather() {
         final LocalDate selectedDate;
+
         try {
             selectedDate =
-                    LocalDate.parse(dateField.getText().trim());
+                    LocalDate.parse(
+                            dateField
+                                    .getText()
+                                    .trim()
+                    );
         }
         catch (DateTimeParseException exception) {
-            errorLabel.setText("Please enter the date as YYYY-MM-DD");
+            showEmptyWeather(
+                    "Please enter the date as YYYY-MM-DD"
+            );
             return;
         }
-        final String city = cityField.getText().trim();
+
+        final String city =
+                cityField.getText().trim();
+
         if (city.isEmpty()) {
-            errorLabel.setText("Please enter a city.");
+            showEmptyWeather(
+                    "Please enter a city."
+            );
             return;
         }
-        errorLabel.setText("Loading weather...");
+
+        errorLabel.setText(
+                "Loading weather..."
+        );
+
         searchButton.setEnabled(false);
 
-        final javax.swing.SwingWorker<Void, Void> worker =
-                new javax.swing.SwingWorker<>() {
+        final SwingWorker<Void, Void> worker =
+                new SwingWorker<>() {
+
                     @Override
                     protected Void doInBackground() {
                         weatherController.execute(
                                 city,
-                                selectedDate);
+                                selectedDate
+                        );
+
                         return null;
                     }
 
@@ -142,7 +213,8 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
                     protected void done() {
                         searchButton.setEnabled(true);
                     }
-        };
+                };
+
         worker.execute();
     }
 
@@ -150,19 +222,50 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
      * Displays an empty weather result area with an
      * optional status or error message.
      *
-     * @param message status/error message, or empty string
+     * @param message status/error message,
+     *                or empty string
      */
     private void showEmptyWeather(
             String message) {
 
-        locationLabel.setText("Location:");
-        dateLabel.setText("Date:");
-        temperatureLabel.setText("Temperature:");
-        feelsLikeLabel.setText("Feels like:");
-        conditionLabel.setText("Condition:");
-        descriptionLabel.setText("Description:");
-        humidityLabel.setText("Humidity:");
-        windSpeedLabel.setText("Wind:");
+        locationLabel.setText(
+                "Location:"
+        );
+
+        dateLabel.setText(
+                "Date:"
+        );
+
+        temperatureLabel.setText(
+                "Temperature:"
+        );
+
+        feelsLikeLabel.setText(
+                "Feels like:"
+        );
+
+        conditionLabel.setText(
+                "Condition:"
+        );
+
+        descriptionLabel.setText(
+                "Description:"
+        );
+
+        humidityLabel.setText(
+                "Humidity:"
+        );
+
+        windSpeedLabel.setText(
+                "Wind:"
+        );
+
+        adviceLabel.setText(
+                "Advice:"
+        );
+
+        temperatureChartPanel.clear();
+
         if (message == null) {
             errorLabel.setText("");
         }
@@ -173,33 +276,60 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
 
     /**
      * Displays a successful weather result.
+     *
      * @param state successful weather state
      */
     private void showWeatherInformation(
             WeatherState state) {
+
         errorLabel.setText("");
+
         locationLabel.setText(
-                "Location: " + state.getCity()
+                "Location: "
+                        + state.getCity()
         );
+
         dateLabel.setText(
-                "Date: " + state.getDate());
+                "Date: "
+                        + state.getDate()
+        );
+
         temperatureLabel.setText(
                 "Temperature: "
-                        + state.getTemperature());
+                        + state.getTemperature()
+        );
+
         feelsLikeLabel.setText(
                 state.getFeelsLike()
         );
+
         conditionLabel.setText(
                 "Condition: "
                         + state.getCondition()
         );
+
         descriptionLabel.setText(
                 "Description: "
-                        + state.getDescription());
+                        + state.getDescription()
+        );
+
         humidityLabel.setText(
-                state.getHumidity());
+                state.getHumidity()
+        );
+
         windSpeedLabel.setText(
-                state.getWindSpeed());
+                state.getWindSpeed()
+        );
+
+        adviceLabel.setText(
+                "Advice: "
+                        + state.getAdvice()
+        );
+
+        temperatureChartPanel
+                .setTemperaturePoints(
+                        state.getTemperaturePoints()
+                );
     }
 
     /**
@@ -209,6 +339,7 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
      */
     public void setSelectedDate(
             LocalDate selectedDate) {
+
         if (selectedDate != null) {
             dateField.setText(
                     selectedDate.toString()
@@ -219,28 +350,38 @@ public class WeatherView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(
             PropertyChangeEvent event) {
+
         /*
          * The Presenter may fire this event from
          * SwingWorker's background thread.
          */
-        if (!SwingUtilities.isEventDispatchThread()) {
+        if (!SwingUtilities
+                .isEventDispatchThread()) {
+
             SwingUtilities.invokeLater(
                     this::updateWeatherInformation
             );
+
             return;
         }
+
         updateWeatherInformation();
     }
 
     private void updateWeatherInformation() {
         final WeatherState state =
                 weatherViewModel.getState();
+
         if (state.getError() != null
                 && !state.getError().isBlank()) {
+
             showEmptyWeather(
-                    state.getError());
+                    state.getError()
+            );
+
             return;
         }
+
         showWeatherInformation(state);
     }
 }

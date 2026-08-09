@@ -1,69 +1,59 @@
 package use_case.weather;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
-public class WeatherOutputData {
+/**
+ * Output data produced by the weather use case.
+ */
+public final class WeatherOutputData {
 
     private final String city;
-    private final LocalDate selectedDate;
+    private final LocalDate date;
+    private final ForecastSlotOutputData representativeSlot;
+    private final String advice;
+    private final List<ForecastSlotOutputData> forecastSlots;
 
-    private final double temperature;
-    private final double feelsLike;
+    public WeatherOutputData(
+            String city,
+            LocalDate date,
+            ForecastSlotOutputData representativeSlot,
+            String advice,
+            List<ForecastSlotOutputData> forecastSlots) {
 
-    private final String condition;
-    private final String description;
+        this.city = Objects.requireNonNull(city);
+        this.date = Objects.requireNonNull(date);
+        this.representativeSlot =
+                Objects.requireNonNull(representativeSlot);
+        this.advice = Objects.requireNonNull(advice);
 
-    private final int humidity;
-    private final double windSpeed;
-
-    public WeatherOutputData(String city,
-                             LocalDate selectedDate,
-                             double temperature,
-                             double feelsLike,
-                             String condition,
-                             String description,
-                             int humidity,
-                             double windSpeed) {
-
-        this.city = city;
-        this.selectedDate = selectedDate;
-        this.temperature = temperature;
-        this.feelsLike = feelsLike;
-        this.condition = condition;
-        this.description = description;
-        this.humidity = humidity;
-        this.windSpeed = windSpeed;
+        this.forecastSlots = Collections.unmodifiableList(
+                new ArrayList<>(
+                        Objects.requireNonNull(forecastSlots)
+                )
+        );
     }
 
     public String getCity() {
         return city;
     }
 
-    public LocalDate getSelectedDate() {
-        return selectedDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public double getTemperature() {
-        return temperature;
+    public ForecastSlotOutputData getRepresentativeSlot() {
+        return representativeSlot;
     }
 
-    public double getFeelsLike() {
-        return feelsLike;
+    public String getAdvice() {
+        return advice;
     }
 
-    public String getCondition() {
-        return condition;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getHumidity() {
-        return humidity;
-    }
-
-    public double getWindSpeed() {
-        return windSpeed;
+    public List<ForecastSlotOutputData> getForecastSlots() {
+        return forecastSlots;
     }
 }

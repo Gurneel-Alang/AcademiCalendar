@@ -1,90 +1,91 @@
 package entity.weather;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
-public class Weather {
+/**
+ * Represents the weather forecast for one city on one date.
+ */
+public final class Weather {
+
     private final String city;
     private final LocalDate date;
-    private final double temperature;
-    private final double feelsLike;
-    private final String condition;
-    private final String description;
-    private final int humidity;
-    private final double windSpeed;
-
-    public Weather(String city, LocalDate date, double temperature, double feelsLike,
-                   String condition, String description, int humidity, double windSpeed) {
-        this.city = city;
-        this.date = date;
-        this.temperature = temperature;
-        this.feelsLike = feelsLike;
-        this.condition = condition;
-        this.description = description;
-        this.humidity = humidity;
-        this.windSpeed = windSpeed;
-    }
+    private final List<ForecastSlot> forecastSlots;
 
     /**
-     * Return the city.
-     * @return the city
+     * Creates weather information for a city and date.
+     *
+     * @param city display name of the city
+     * @param date selected forecast date
+     * @param forecastSlots detailed forecasts throughout the day
      */
+    public Weather(
+            String city,
+            LocalDate date,
+            List<ForecastSlot> forecastSlots) {
+
+        this.city = Objects.requireNonNull(city);
+        this.date = Objects.requireNonNull(date);
+
+        this.forecastSlots = Collections.unmodifiableList(
+                new ArrayList<>(
+                        Objects.requireNonNull(forecastSlots)
+                )
+        );
+    }
+
     public String getCity() {
         return city;
     }
 
-    /**
-     * Return the date.
-     * @return the date
-     */
     public LocalDate getDate() {
         return date;
     }
 
-    /**
-     * Return the temperature.
-     * @return the temperature
-     */
-    public double getTemperature() {
-        return temperature;
+    public List<ForecastSlot> getForecastSlots() {
+        return forecastSlots;
     }
 
     /**
-     * Return the "feels like" temperature.
-     * @return the "feels like" temperature
+     * Returns the forecast slot closest to local noon.
+     *
+     * @return representative forecast slot
+     * @throws IllegalStateException if no forecast slots are available
      */
-    public double getFeelsLike() {
-        return feelsLike;
+    public ForecastSlot getRepresentativeSlot() {
+        if (forecastSlots.isEmpty()) {
+            throw new IllegalStateException(
+                    "Weather has no forecast slots."
+            );
+        }
+
+        return forecastSlots.stream()
+                .min(
+                        Comparator.comparingLong(
+                                slot -> distanceFromNoon(
+                                        slot.getDateTime().toLocalTime()
+                                )
+                        )
+                )
+                .orElseThrow(
+                        () -> new IllegalStateException(
+                                "Weather has no forecast slots."
+                        )
+                );
     }
 
-    /**
-     * Return the condition.
-     * @return the condition
-     */
-    public String getCondition() {
-        return condition;
-    }
-
-    /**
-     * Return the description.
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Return the humidity.
-     * @return the humidity
-     */
-    public int getHumidity() {
-        return humidity;
-    }
-
-    /**
-     * Return the wind speed.
-     * @return the wind speed
-     */
-    public double getWindSpeed() {
-        return windSpeed;
+    private long distanceFromNoon(LocalTime time) {
+        return Math.abs(
+                Duration.between(
+                        time,
+                        LocalTime.NOON
+                ).toMinutes()
+        );
     }
 }
