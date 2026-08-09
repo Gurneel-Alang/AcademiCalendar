@@ -25,6 +25,10 @@ import interface_adapter.event.edit_event.EditEventPresenter;
 import interface_adapter.event.edit_event.EditEventViewModel;
 import interface_adapter.event.view_events.ViewEventsController;
 import interface_adapter.event.view_events.ViewEventsViewModel;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderController;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderPresenter;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderViewModel;
+import use_case.reminder.schedule_reminder.ScheduleReminderInteractor;
 import use_case.event.add_event.AddEventInteractor;
 import use_case.event.delete_event.DeleteEventInteractor;
 import use_case.event.edit_event.EditEventInteractor;
@@ -143,8 +147,18 @@ public class MainViewBuilder {
         final AddEventInteractor addEventInteractor = new AddEventInteractor(
                 eventDataAccessObject, addEventPresenter, new EventFactory());
         final AddEventController addEventController = new AddEventController(addEventInteractor);
+
         final ReminderScheduler reminderScheduler = new ReminderScheduler();
-        addEventView = new AddEventView(addEventController, addEventViewModel, reminderScheduler);
+        final ScheduleReminderViewModel scheduleReminderViewModel = new ScheduleReminderViewModel();
+        final ScheduleReminderPresenter scheduleReminderPresenter =
+                new ScheduleReminderPresenter(scheduleReminderViewModel);
+        final ScheduleReminderInteractor scheduleReminderInteractor =
+                new ScheduleReminderInteractor(reminderScheduler, scheduleReminderPresenter);
+        final ScheduleReminderController scheduleReminderController =
+                new ScheduleReminderController(scheduleReminderInteractor);
+
+        addEventView = new AddEventView(addEventController, addEventViewModel,
+                scheduleReminderController, scheduleReminderViewModel);
         return this;
     }
 
