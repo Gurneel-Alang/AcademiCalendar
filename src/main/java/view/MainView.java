@@ -11,6 +11,7 @@ import interface_adapter.checklist.load_checklist.LoadChecklistController;
 import interface_adapter.event.view_events.ViewEventsController;
 import use_case.task.load_checklist.LoadChecklistOutputBoundary;
 import view.event_view.EventListView;
+import view.StudyTimerView;
 
 /**
  * Main application view containing navigation and feature views.
@@ -19,6 +20,7 @@ public class MainView extends JPanel {
     private static final String EVENT_VIEW = "event";
     private static final String WEATHER_VIEW = "weather";
     private static final String CHECKLIST_VIEW = "checklist";
+    private static final String STUDY_TIMER_VIEW = "studytimer";
 
     private final CardLayout rightCardLayout;
     private final JPanel rightContentPanel;
@@ -37,7 +39,8 @@ public class MainView extends JPanel {
      * @param onDeleteEventRequested the thread for the delete event dialog
      */
     public MainView(CalendarView calendarView, WeatherView weatherView, JPanel checklistView,
-                    EventListView eventListView, CreateTaskController createTaskController,
+                    EventListView eventListView, StudyTimerView studyTimerView,
+                    CreateTaskController createTaskController,
                     LoadChecklistController loadChecklistController, ViewEventsController viewEventsController,
                     Runnable onAddEventRequested,
                     Runnable onEditEventRequested, Runnable onDeleteEventRequested) {
@@ -46,18 +49,21 @@ public class MainView extends JPanel {
         final JButton eventButton = new JButton("Events");
         final JButton weatherButton = new JButton("Weather");
         final JButton checklistButton = new JButton("Checklist");
+        final JButton studyTimerButton = new JButton("Study Timer");
 
         final JPanel navigationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         navigationPanel.add(eventButton);
         navigationPanel.add(weatherButton);
         navigationPanel.add(checklistButton);
+        navigationPanel.add(studyTimerButton);
 
         rightCardLayout = new CardLayout();
         rightContentPanel = new JPanel(rightCardLayout);
 
         rightContentPanel.add(eventListView, EVENT_VIEW);
         rightContentPanel.add(weatherView, WEATHER_VIEW);
+        rightContentPanel.add(studyTimerView, STUDY_TIMER_VIEW);
 
         /*
          * Checklist view + task input, wrapped together so the
@@ -111,6 +117,10 @@ public class MainView extends JPanel {
 
         checklistButton.addActionListener(
                 event -> showView(CHECKLIST_VIEW)
+        );
+
+        studyTimerButton.addActionListener(
+                event -> showView(STUDY_TIMER_VIEW)
         );
 
         /*

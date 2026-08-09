@@ -33,10 +33,11 @@ public final class CalendarPreviewMain {
                         .addWeatherView()
                             .addEventListView()
                                 .addCheckListView()
-                                    .addAddEventView()
-                                        .addEditEventView()
-                                            .addDeleteEventView()
-                                                .build();
+                                    .addStudyTimerView()
+                                        .addAddEventView()
+                                            .addEditEventView()
+                                                .addDeleteEventView()
+                                                    .build();
 
         frame.setDefaultCloseOperation(
                 JFrame.EXIT_ON_CLOSE

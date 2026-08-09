@@ -36,6 +36,7 @@ import view.ChecklistView;
 import view.MainView;
 import view.WeatherView;
 import view.event_view.*;
+import view.StudyTimerView;
 
 /**
  * Builder class to attach use cases and views to - and return - a MainView.
@@ -61,6 +62,7 @@ public class MainViewBuilder {
     private AddEventView addEventView;
     private EditEventView editEventView;
     private DeleteEventView deleteEventView;
+    private StudyTimerView studyTimerView;
 
     public MainViewBuilder(JFrame frame) {
         this.frame = frame;
@@ -123,6 +125,15 @@ public class MainViewBuilder {
     }
 
     /**
+     * Add the Study Timer view.
+     * @return this builder
+     */
+    public MainViewBuilder addStudyTimerView() {
+        studyTimerView = new StudyTimerView();
+        return this;
+    }
+
+    /**
      * Add the Add Event Use Case and view.
      * @return this builder
      */
@@ -170,7 +181,7 @@ public class MainViewBuilder {
      * @return the MainView
      */
     public MainView build() {
-        return new MainView(calendarView, weatherView, checklistView, eventListView,
+        return new MainView(calendarView, weatherView, checklistView, eventListView, studyTimerView,
                 createTaskController, loadChecklistController, viewEventsController,
                 () -> {
                     final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
