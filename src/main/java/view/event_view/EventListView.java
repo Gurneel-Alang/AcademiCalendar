@@ -37,7 +37,7 @@ public class EventListView extends JPanel {
         stackedEventsPanel.removeAll();
 
         if (events.isEmpty()) {
-            final JLabel emptyLabel = new JLabel("No events were found on this date.");
+            final JLabel emptyLabel = new JLabel("No events were found.");
             emptyLabel.setHorizontalAlignment(SwingConstants.LEFT);
             emptyLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
             stackedEventsPanel.add(emptyLabel);
@@ -49,5 +49,8 @@ public class EventListView extends JPanel {
                 stackedEventsPanel.add(eventDetailsView);
             }
         }
+
+        stackedEventsPanel.revalidate();
+        stackedEventsPanel.repaint();
     }
 }

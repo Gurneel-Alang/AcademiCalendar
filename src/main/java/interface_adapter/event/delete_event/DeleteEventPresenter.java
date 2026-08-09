@@ -19,8 +19,6 @@ public class DeleteEventPresenter implements DeleteEventOutputBoundary {
         final DeleteEventState state = deleteEventViewModel.getState();
         state.setErrorMessage(null);
         deleteEventViewModel.setState(state);
-        deleteEventViewModel.firePropertyChanged(DeleteEventViewModel.CLOSE_PROPERTY);
-
         switchToMainView();
     }
 
