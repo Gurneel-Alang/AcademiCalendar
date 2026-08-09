@@ -23,26 +23,22 @@ public class ScheduleReminderInteractor implements ScheduleReminderInputBoundary
         final ReminderChoices option = inputData.getOption();
 
         if (eventTitle == null || eventTitle.isBlank()) {
-            presenter.prepareFailView("A reminder needs an event title.");
+            presenter.prepareFailView("ERROR: Event title is required");
             return;
         }
         if (option == null) {
-            presenter.prepareFailView("No reminder option was selected.");
+            presenter.prepareFailView("ERROR: Must Select a reminder option");
             return;
         }
 
         final long secondsUntilFire = scheduler.schedule(eventTitle, option,
-                (firedTitle, firedOption) -> presenter.reminderFired(
-                        new ScheduleReminderOutputData(
-                                firedTitle,
-                                firedOption.getLabel(),
-                                firedOption.getPastLabel(),
-                                0)));
+                (firedTitle, firedOption) -> {
+                    presenter.reminderFired(
+                            new ScheduleReminderOutputData(firedTitle, firedOption.getLabel(),
+                                    firedOption.getPastLabel(), 0));
+                });
 
-        presenter.prepareSuccessView(new ScheduleReminderOutputData(
-                eventTitle,
-                option.getLabel(),
-                option.getPastLabel(),
-                secondsUntilFire));
+        presenter.prepareSuccessView(new ScheduleReminderOutputData(eventTitle, option.getLabel(),
+                option.getPastLabel(), secondsUntilFire));
     }
 }

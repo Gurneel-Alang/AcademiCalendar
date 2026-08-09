@@ -18,10 +18,18 @@ public class ScheduleReminderViewModel {
         return state;
     }
 
+    /**
+     * Notify listeners who are registered in the command below if anything changes.
+     * @param propertyName name of the item that changed
+     */
     public void firePropertyChanged(String propertyName) {
         support.firePropertyChange(propertyName, null, state);
     }
 
+    /**
+     * Add a listener to the registered list to get notified if things changed.
+     * @param listener the listener or view to add
+     */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }

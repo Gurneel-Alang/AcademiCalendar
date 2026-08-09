@@ -13,14 +13,13 @@ import use_case.reminder.schedule_reminder.ScheduleReminderDataAccessInterface;
 
 public class ReminderScheduler implements ScheduleReminderDataAccessInterface {
 
-    private static final long CONVERT_TO_SECONDS = 60L;
-    private static final int MILISECOND = 1000;
+    private static final long SECONDS_PER_MINUTE = 60L;
+    private static final int MILLIS_PER_SECOND = 1000;
 
     @Override
     public long schedule(String eventTitle, ReminderChoices option, ReminderFiredListener onFire) {
-        long seconds = option.getOffsetTime() / CONVERT_TO_SECONDS;
-        int delay = (int) Math.min(seconds * MILISECOND, Integer.MAX_VALUE);
-
+        long seconds = option.getOffsetTime() / SECONDS_PER_MINUTE;
+        int delay = (int) (seconds * MILLIS_PER_SECOND);
         Timer timer = new Timer(delay, event -> onFire.fired(eventTitle, option));
         timer.setRepeats(false);
         timer.start();

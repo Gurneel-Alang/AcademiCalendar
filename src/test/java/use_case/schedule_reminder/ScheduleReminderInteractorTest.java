@@ -44,13 +44,13 @@ public class ScheduleReminderInteractorTest {
 
                     @Override
                     public void prepareFailView(String errorMessage) {
-                        fail("Use case should not fail");
+                        fail("ERROR: Use case should not fail");
                     }
 
                     @Override
                     public void reminderFired(
                             ScheduleReminderOutputData outputData) {
-                        fail("Reminder should not fire");
+                        fail("ERROR: Reminder should not fire");
                     }
                 };
 
@@ -81,17 +81,17 @@ public class ScheduleReminderInteractorTest {
                     @Override
                     public void prepareSuccessView(
                             ScheduleReminderOutputData outputData) {
-                        fail("Use case should not pass.");
+                        fail("ERROR: Use case should not pass");
                     }
 
                     @Override
                     public void prepareFailView(String errorMessage) {
-                        assertEquals("A reminder needs an event title.", errorMessage);
+                        assertEquals("ERROR: Event title is required", errorMessage);
                     }
 
                     @Override
                     public void reminderFired(ScheduleReminderOutputData outputData) {
-                        fail("Reminder should not fire when scheduling fails.");
+                        fail("ERROR: Reminder must not fire if scheduling failed");
                     }
                 };
 
