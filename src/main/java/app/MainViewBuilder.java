@@ -24,6 +24,10 @@ import interface_adapter.event.edit_event.EditEventController;
 import interface_adapter.event.edit_event.EditEventPresenter;
 import interface_adapter.event.edit_event.EditEventViewModel;
 import interface_adapter.event.view_events.ViewEventsViewModel;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderController;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderPresenter;
+import interface_adapter.reminder.schedule_reminder.ScheduleReminderViewModel;
+import use_case.reminder.schedule_reminder.ScheduleReminderInteractor;
 import interface_adapter.event.view_events.ViewEventsController;
 import interface_adapter.view_monthly_schedule.ViewMonthlyScheduleController;
 import interface_adapter.view_monthly_schedule.ViewMonthlySchedulePresenter;
@@ -153,11 +157,23 @@ public class MainViewBuilder {
     public MainViewBuilder addAddEventView() {
         final AddEventViewModel addEventViewModel = new AddEventViewModel();
         final AddEventPresenter addEventPresenter = new AddEventPresenter(addEventViewModel);
+      
         final AddEventInteractor addEventInteractor = new AddEventInteractor(
                 eventDataAccessObject, addEventPresenter, new EventFactory());
         final AddEventController addEventController = new AddEventController(addEventInteractor);
+
         final ReminderScheduler reminderScheduler = new ReminderScheduler();
-        addEventView = new AddEventView(addEventController, addEventViewModel, reminderScheduler);
+        final ScheduleReminderViewModel scheduleReminderViewModel = new ScheduleReminderViewModel();
+        final ScheduleReminderPresenter scheduleReminderPresenter =
+                new ScheduleReminderPresenter(scheduleReminderViewModel);
+        final ScheduleReminderInteractor scheduleReminderInteractor =
+                new ScheduleReminderInteractor(reminderScheduler, scheduleReminderPresenter);
+        final ScheduleReminderController scheduleReminderController =
+                new ScheduleReminderController(scheduleReminderInteractor);
+
+        addEventView = new AddEventView(addEventController, addEventViewModel,
+                scheduleReminderController, scheduleReminderViewModel);
+      
         addEventViewModel.addPropertyChangeListener(event -> {
             if (AddEventViewModel.CLOSE_PROPERTY.equals(event.getPropertyName())) {
                 refreshEvents();

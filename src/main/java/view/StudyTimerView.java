@@ -11,7 +11,6 @@ public class StudyTimerView extends JPanel {
     private static final int ONE_SECOND_IN_MS = 1000;
     private static final int THIRTY_SECONDS_IN_MS = 30000;
     private static final float FONT_SIZE = 50f;
-    private static final float MESSAGE_FONT_SIZE = 15f;
 
     private static final Color DARK_BLUE = new Color(25, 42, 86);
     private static final Color SOFT_BLUE_GREY = new Color(90, 105, 140);
@@ -54,7 +53,7 @@ public class StudyTimerView extends JPanel {
         timeLabel.setForeground(DARK_BLUE);
 
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        messageLabel.setFont(new Font("SansSerif", Font.ITALIC, (int) MESSAGE_FONT_SIZE));
+        messageLabel.setFont(new Font("SansSerif", Font.ITALIC, (int) 15f));
         messageLabel.setForeground(SOFT_BLUE_GREY);
         messageLabel.setBorder(BorderFactory.createEmptyBorder(14, 0, 0, 0));
 
