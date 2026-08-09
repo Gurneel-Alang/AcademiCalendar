@@ -1,4 +1,4 @@
-package data_access.weather;
+package data_access.weather.cache;
 
 import java.time.Instant;
 import java.util.Objects;

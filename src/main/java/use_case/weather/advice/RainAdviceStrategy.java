@@ -17,7 +17,7 @@ public final class RainAdviceStrategy
     private static final int FORECAST_INTERVAL_HOURS = 3;
 
     private static final DateTimeFormatter TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("h a");
+            DateTimeFormatter.ofPattern("HH:mm");
 
     @Override
     public String generate(
@@ -28,6 +28,7 @@ public final class RainAdviceStrategy
 
         for (ForecastSlot slot : forecastSlots) {
             if (isRainExpected(slot)) {
+
                 if (firstRainSlot == null) {
                     firstRainSlot = slot;
                 }
@@ -40,10 +41,7 @@ public final class RainAdviceStrategy
             return "";
         }
 
-        final LocalTime startTime =
-                firstRainSlot
-                        .getDateTime()
-                        .toLocalTime();
+        final LocalTime startTime = firstRainSlot.getDateTime().toLocalTime();
 
         final LocalTime endTime =
                 lastRainSlot
@@ -53,11 +51,10 @@ public final class RainAdviceStrategy
                                 FORECAST_INTERVAL_HOURS
                         );
 
-        return "Rain is expected from "
-                + startTime.format(TIME_FORMATTER)
-                + " to "
+        return "Rain expected "
+                + startTime.format(TIME_FORMATTER) + "–"
                 + endTime.format(TIME_FORMATTER)
-                + ". Consider bringing an umbrella.";
+                + ". Bring an umbrella.";
     }
 
     private boolean isRainExpected(

@@ -51,12 +51,8 @@ public final class WeatherAdviceGenerator {
             }
         }
 
-        if (adviceMessages.isEmpty()) {
-            return "No special weather precautions are needed today.";
-        }
-
         return String.join(
-                " ",
+                "\n",
                 adviceMessages
         );
     }

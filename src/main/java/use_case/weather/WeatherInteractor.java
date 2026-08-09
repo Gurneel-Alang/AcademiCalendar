@@ -84,9 +84,7 @@ public class WeatherInteractor implements WeatherInputBoundary {
                     new WeatherOutputData(
                             weather.getCity(),
                             weather.getDate(),
-                            convertForecastSlot(
-                                    representativeSlot
-                            ),
+                            convertForecastSlot(representativeSlot),
                             advice,
                             forecastSlots
                     );
@@ -115,8 +113,7 @@ public class WeatherInteractor implements WeatherInputBoundary {
         for (ForecastSlot forecastSlot : forecastSlots) {
             outputSlots.add(
                     convertForecastSlot(forecastSlot)
-            );
-        }
+            );}
 
         return outputSlots;
     }
