@@ -2,9 +2,7 @@ package use_case.view_monthly_schedule;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import entity.event.EventInterface;
@@ -60,9 +58,4 @@ public class ViewMonthlyScheduleInteractor
         presenter.prepareSuccessView(outputData);
     }
 
-    private LocalDate convertToLocalDate(Date date) {
-        return date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
 }

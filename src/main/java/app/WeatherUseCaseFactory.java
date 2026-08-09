@@ -2,63 +2,54 @@ package app;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.Clock;
+import java.time.Duration;
+import java.util.List;
 
-import data_access.weather.ForecastSelector;
+import data_access.weather.openweather.ForecastSelector;
 import data_access.weather.OfflineFirstWeatherDataAccessObject;
-import data_access.weather.OpenWeatherApiClient;
-import data_access.weather.OpenWeatherDataAccessObject;
-import data_access.weather.OpenWeatherJsonParser;
-import data_access.weather.SQLiteWeatherCache;
-import data_access.weather.WeatherApiClient;
-import data_access.weather.WeatherCache;
+import data_access.weather.openweather.OpenWeatherApiClient;
+import data_access.weather.openweather.OpenWeatherDataAccessObject;
+import data_access.weather.openweather.OpenWeatherJsonParser;
+import data_access.weather.cache.SQLiteWeatherCache;
+import data_access.weather.openweather.WeatherApiClient;
+import data_access.weather.cache.WeatherCache;
+
 import interface_adapter.weather.WeatherController;
 import interface_adapter.weather.WeatherPresenter;
 import interface_adapter.weather.WeatherViewModel;
+
+import use_case.weather.advice.HeatAdviceStrategy;
+import use_case.weather.advice.RainAdviceStrategy;
+import use_case.weather.advice.WeatherAdviceGenerator;
 import use_case.weather.WeatherDataAccessInterface;
 import use_case.weather.WeatherInputBoundary;
 import use_case.weather.WeatherInteractor;
 import use_case.weather.WeatherOutputBoundary;
+
+import use_case.weather.advice.WindAdviceStrategy;
 import view.WeatherView;
 
 /**
- * Creates and connects the components of the weather use case.
+ * Creates and wires the weather use case.
  */
 public final class WeatherUseCaseFactory {
+
+    private static final Duration CACHE_LIFETIME =
+            Duration.ofHours(3);
 
     private WeatherUseCaseFactory() {
     }
 
     /**
-     * Creates the weather view using the default local database.
-     * @param apiKey OpenWeather API key
-     * @return fully configured weather view
-     */
-    public static WeatherView create(String apiKey) {
-        final Path databasePath =
-                Paths.get(
-                        System.getProperty("user.home"),
-                        ".academicalendar",
-                        "academicalendar.db"
-                );
-
-        return create(apiKey, databasePath);
-    }
-
-    /**
-     * Creates the weather view using a specified database path.
-     * The database-path parameter makes integration testing easier,
-     * because tests can use a temporary database.
+     * Creates the weather feature.
      *
      * @param apiKey OpenWeather API key
-     * @param databasePath location of the SQLite database
-     * @return fully configured weather view
-     * @throws IllegalStateException if the weather database cannot be initialized
+     * @return weather view
+     * @throws IllegalStateException if the local weather cache
+     *                               cannot be initialized
      */
-    public static WeatherView create(
-            String apiKey,
-            Path databasePath) {
-
+    public static WeatherView create(String apiKey) {
         final WeatherApiClient apiClient =
                 new OpenWeatherApiClient(apiKey);
 
@@ -68,42 +59,40 @@ public final class WeatherUseCaseFactory {
         final ForecastSelector selector =
                 new ForecastSelector();
 
-        /*
-         * Remote data source.
-         */
-        final WeatherDataAccessInterface remoteDao =
+        final WeatherDataAccessInterface remoteDataAccess =
                 new OpenWeatherDataAccessObject(
                         apiClient,
                         parser,
                         selector
                 );
 
-        /*
-         * Local data source.
-         */
-        final WeatherCache weatherCache;
+        final WeatherDataAccessInterface weatherDataAccess;
 
         try {
-            weatherCache =
-                    new SQLiteWeatherCache(
-                            databasePath
+            final Path databasePath =
+                    Path.of(
+                            System.getProperty("user.home"),
+                            ".academicalendar",
+                            "weather.db"
+                    );
+
+            final WeatherCache cache =
+                    new SQLiteWeatherCache(databasePath);
+
+            weatherDataAccess =
+                    new OfflineFirstWeatherDataAccessObject(
+                            remoteDataAccess,
+                            cache,
+                            Clock.systemUTC(),
+                            CACHE_LIFETIME
                     );
         }
         catch (IOException exception) {
             throw new IllegalStateException(
-                    "Could not initialize the weather database.",
+                    "Could not initialize the weather cache.",
                     exception
             );
         }
-
-        /*
-         * Combines the remote and local data sources.
-         */
-        final WeatherDataAccessInterface weatherDao =
-                new OfflineFirstWeatherDataAccessObject(
-                        remoteDao,
-                        weatherCache
-                );
 
         final WeatherViewModel viewModel =
                 new WeatherViewModel();
@@ -111,10 +100,18 @@ public final class WeatherUseCaseFactory {
         final WeatherOutputBoundary presenter =
                 new WeatherPresenter(viewModel);
 
+        final WeatherAdviceGenerator adviceGenerator =
+                new WeatherAdviceGenerator(List.of(
+                        new RainAdviceStrategy(),
+                        new HeatAdviceStrategy(),
+                        new WindAdviceStrategy()
+                ));
+
         final WeatherInputBoundary interactor =
                 new WeatherInteractor(
-                        weatherDao,
-                        presenter
+                        weatherDataAccess,
+                        presenter,
+                        adviceGenerator
                 );
 
         final WeatherController controller =

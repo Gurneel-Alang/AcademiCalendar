@@ -1,6 +1,8 @@
 package interface_adapter.weather;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores the current weather-view state.
@@ -17,6 +19,8 @@ public class WeatherState {
     private String windSpeed = "";
     private String error = "";
     private String advice = "";
+    private List<TemperaturePoint> temperaturePoints =
+            new ArrayList<>();
 
     public String getAdvice() {
         return advice;
@@ -96,5 +100,16 @@ public class WeatherState {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public List<TemperaturePoint> getTemperaturePoints() {
+        return new ArrayList<>(temperaturePoints);
+    }
+
+    public void setTemperaturePoints(
+            List<TemperaturePoint> temperaturePoints) {
+
+        this.temperaturePoints =
+                new ArrayList<>(temperaturePoints);
     }
 }

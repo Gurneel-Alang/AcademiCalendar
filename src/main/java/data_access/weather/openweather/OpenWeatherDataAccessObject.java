@@ -1,10 +1,10 @@
-package data_access.weather;
+package data_access.weather.openweather;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
-import data_access.weather.dto.ForecastResponse;
-import data_access.weather.dto.LocationResponse;
+import data_access.weather.openweather.dto.ForecastResponse;
+import data_access.weather.openweather.dto.LocationResponse;
 import entity.weather.Weather;
 import use_case.weather.WeatherDataAccessInterface;
 

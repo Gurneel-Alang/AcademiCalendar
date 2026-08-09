@@ -1,5 +1,7 @@
 package data_access;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,12 +12,14 @@ import interface_adapter.event.view_events.EventsGateway;
 import use_case.event.add_event.AddEventDataAccessInterface;
 import use_case.event.delete_event.DeleteEventDataAccessInterface;
 import use_case.event.edit_event.EditEventDataAccessInterface;
+import use_case.view_monthly_schedule.ViewMonthlyScheduleDataAccessInterface;
 
 /**
  * The DAO for events.
  */
 public class EventDataAccessObject implements AddEventDataAccessInterface,
-    EditEventDataAccessInterface, DeleteEventDataAccessInterface, EventsGateway {
+    EditEventDataAccessInterface, DeleteEventDataAccessInterface, EventsGateway,
+    ViewMonthlyScheduleDataAccessInterface {
 
     private final Map<Integer, EventInterface> events = new HashMap<>();
 
@@ -75,5 +79,20 @@ public class EventDataAccessObject implements AddEventDataAccessInterface,
     @Override
     public List<EventInterface> getAllEvents() {
         return new ArrayList<>(events.values());
+    }
+
+    @Override
+    public List<EventInterface> getEventsForMonth(YearMonth month) {
+        final LocalDate firstDay = month.atDay(1);
+        final LocalDate lastDay = month.atEndOfMonth();
+        final List<EventInterface> matches = new ArrayList<>();
+
+        for (EventInterface event : events.values()) {
+            if (!event.getEndDate().isBefore(firstDay)
+                    && !event.getStartDate().isAfter(lastDay)) {
+                matches.add(event);
+            }
+        }
+        return matches;
     }
 }

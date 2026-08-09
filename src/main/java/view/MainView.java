@@ -9,7 +9,7 @@ import javax.swing.*;
 import interface_adapter.checklist.create_task.CreateTaskController;
 import interface_adapter.checklist.load_checklist.LoadChecklistController;
 import interface_adapter.event.view_events.ViewEventsController;
-import use_case.task.load_checklist.LoadChecklistOutputBoundary;
+import interface_adapter.view_monthly_schedule.ViewMonthlyScheduleController;
 import view.event_view.EventListView;
 
 /**
@@ -19,6 +19,7 @@ public class MainView extends JPanel {
     private static final String EVENT_VIEW = "event";
     private static final String WEATHER_VIEW = "weather";
     private static final String CHECKLIST_VIEW = "checklist";
+    private static final String STUDY_TIMER_VIEW = "studytimer";
 
     private final CardLayout rightCardLayout;
     private final JPanel rightContentPanel;
@@ -31,14 +32,18 @@ public class MainView extends JPanel {
      * @param eventListView the event list view
      * @param createTaskController the controller for creating tasks
      * @param loadChecklistController the controller for loading the checklist
-     * @param viewEventsController the controller for loading events on a date
+     * @param viewEventsController controller for loading events on a date
+     * @param viewMonthlyScheduleController controller for loading events in a month
      * @param onAddEventRequested the thread for the add event dialog
      * @param onEditEventRequested the thread for the edit event dialog
      * @param onDeleteEventRequested the thread for the delete event dialog
      */
     public MainView(CalendarView calendarView, WeatherView weatherView, JPanel checklistView,
-                    EventListView eventListView, CreateTaskController createTaskController,
-                    LoadChecklistController loadChecklistController, ViewEventsController viewEventsController,
+                    EventListView eventListView, StudyTimerView studyTimerView,
+                    CreateTaskController createTaskController,
+                    LoadChecklistController loadChecklistController,
+                    ViewEventsController viewEventsController,
+                    ViewMonthlyScheduleController viewMonthlyScheduleController,
                     Runnable onAddEventRequested,
                     Runnable onEditEventRequested, Runnable onDeleteEventRequested) {
         setLayout(new BorderLayout());
@@ -46,18 +51,21 @@ public class MainView extends JPanel {
         final JButton eventButton = new JButton("Events");
         final JButton weatherButton = new JButton("Weather");
         final JButton checklistButton = new JButton("Checklist");
+        final JButton studyTimerButton = new JButton("Study Timer");
 
         final JPanel navigationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         navigationPanel.add(eventButton);
         navigationPanel.add(weatherButton);
         navigationPanel.add(checklistButton);
+        navigationPanel.add(studyTimerButton);
 
         rightCardLayout = new CardLayout();
         rightContentPanel = new JPanel(rightCardLayout);
 
         rightContentPanel.add(eventListView, EVENT_VIEW);
         rightContentPanel.add(weatherView, WEATHER_VIEW);
+        rightContentPanel.add(studyTimerView, STUDY_TIMER_VIEW);
 
         /*
          * Checklist view + task input, wrapped together so the
@@ -96,10 +104,21 @@ public class MainView extends JPanel {
         /*
          * Navigation
          */
+        final Runnable loadEvents = () -> {
+            if (calendarView.getSelectedDate() != null) {
+                viewEventsController.execute(calendarView.getSelectedDate());
+            }
+            else {
+                viewMonthlyScheduleController.execute(
+                        calendarView.getDisplayedYearMonth());
+            }
+        };
+
         eventButton.addActionListener(event -> {
-            viewEventsController.execute(calendarView.getSelectedDate());
+            loadEvents.run();
             showView(EVENT_VIEW);
         });
+        calendarView.addSelectionChangeListener(loadEvents);
 
         weatherButton.addActionListener(event -> {
             weatherView.setSelectedDate(
@@ -111,6 +130,10 @@ public class MainView extends JPanel {
 
         checklistButton.addActionListener(
                 event -> showView(CHECKLIST_VIEW)
+        );
+
+        studyTimerButton.addActionListener(
+                event -> showView(STUDY_TIMER_VIEW)
         );
 
         /*

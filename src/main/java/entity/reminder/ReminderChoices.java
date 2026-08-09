@@ -60,4 +60,15 @@ public class ReminderChoices {
     public static ReminderChoices oneHour() {
         return new ReminderChoices("In 1 hour", "1 hour ago", 3600);
     }
+
+    /**
+     * Custom reminder, receiving input entered by user, then process it to match into seconds.
+     * @return a reminder that fires x hours after creation
+     */
+    public static ReminderChoices customHours(int hours){
+        return new ReminderChoices(
+                "In" + hours + " hour(s)",
+                hours + " hour(s) ago",
+                hours * 3600L);
+    }
 }

@@ -6,20 +6,18 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Optional;
 
+import data_access.weather.cache.CachedWeather;
+import data_access.weather.cache.WeatherCache;
 import entity.weather.Weather;
 import use_case.weather.WeatherDataAccessInterface;
 
 /**
  * Combines the remote weather service with a persistent local cache.
  */
-public final class OfflineFirstWeatherDataAccessObject
-        implements WeatherDataAccessInterface {
-
+public final class OfflineFirstWeatherDataAccessObject implements WeatherDataAccessInterface {
     private static final Duration DEFAULT_CACHE_LIFETIME =
             Duration.ofHours(3);
-
     private final WeatherDataAccessInterface remoteDataAccessObject;
     private final WeatherCache weatherCache;
     private final Clock clock;
@@ -35,7 +33,6 @@ public final class OfflineFirstWeatherDataAccessObject
     public OfflineFirstWeatherDataAccessObject(
             WeatherDataAccessInterface remoteDataAccessObject,
             WeatherCache weatherCache) {
-
         this(
                 remoteDataAccessObject,
                 weatherCache,
@@ -85,36 +82,28 @@ public final class OfflineFirstWeatherDataAccessObject
             String city,
             LocalDate date) throws IOException {
 
-        final Instant now = clock.instant();
+        final Instant now =
+                clock.instant();
 
-        Optional<CachedWeather> cachedWeather =
-                Optional.empty();
-
-        IOException cacheReadFailure = null;
+        CachedWeather cachedWeather = null;
+        IOException cacheFailure = null;
 
         try {
             cachedWeather =
-                    weatherCache.find(city, date);
-        }
-        catch (IOException exception) {
-            cacheReadFailure = exception;
+                    weatherCache
+                            .find(city, date)
+                            .orElse(null);
+        } catch (IOException exception) {
+            cacheFailure = exception;
         }
 
-        /*
-         * Fresh local data can be returned immediately,
-         * without making a network request.
-         */
-        if (cachedWeather.isPresent()
-                && cachedWeather.get().isFresh(now)) {
+        if (cachedWeather != null
+                && cachedWeather.isFresh(now)) {
 
-            return cachedWeather.get().getWeather();
+            return cachedWeather.getWeather();
         }
 
         try {
-            /*
-             * No fresh cache is available, so request
-             * the latest weather from OpenWeather.
-             */
             final Weather remoteWeather =
                     remoteDataAccessObject.getWeather(
                             city,
@@ -130,35 +119,26 @@ public final class OfflineFirstWeatherDataAccessObject
                     );
 
             try {
-                weatherCache.save(newCachedWeather);
-            }
-            catch (IOException exception) {
-                /*
-                 * Valid network data should still be returned
-                 * if saving the cache fails.
-                 */
+                weatherCache.save(
+                        newCachedWeather
+                );
+            } catch (IOException ignored) {
+                // Valid remote data can still be shown.
             }
 
             return remoteWeather;
-        }
-        catch (IOException remoteFailure) {
-            /*
-             * If the network fails, expired cached data
-             * is still better than displaying no weather.
-             */
-            if (cachedWeather.isPresent()) {
-                return cachedWeather
-                        .get()
-                        .getWeather();
+        } catch (IOException remoteFailure) {
+
+            if (cachedWeather != null) {
+                return cachedWeather.getWeather();
             }
 
-            if (cacheReadFailure != null) {
+            if (cacheFailure != null) {
                 remoteFailure.addSuppressed(
-                        cacheReadFailure
+                        cacheFailure
                 );
             }
 
             throw remoteFailure;
         }
-    }
-}
+    }}

@@ -23,19 +23,23 @@ import interface_adapter.event.delete_event.DeleteEventViewModel;
 import interface_adapter.event.edit_event.EditEventController;
 import interface_adapter.event.edit_event.EditEventPresenter;
 import interface_adapter.event.edit_event.EditEventViewModel;
-import interface_adapter.event.view_events.ViewEventsController;
 import interface_adapter.event.view_events.ViewEventsViewModel;
+import interface_adapter.event.view_events.ViewEventsController;
+import interface_adapter.view_monthly_schedule.ViewMonthlyScheduleController;
+import interface_adapter.view_monthly_schedule.ViewMonthlySchedulePresenter;
 import use_case.event.add_event.AddEventInteractor;
 import use_case.event.delete_event.DeleteEventInteractor;
 import use_case.event.edit_event.EditEventInteractor;
 import use_case.task.create_task.CreateTaskInteractor;
 import use_case.task.load_checklist.LoadChecklistInteractor;
 import use_case.task.toggle_task.ToggleTaskInteractor;
+import use_case.view_monthly_schedule.ViewMonthlyScheduleInteractor;
 import view.CalendarView;
 import view.ChecklistView;
 import view.MainView;
 import view.WeatherView;
 import view.event_view.*;
+import view.StudyTimerView;
 
 /**
  * Builder class to attach use cases and views to - and return - a MainView.
@@ -53,6 +57,7 @@ public class MainViewBuilder {
     private CreateTaskController createTaskController;
     private LoadChecklistController loadChecklistController;
     private ViewEventsController viewEventsController;
+    private ViewMonthlyScheduleController viewMonthlyScheduleController;
 
     private CalendarView calendarView;
     private WeatherView weatherView;
@@ -61,6 +66,7 @@ public class MainViewBuilder {
     private AddEventView addEventView;
     private EditEventView editEventView;
     private DeleteEventView deleteEventView;
+    private StudyTimerView studyTimerView;
 
     public MainViewBuilder(JFrame frame) {
         this.frame = frame;
@@ -111,14 +117,29 @@ public class MainViewBuilder {
     }
 
     /**
-     * Add the "view events on a given date" view.
+     * Add the "view events in the displayed month" use case and view.
      * @return this builder
      */
     public MainViewBuilder addEventListView() {
         final ViewEventsViewModel viewEventsViewModel = new ViewEventsViewModel();
         viewEventsController = new ViewEventsController(
                 eventDataAccessObject, viewEventsViewModel);
+        final ViewMonthlySchedulePresenter presenter =
+                new ViewMonthlySchedulePresenter(viewEventsViewModel);
+        final ViewMonthlyScheduleInteractor interactor =
+                new ViewMonthlyScheduleInteractor(eventDataAccessObject, presenter);
+        viewMonthlyScheduleController =
+                new ViewMonthlyScheduleController(interactor);
         eventListView = new EventListView(viewEventsViewModel);
+        return this;
+    }
+
+    /**
+     * Add the Study Timer view.
+     * @return this builder
+     */
+    public MainViewBuilder addStudyTimerView() {
+        studyTimerView = new StudyTimerView();
         return this;
     }
 
@@ -134,6 +155,11 @@ public class MainViewBuilder {
         final AddEventController addEventController = new AddEventController(addEventInteractor);
         final ReminderScheduler reminderScheduler = new ReminderScheduler();
         addEventView = new AddEventView(addEventController, addEventViewModel, reminderScheduler);
+        addEventViewModel.addPropertyChangeListener(event -> {
+            if (AddEventViewModel.CLOSE_PROPERTY.equals(event.getPropertyName())) {
+                refreshEvents();
+            }
+        });
         return this;
     }
 
@@ -148,6 +174,11 @@ public class MainViewBuilder {
                 eventDataAccessObject, editEventPresenter, new EventFactory());
         final EditEventController editEventController = new EditEventController(editEventInteractor);
         editEventView = new EditEventView(editEventController, editEventViewModel);
+        editEventViewModel.addPropertyChangeListener(event -> {
+            if (EditEventViewModel.CLOSE_PROPERTY.equals(event.getPropertyName())) {
+                refreshEvents();
+            }
+        });
         return this;
     }
 
@@ -162,7 +193,22 @@ public class MainViewBuilder {
                 eventDataAccessObject, deleteEventPresenter);
         final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
         deleteEventView = new DeleteEventView(deleteEventController, deleteEventViewModel);
+        deleteEventViewModel.addPropertyChangeListener(event -> {
+            if (DeleteEventViewModel.CLOSE_PROPERTY.equals(event.getPropertyName())) {
+                refreshEvents();
+            }
+        });
         return this;
+    }
+
+    private void refreshEvents() {
+        if (calendarView != null && calendarView.getSelectedDate() != null
+                && viewEventsController != null) {
+            viewEventsController.execute(calendarView.getSelectedDate());
+        }
+        else if (calendarView != null && viewMonthlyScheduleController != null) {
+            viewMonthlyScheduleController.execute(calendarView.getDisplayedYearMonth());
+        }
     }
 
     /**
@@ -171,7 +217,8 @@ public class MainViewBuilder {
      */
     public MainView build() {
         return new MainView(calendarView, weatherView, checklistView, eventListView,
-                createTaskController, loadChecklistController, viewEventsController,
+                studyTimerView, createTaskController, loadChecklistController,
+                viewEventsController, viewMonthlyScheduleController,
                 () -> {
                     final AddEventDialog dialog = new AddEventDialog(frame, addEventView);
                     dialog.setVisible(true);

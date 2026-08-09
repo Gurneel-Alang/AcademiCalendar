@@ -2,18 +2,37 @@ package use_case.weather;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import entity.weather.ForecastSlot;
 import entity.weather.Weather;
+import use_case.weather.advice.WeatherAdviceGenerator;
 
+/**
+ * Handles the weather use case.
+ */
 public class WeatherInteractor implements WeatherInputBoundary {
 
     private final WeatherDataAccessInterface weatherDataAccessObject;
     private final WeatherOutputBoundary weatherPresenter;
+    private final WeatherAdviceGenerator weatherAdviceGenerator;
 
-    public WeatherInteractor(WeatherDataAccessInterface weatherDataAccessObject,
-                             WeatherOutputBoundary weatherPresenter) {
+    /**
+     * Creates a weather interactor.
+     *
+     * @param weatherDataAccessObject weather data access
+     * @param weatherPresenter weather output boundary
+     * @param weatherAdviceGenerator generates advice from forecast data
+     */
+    public WeatherInteractor(
+            WeatherDataAccessInterface weatherDataAccessObject,
+            WeatherOutputBoundary weatherPresenter,
+            WeatherAdviceGenerator weatherAdviceGenerator) {
+
         this.weatherDataAccessObject = weatherDataAccessObject;
         this.weatherPresenter = weatherPresenter;
+        this.weatherAdviceGenerator = weatherAdviceGenerator;
     }
 
     @Override
@@ -25,8 +44,8 @@ public class WeatherInteractor implements WeatherInputBoundary {
             return;
         }
 
-        String city = inputData.getCity();
-        LocalDate date = inputData.getSelectedDate();
+        final String city = inputData.getCity();
+        final LocalDate date = inputData.getSelectedDate();
 
         if (city == null || city.trim().isEmpty()) {
             weatherPresenter.prepareFailView(
@@ -42,23 +61,32 @@ public class WeatherInteractor implements WeatherInputBoundary {
             return;
         }
 
-        try {
-            Weather weather = weatherDataAccessObject.getWeather(
-                    city.trim(),
-                    date
-            );
+        try {final Weather weather =
+                    weatherDataAccessObject.getWeather(
+                            city.trim(),
+                            date
+                    );
 
-            String advice = generateAdvice(weather);
-            WeatherOutputData outputData =
+            final ForecastSlot representativeSlot =
+                    weather.getRepresentativeSlot();
+
+            final String advice =
+                    weatherAdviceGenerator.generate(
+                            weather.getForecastSlots()
+                    );
+
+            final List<ForecastSlotOutputData> forecastSlots =
+                    convertForecastSlots(
+                            weather.getForecastSlots()
+                    );
+
+            final WeatherOutputData outputData =
                     new WeatherOutputData(
                             weather.getCity(),
                             weather.getDate(),
-                            weather.getTemperature(),
-                            weather.getFeelsLike(),
-                            weather.getCondition(),
-                            weather.getDescription(),
-                            weather.getHumidity(),
-                            weather.getWindSpeed()
+                            convertForecastSlot(representativeSlot),
+                            advice,
+                            forecastSlots
                     );
 
             weatherPresenter.prepareSuccessView(outputData);
@@ -70,18 +98,44 @@ public class WeatherInteractor implements WeatherInputBoundary {
         }
     }
 
-    private String generateAdvice(Weather weather) {
-        if ("Rain".equalsIgnoreCase(weather.getCondition())) {
-            return "Bring an umbrella.";
-        }
-        else if (weather.getTemperature() < 5) {
-            return "Wear a warm coat.";
-        }
-        else if (weather.getTemperature() > 28) {
-            return "Stay hydrated.";
-        }
-        else {
-            return "No special preparation is needed.";
-        }
+    /**
+     * Converts forecast entities into output data.
+     *
+     * @param forecastSlots forecast entities
+     * @return forecast output data
+     */
+    private List<ForecastSlotOutputData> convertForecastSlots(
+            List<ForecastSlot> forecastSlots) {
+
+        final List<ForecastSlotOutputData> outputSlots =
+                new ArrayList<>();
+
+        for (ForecastSlot forecastSlot : forecastSlots) {
+            outputSlots.add(
+                    convertForecastSlot(forecastSlot)
+            );}
+
+        return outputSlots;
+    }
+
+    /**
+     * Converts one forecast entity into output data.
+     *
+     * @param forecastSlot forecast entity
+     * @return forecast output data
+     */
+    private ForecastSlotOutputData convertForecastSlot(
+            ForecastSlot forecastSlot) {
+
+        return new ForecastSlotOutputData(
+                forecastSlot.getDateTime(),
+                forecastSlot.getTemperature(),
+                forecastSlot.getFeelsLike(),
+                forecastSlot.getCondition(),
+                forecastSlot.getDescription(),
+                forecastSlot.getHumidity(),
+                forecastSlot.getWindSpeed(),
+                forecastSlot.getPrecipitationProbability()
+        );
     }
 }

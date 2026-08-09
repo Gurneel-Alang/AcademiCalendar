@@ -1,11 +1,11 @@
-package data_access.weather;
+package data_access.weather.openweather;
 
 import java.io.IOException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import data_access.weather.dto.ForecastResponse;
-import data_access.weather.dto.LocationResponse;
+import data_access.weather.openweather.dto.ForecastResponse;
+import data_access.weather.openweather.dto.LocationResponse;
 
 /**
  * Converts OpenWeather JSON responses into data-transfer objects（dto）.
@@ -60,7 +60,6 @@ public class OpenWeatherJsonParser {
      */
     public ForecastResponse parseForecast(String json)
             throws IOException {
-
         try {
             final ForecastResponse response =
                     gson.fromJson(
@@ -73,7 +72,6 @@ public class OpenWeatherJsonParser {
                         "OpenWeather returned an empty forecast response."
                 );
             }
-
             return response;
         }
         catch (JsonParseException exception) {

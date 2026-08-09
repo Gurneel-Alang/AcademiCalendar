@@ -1,4 +1,4 @@
-package data_access.weather.dto;
+package data_access.weather.openweather.dto;
 
 public class LocationResponse {
     private String name;

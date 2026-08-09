@@ -1,4 +1,4 @@
-package data_access.weather;
+package data_access.weather.openweather;
 
 import java.io.IOException;
 import java.net.URI;
@@ -31,13 +31,9 @@ public class OpenWeatherApiClient implements WeatherApiClient {
     @Override
     public String fetchLocation(String city) throws IOException {
         validateApiKey();
-
-        final String requestUrl =
-                GEOCODING_URL
-                        + "?q=" + encode(city)
+        final String requestUrl = GEOCODING_URL + "?q=" + encode(city)
                         + "&limit=1"
                         + "&appid=" + encode(apiKey);
-
         return sendGetRequest(requestUrl);
     }
 
@@ -60,7 +56,6 @@ public class OpenWeatherApiClient implements WeatherApiClient {
 
     private String sendGetRequest(String requestUrl)
             throws IOException {
-
         final HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(requestUrl))
                 .GET()
