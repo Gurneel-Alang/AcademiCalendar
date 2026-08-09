@@ -1,5 +1,7 @@
 package entity.reminder;
 
+
+// Reminder options that user can pick, either preset or custom
 public class ReminderChoices {
 
     private final String label;
@@ -39,6 +41,7 @@ public class ReminderChoices {
 
     /**
      * Change output from code output to String output.
+     * @return label in String
      */
     @Override
     public String toString() {
@@ -67,7 +70,7 @@ public class ReminderChoices {
      */
     public static ReminderChoices customHours(int hours){
         return new ReminderChoices(
-                "In" + hours + " hour(s)",
+                "In " + hours + " hour(s)",
                 hours + " hour(s) ago",
                 hours * 3600L);
     }

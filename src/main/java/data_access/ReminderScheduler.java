@@ -6,8 +6,6 @@ import entity.reminder.ReminderChoices;
 
 /**
  * Implemented reminder using Java Swing timer.
- * In one hour will send a reminder in 60 seconds, while 3 and 7 days
- * will be 259200 and 604800 seconds respectively.
  */
 
 public class ReminderScheduler {
@@ -16,10 +14,7 @@ public class ReminderScheduler {
     private static final int MILLIS_PER_SECOND = 1000;
 
     /**
-     * Initialize a reminder for an event that was created.
-     * @param eventTitle the event's title
-     * @param option the reminder option
-     * @param onFire the action
+     * Initialize a reminder for an event that was created
      */
     public void schedule(String eventTitle, ReminderChoices option, FinishedCountdown onFire) {
         final long scaledSeconds = option.getOffsetTime() / REAL_SECONDS_PER_SCHEDULED_SECOND;
@@ -31,9 +26,6 @@ public class ReminderScheduler {
         timer.start();
     }
 
-    /**
-     * Event action when timer finished countdown.
-     */
     public interface FinishedCountdown {
         void fire(String eventTitle, ReminderChoices option);
     }
