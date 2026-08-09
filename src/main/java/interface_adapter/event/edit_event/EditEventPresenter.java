@@ -16,8 +16,6 @@ public class EditEventPresenter implements EditEventOutputBoundary {
         final EditEventState state = editEventViewModel.getState();
         state.setErrorMessage(null);
         editEventViewModel.setState(state);
-        editEventViewModel.firePropertyChanged(EditEventViewModel.CLOSE_PROPERTY);
-
         switchToMainView();
     }
 
