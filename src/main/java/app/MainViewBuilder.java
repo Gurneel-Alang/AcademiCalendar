@@ -34,6 +34,8 @@ import use_case.task.create_task.CreateTaskInteractor;
 import use_case.task.load_checklist.LoadChecklistInteractor;
 import use_case.task.toggle_task.ToggleTaskInteractor;
 import use_case.view_monthly_schedule.ViewMonthlyScheduleInteractor;
+import use_case.task.load_checklist.TaskSortStrategy;
+import use_case.task.load_checklist.DueDateSortStrategy;
 import view.CalendarView;
 import view.ChecklistView;
 import view.MainView;
@@ -107,9 +109,10 @@ public class MainViewBuilder {
                 checkListDataAccessObject, toggleTaskPresenter);
         final ToggleTaskController toggleTaskController = new ToggleTaskController(toggleTaskInteractor);
 
+        final TaskSortStrategy taskSortStrategy = new DueDateSortStrategy();
         final LoadChecklistPresenter loadChecklistPresenter = new LoadChecklistPresenter(checklistViewModel);
         final LoadChecklistInteractor loadChecklistInteractor = new LoadChecklistInteractor(
-                checkListDataAccessObject, loadChecklistPresenter);
+                checkListDataAccessObject, loadChecklistPresenter, taskSortStrategy);
         loadChecklistController = new LoadChecklistController(loadChecklistInteractor);
 
         checklistView = new ChecklistView(checklistViewModel, toggleTaskController);
