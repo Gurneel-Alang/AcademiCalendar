@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,8 @@ public class ChecklistView extends JPanel
     private final JLabel emptyLabel =
             new JLabel("No tasks yet.", SwingConstants.CENTER);
 
+    private final JLabel progressLabel = new JLabel("", SwingConstants.CENTER);
+
     private final Map<String, JCheckBox> checkBoxesByTaskId =
             new HashMap<>();
 
@@ -47,6 +50,9 @@ public class ChecklistView extends JPanel
 
         taskPanel.setLayout(new GridLayout(0, 1, 4, 4));
         add(taskPanel, java.awt.BorderLayout.NORTH);
+
+        progressLabel.setFont(progressLabel.getFont().deriveFont(Font.ITALIC));
+        add(progressLabel, java.awt.BorderLayout.SOUTH);
 
         render(viewModel.getState());
     }
@@ -69,16 +75,22 @@ public class ChecklistView extends JPanel
             }
         }
 
+        progressLabel.setText(state.getProgressSummary());
+
         revalidate();
         repaint();
     }
 
     private Component createTaskRow(TaskState task) {
+        final TaskDisplayFormatter formatter = new CompletedFormatterDecorator(
+                new OverdueFormatterDecorator(
+                        new BaseTaskFormatter()
+                )
+        );
         final JCheckBox checkBox =
-                new JCheckBox(formatTaskText(task));
+                new JCheckBox("<html>" + formatter.format(task) + "</html>");
 
         checkBox.setSelected(task.isCompleted());
-        styleTask(checkBox, task.isCompleted());
 
         /*
          * Store the task ID separately. Do not use the description as an ID
@@ -91,43 +103,5 @@ public class ChecklistView extends JPanel
         );
 
         return checkBox;
-    }
-
-    private String formatTaskText(TaskState task) {
-        final String dateSuffix = task.getDueDate()!= null
-                ? " (due " + task.getDueDate() + ")"
-                : "";
-        if (task.isCompleted()) {
-            return "<html><strike>"
-                    + escapeHtml(task.getDescription())
-                    + "</strike></html>";
-        }
-
-        return task.getDescription() + dateSuffix;
-    }
-
-    private void styleTask(
-            JCheckBox checkBox,
-            boolean completed
-    ) {
-        if (completed) {
-            checkBox.setForeground(Color.GRAY);
-            checkBox.setFont(
-                    checkBox.getFont().deriveFont(Font.PLAIN)
-            );
-        }
-        else {
-            checkBox.setForeground(Color.BLACK);
-            checkBox.setFont(
-                    checkBox.getFont().deriveFont(Font.PLAIN)
-            );
-        }
-    }
-
-    private String escapeHtml(String text) {
-        return text
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;");
     }
 }
