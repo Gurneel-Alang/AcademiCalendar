@@ -52,12 +52,6 @@ public final class Weather {
         return forecastSlots;
     }
 
-    /**
-     * Returns the forecast slot closest to local noon.
-     *
-     * @return representative forecast slot
-     * @throws IllegalStateException if no forecast slots are available
-     */
     public ForecastSlot getRepresentativeSlot() {
         if (forecastSlots.isEmpty()) {
             throw new IllegalStateException(
@@ -87,5 +81,4 @@ public final class Weather {
                         LocalTime.NOON
                 ).toMinutes()
         );
-    }
-}
+    }}

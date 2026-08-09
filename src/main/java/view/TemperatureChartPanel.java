@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -13,20 +14,31 @@ import javax.swing.JPanel;
 import interface_adapter.weather.TemperaturePoint;
 
 /**
- * Displays a simple line chart of temperatures throughout the day.
+ * Displays a simple line chart of temperatures
+ * throughout the day.
  */
-public final class TemperatureChartPanel extends JPanel {
+public final class TemperatureChartPanel
+        extends JPanel {
 
     private static final int PREFERRED_WIDTH = 420;
-    private static final int PREFERRED_HEIGHT = 220;
+    private static final int PREFERRED_HEIGHT = 240;
 
     private static final int LEFT_PADDING = 45;
     private static final int RIGHT_PADDING = 20;
-    private static final int TOP_PADDING = 25;
+    private static final int TOP_PADDING = 30;
     private static final int BOTTOM_PADDING = 40;
+
     private static final int POINT_RADIUS = 4;
+
+    private static final float TEMPERATURE_FONT_SIZE =
+            12f;
+
+    private static final float TIME_FONT_SIZE =
+            11f;
+
     private static final DateTimeFormatter TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("h a");
+            DateTimeFormatter.ofPattern("HH:mm");
+
     private List<TemperaturePoint> temperaturePoints =
             new ArrayList<>();
 
@@ -50,7 +62,9 @@ public final class TemperatureChartPanel extends JPanel {
     public void setTemperaturePoints(
             List<TemperaturePoint> points) {
 
-        temperaturePoints = new ArrayList<>(points);
+        temperaturePoints =
+                new ArrayList<>(points);
+
         repaint();
     }
 
@@ -63,7 +77,9 @@ public final class TemperatureChartPanel extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics graphics) {
+    protected void paintComponent(
+            Graphics graphics) {
+
         super.paintComponent(graphics);
 
         if (temperaturePoints.isEmpty()) {
@@ -83,15 +99,21 @@ public final class TemperatureChartPanel extends JPanel {
         graphics2D.dispose();
     }
 
-    private void drawChart(Graphics2D graphics) {
+    private void drawChart(
+            Graphics2D graphics) {
+
         final int width = getWidth();
         final int height = getHeight();
 
         final int chartWidth =
-                width - LEFT_PADDING - RIGHT_PADDING;
+                width
+                        - LEFT_PADDING
+                        - RIGHT_PADDING;
 
         final int chartHeight =
-                height - TOP_PADDING - BOTTOM_PADDING;
+                height
+                        - TOP_PADDING
+                        - BOTTOM_PADDING;
 
         final double minimumTemperature =
                 findMinimumTemperature();
@@ -102,7 +124,8 @@ public final class TemperatureChartPanel extends JPanel {
         final double temperatureRange =
                 Math.max(
                         1.0,
-                        maximumTemperature - minimumTemperature
+                        maximumTemperature
+                                - minimumTemperature
                 );
 
         drawAxes(
@@ -121,17 +144,19 @@ public final class TemperatureChartPanel extends JPanel {
             final TemperaturePoint point =
                     temperaturePoints.get(index);
 
-            final int x = calculateX(
-                    index,
-                    chartWidth
-            );
+            final int x =
+                    calculateX(
+                            index,
+                            chartWidth
+                    );
 
-            final int y = calculateY(
-                    point.getTemperature(),
-                    minimumTemperature,
-                    temperatureRange,
-                    chartHeight
-            );
+            final int y =
+                    calculateY(
+                            point.getTemperature(),
+                            minimumTemperature,
+                            temperatureRange,
+                            chartHeight
+                    );
 
             if (previousX >= 0) {
                 graphics.drawLine(
@@ -187,7 +212,8 @@ public final class TemperatureChartPanel extends JPanel {
             int chartWidth) {
 
         if (temperaturePoints.size() == 1) {
-            return LEFT_PADDING + chartWidth / 2;
+            return LEFT_PADDING
+                    + chartWidth / 2;
         }
 
         return LEFT_PADDING
@@ -202,7 +228,8 @@ public final class TemperatureChartPanel extends JPanel {
             int chartHeight) {
 
         final double normalized =
-                (temperature - minimumTemperature)
+                (temperature
+                        - minimumTemperature)
                         / temperatureRange;
 
         return TOP_PADDING
@@ -219,6 +246,16 @@ public final class TemperatureChartPanel extends JPanel {
             int y,
             int height) {
 
+        final Font originalFont =
+                graphics.getFont();
+
+        graphics.setFont(
+                originalFont.deriveFont(
+                        Font.BOLD,
+                        TEMPERATURE_FONT_SIZE
+                )
+        );
+
         final String temperatureText =
                 String.format(
                         "%.0f°C",
@@ -231,6 +268,13 @@ public final class TemperatureChartPanel extends JPanel {
                 y - 8
         );
 
+        graphics.setFont(
+                originalFont.deriveFont(
+                        Font.PLAIN,
+                        TIME_FONT_SIZE
+                )
+        );
+
         final String timeText =
                 point.getTime().format(
                         TIME_FORMATTER
@@ -238,12 +282,13 @@ public final class TemperatureChartPanel extends JPanel {
 
         graphics.drawString(
                 timeText,
-                x - 12,
+                x - 14,
                 height - 15
         );
     }
 
     private double findMinimumTemperature() {
+
         double minimum =
                 temperaturePoints
                         .get(0)
@@ -266,10 +311,8 @@ public final class TemperatureChartPanel extends JPanel {
                 temperaturePoints
                         .get(0)
                         .getTemperature();
-
         for (TemperaturePoint point
                 : temperaturePoints) {
-
             maximum = Math.max(
                     maximum,
                     point.getTemperature()

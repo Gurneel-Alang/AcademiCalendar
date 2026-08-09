@@ -16,15 +16,25 @@ public final class HeatAdviceStrategy
     public String generate(
             List<ForecastSlot> forecastSlots) {
 
-        for (ForecastSlot slot : forecastSlots) {
-            if (slot.getTemperature()
-                    >= HOT_TEMPERATURE) {
+        double highestTemperature =
+                Double.NEGATIVE_INFINITY;
 
-                return "High temperatures are expected today. "
-                        + "Remember to stay hydrated.";
-            }
+        for (ForecastSlot slot : forecastSlots) {
+            highestTemperature = Math.max(
+                    highestTemperature,
+                    slot.getTemperature()
+            );
         }
 
-        return "";
+        if (highestTemperature
+                < HOT_TEMPERATURE) {
+            return "";
+        }
+
+        return String.format(
+                "High temperature expected (%.0f°C). "
+                        + "Remember to stay hydrated.",
+                highestTemperature
+        );
     }
 }

@@ -6,14 +6,14 @@ import java.time.Clock;
 import java.time.Duration;
 import java.util.List;
 
-import data_access.weather.ForecastSelector;
+import data_access.weather.openweather.ForecastSelector;
 import data_access.weather.OfflineFirstWeatherDataAccessObject;
-import data_access.weather.OpenWeatherApiClient;
-import data_access.weather.OpenWeatherDataAccessObject;
-import data_access.weather.OpenWeatherJsonParser;
-import data_access.weather.SQLiteWeatherCache;
-import data_access.weather.WeatherApiClient;
-import data_access.weather.WeatherCache;
+import data_access.weather.openweather.OpenWeatherApiClient;
+import data_access.weather.openweather.OpenWeatherDataAccessObject;
+import data_access.weather.openweather.OpenWeatherJsonParser;
+import data_access.weather.cache.SQLiteWeatherCache;
+import data_access.weather.openweather.WeatherApiClient;
+import data_access.weather.cache.WeatherCache;
 
 import interface_adapter.weather.WeatherController;
 import interface_adapter.weather.WeatherPresenter;

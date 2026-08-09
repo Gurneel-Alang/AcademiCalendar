@@ -1,4 +1,4 @@
-package data_access.weather.dto;
+package data_access.weather.openweather.dto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package data_access.weather;
+package data_access.weather.openweather;
 
 import java.io.IOException;
 import java.net.URI;

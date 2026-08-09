@@ -1,11 +1,11 @@
-package data_access.weather;
+package data_access.weather.openweather;
 
 import java.io.IOException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import data_access.weather.dto.ForecastResponse;
-import data_access.weather.dto.LocationResponse;
+import data_access.weather.openweather.dto.ForecastResponse;
+import data_access.weather.openweather.dto.LocationResponse;
 
 /**
  * Converts OpenWeather JSON responses into data-transfer objects（dto）.

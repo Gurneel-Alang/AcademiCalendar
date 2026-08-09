@@ -1,226 +1,175 @@
 package use_case.weather;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.Test;
 
+import entity.weather.ForecastSlot;
 import entity.weather.Weather;
+import use_case.weather.advice.WeatherAdviceGenerator;
 
+/**
+ * Unit tests for the weather use case interactor.
+ */
 public class WeatherInteractorTest {
+
+    private static final LocalDate DATE = LocalDate.of(2026, 8, 9);
 
     @Test
     public void successTest() {
-        final LocalDate date =
-                LocalDate.of(2026, 8, 8);
+        final Weather weather = createWeather();
+        final RecordingPresenter presenter = new RecordingPresenter();
 
-        final Weather expectedWeather =
-                new Weather(
-                        "Toronto, Ontario, CA",
-                        date,
-                        24.0,
-                        25.0,
-                        "Clear",
-                        "clear sky",
-                        55,
-                        3.2
-                );
+        final WeatherDataAccessInterface fakeDao = (city, date) -> {
+            assertEquals("Toronto", city);
+            assertEquals(DATE, date);
+            return weather;
+        };
 
-        final WeatherDataAccessInterface fakeDao =
-                new WeatherDataAccessInterface() {
-                    @Override
-                    public Weather getWeather(
-                            String city,
-                            LocalDate requestedDate) {
+        createInteractor(fakeDao, presenter).execute(
+                new WeatherInputData("  Toronto  ", DATE)
+        );
 
-                        assertEquals("Toronto", city);
-                        assertEquals(date, requestedDate);
+        assertNull(presenter.error);
+        assertNotNull(presenter.output);
+        assertEquals("Toronto, Ontario, CA", presenter.output.getCity());
+        assertEquals(DATE, presenter.output.getDate());
+        assertEquals("Bring an umbrella.", presenter.output.getAdvice());
+        assertEquals(2, presenter.output.getForecastSlots().size());
 
-                        return expectedWeather;
-                    }
-                };
+        final ForecastSlotOutputData representative =
+                presenter.output.getRepresentativeSlot();
 
-        final WeatherOutputBoundary presenter =
-                new WeatherOutputBoundary() {
-                    @Override
-                    public void prepareSuccessView(
-                            WeatherOutputData outputData) {
+        assertEquals(LocalDateTime.of(2026, 8, 9, 12, 0),
+                representative.getDateTime());
+        assertEquals(24.0, representative.getTemperature(), 0.001);
+        assertEquals(25.0, representative.getFeelsLike(), 0.001);
+        assertEquals("Rain", representative.getCondition());
+        assertEquals("light rain", representative.getDescription());
+        assertEquals(70, representative.getHumidity());
+        assertEquals(4.5, representative.getWindSpeed(), 0.001);
+        assertEquals(0.8,
+                representative.getPrecipitationProbability(), 0.001);
+    }
 
-                        assertEquals(
-                                "Toronto, Ontario, CA",
-                                outputData.getCity()
-                        );
+    @Test
+    public void nullInputFailureTest() {
+        assertFailure(null, "Weather request is required.");
+    }
 
-                        assertEquals(
-                                date,
-                                outputData.getSelectedDate()
-                        );
-
-                        assertEquals(
-                                24.0,
-                                outputData.getTemperature(),
-                                0.001
-                        );
-                    }
-
-                    @Override
-                    public void prepareFailView(String error) {
-                        fail(
-                                "Unexpected failure: " + error
-                        );
-                    }
-                };
-
-        final WeatherInputBoundary interactor =
-                new WeatherInteractor(
-                        fakeDao,
-                        presenter
-                );
-
-        interactor.execute(
-                new WeatherInputData(
-                        "Toronto",
-                        date
-                )
+    @Test
+    public void nullCityFailureTest() {
+        assertFailure(
+                new WeatherInputData(null, DATE),
+                "Please enter a city."
         );
     }
 
     @Test
-    public void emptyCityFailureTest() {
-        final WeatherDataAccessInterface fakeDao =
-                new FailingIfCalledWeatherDao();
-
-        final WeatherOutputBoundary presenter =
-                new WeatherOutputBoundary() {
-                    @Override
-                    public void prepareSuccessView(
-                            WeatherOutputData outputData) {
-                        fail("Success was not expected.");
-                    }
-
-                    @Override
-                    public void prepareFailView(String error) {
-                        assertEquals(
-                                "Please enter a city.",
-                                error
-                        );
-                    }
-                };
-
-        final WeatherInputBoundary interactor =
-                new WeatherInteractor(
-                        fakeDao,
-                        presenter
-                );
-
-        interactor.execute(
-                new WeatherInputData(
-                        "   ",
-                        LocalDate.of(2026, 8, 8)
-                )
+    public void blankCityFailureTest() {
+        assertFailure(
+                new WeatherInputData("   ", DATE),
+                "Please enter a city."
         );
     }
 
     @Test
     public void nullDateFailureTest() {
-        final WeatherDataAccessInterface fakeDao =
-                new FailingIfCalledWeatherDao();
-
-        final WeatherOutputBoundary presenter =
-                new WeatherOutputBoundary() {
-                    @Override
-                    public void prepareSuccessView(
-                            WeatherOutputData outputData) {
-                        fail("Success was not expected.");
-                    }
-
-                    @Override
-                    public void prepareFailView(String error) {
-                        assertEquals(
-                                "Please select a date.",
-                                error
-                        );
-                    }
-                };
-
-        final WeatherInputBoundary interactor =
-                new WeatherInteractor(
-                        fakeDao,
-                        presenter
-                );
-
-        interactor.execute(
-                new WeatherInputData(
-                        "Toronto",
-                        null
-                )
+        assertFailure(
+                new WeatherInputData("Toronto", null),
+                "Please select a date."
         );
     }
 
     @Test
     public void dataAccessFailureTest() {
-        final WeatherDataAccessInterface fakeDao =
-                new WeatherDataAccessInterface() {
-                    @Override
-                    public Weather getWeather(
-                            String city,
-                            LocalDate date)
-                            throws IOException {
+        final RecordingPresenter presenter = new RecordingPresenter();
+        final WeatherDataAccessInterface failingDao = (city, date) -> {
+            throw new IOException("Weather service unavailable.");
+        };
 
-                        throw new IOException(
-                                "Weather service unavailable."
-                        );
-                    }
-                };
+        createInteractor(failingDao, presenter).execute(
+                new WeatherInputData("Toronto", DATE)
+        );
 
-        final WeatherOutputBoundary presenter =
-                new WeatherOutputBoundary() {
-                    @Override
-                    public void prepareSuccessView(
-                            WeatherOutputData outputData) {
-                        fail("Success was not expected.");
-                    }
+        assertNull(presenter.output);
+        assertEquals("Weather service unavailable.", presenter.error);
+    }
 
-                    @Override
-                    public void prepareFailView(String error) {
-                        assertEquals(
-                                "Weather service unavailable.",
-                                error
-                        );
-                    }
-                };
+    private void assertFailure(
+            WeatherInputData inputData,
+            String expectedError) {
 
-        final WeatherInputBoundary interactor =
-                new WeatherInteractor(
-                        fakeDao,
-                        presenter
-                );
+        final RecordingPresenter presenter = new RecordingPresenter();
+        final WeatherDataAccessInterface unusedDao = (city, date) -> {
+            fail("DAO should not be called for invalid input.");
+            return null;
+        };
 
-        interactor.execute(
-                new WeatherInputData(
-                        "Toronto",
-                        LocalDate.of(2026, 8, 8)
-                )
+        createInteractor(unusedDao, presenter).execute(inputData);
+
+        assertNull(presenter.output);
+        assertEquals(expectedError, presenter.error);
+    }
+
+    private WeatherInputBoundary createInteractor(
+            WeatherDataAccessInterface dao,
+            WeatherOutputBoundary presenter) {
+
+        final WeatherAdviceGenerator adviceGenerator =
+                new WeatherAdviceGenerator(List.of(
+                        slots -> "Bring an umbrella."
+                ));
+
+        return new WeatherInteractor(
+                dao,
+                presenter,
+                adviceGenerator
         );
     }
 
-    private static final class FailingIfCalledWeatherDao
-            implements WeatherDataAccessInterface {
+    private Weather createWeather() {
+        final ForecastSlot morning = new ForecastSlot(
+                LocalDateTime.of(2026, 8, 9, 9, 0),
+                20.0, 21.0, "Clouds", "cloudy",
+                60, 2.0, 0.1
+        );
+
+        final ForecastSlot noon = new ForecastSlot(
+                LocalDateTime.of(2026, 8, 9, 12, 0),
+                24.0, 25.0, "Rain", "light rain",
+                70, 4.5, 0.8
+        );
+
+        return new Weather(
+                "Toronto, Ontario, CA",
+                DATE,
+                List.of(morning, noon)
+        );
+    }
+
+    private static final class RecordingPresenter
+            implements WeatherOutputBoundary {
+
+        private WeatherOutputData output;
+        private String error;
 
         @Override
-        public Weather getWeather(
-                String city,
-                LocalDate date) {
+        public void prepareSuccessView(WeatherOutputData outputData) {
+            output = outputData;
+        }
 
-            fail(
-                    "DAO should not be called "
-                            + "when input is invalid."
-            );
-
-            return null;
+        @Override
+        public void prepareFailView(String errorMessage) {
+            error = errorMessage;
         }
     }
 }

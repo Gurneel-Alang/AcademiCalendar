@@ -1,4 +1,4 @@
-package data_access.weather;
+package data_access.weather.openweather;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -6,15 +6,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import data_access.weather.dto.ForecastResponse;
-import data_access.weather.dto.ForecastResponse.ForecastEntry;
-import data_access.weather.dto.ForecastResponse.WeatherDescription;
-import data_access.weather.dto.LocationResponse;
+import data_access.weather.openweather.dto.ForecastResponse;
+import data_access.weather.openweather.dto.LocationResponse;
 import entity.weather.ForecastSlot;
 import entity.weather.Weather;
 

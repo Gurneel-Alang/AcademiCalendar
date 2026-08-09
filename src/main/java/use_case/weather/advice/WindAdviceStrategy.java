@@ -16,15 +16,25 @@ public final class WindAdviceStrategy
     public String generate(
             List<ForecastSlot> forecastSlots) {
 
-        for (ForecastSlot slot : forecastSlots) {
-            if (slot.getWindSpeed()
-                    >= STRONG_WIND_SPEED) {
+        double highestWindSpeed =
+                Double.NEGATIVE_INFINITY;
 
-                return "Strong winds are expected today. "
-                        + "Take care when travelling outdoors.";
-            }
+        for (ForecastSlot slot : forecastSlots) {
+            highestWindSpeed = Math.max(
+                    highestWindSpeed,
+                    slot.getWindSpeed()
+            );
         }
 
-        return "";
+        if (highestWindSpeed
+                < STRONG_WIND_SPEED) {
+            return "";
+        }
+
+        return String.format(
+                "Strong winds expected (%.1f m/s). "
+                        + "Take care outdoors.",
+                highestWindSpeed
+        );
     }
 }
