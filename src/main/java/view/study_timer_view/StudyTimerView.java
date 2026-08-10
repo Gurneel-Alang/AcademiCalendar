@@ -1,4 +1,4 @@
-package view;
+package view.study_timer_view;
 
 import java.awt.*;
 import java.util.Random;

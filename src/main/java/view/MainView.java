@@ -10,7 +10,10 @@ import interface_adapter.checklist.create_task.CreateTaskController;
 import interface_adapter.checklist.load_checklist.LoadChecklistController;
 import interface_adapter.event.view_events.ViewEventsController;
 import interface_adapter.view_monthly_schedule.ViewMonthlyScheduleController;
+import view.calendar_view.CalendarView;
 import view.event_view.EventListView;
+import view.study_timer_view.StudyTimerView;
+import view.weather_view.WeatherView;
 
 /**
  * Main application view containing navigation and feature views.

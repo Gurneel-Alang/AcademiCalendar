@@ -1,4 +1,4 @@
-package view;
+package view.weather_view;
 
 import java.awt.Dimension;
 import java.awt.Font;

@@ -28,7 +28,7 @@ import use_case.weather.WeatherInteractor;
 import use_case.weather.WeatherOutputBoundary;
 
 import use_case.weather.advice.WindAdviceStrategy;
-import view.WeatherView;
+import view.weather_view.WeatherView;
 
 /**
  * Creates and wires the weather use case.

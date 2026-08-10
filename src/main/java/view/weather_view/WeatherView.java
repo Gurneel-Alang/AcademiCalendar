@@ -1,4 +1,4 @@
-package view;
+package view.weather_view;
 
 import java.awt.BorderLayout;
 import java.awt.Font;

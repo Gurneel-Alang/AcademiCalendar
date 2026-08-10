@@ -40,12 +40,12 @@ import use_case.task.toggle_task.ToggleTaskInteractor;
 import use_case.view_monthly_schedule.ViewMonthlyScheduleInteractor;
 import use_case.task.load_checklist.TaskSortStrategy;
 import use_case.task.load_checklist.DueDateSortStrategy;
-import view.CalendarView;
-import view.ChecklistView;
+import view.calendar_view.CalendarView;
+import view.checklist_view.ChecklistView;
 import view.MainView;
-import view.WeatherView;
+import view.weather_view.WeatherView;
 import view.event_view.*;
-import view.StudyTimerView;
+import view.study_timer_view.StudyTimerView;
 
 /**
  * Builder class to attach use cases and views to - and return - a MainView.
