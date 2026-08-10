@@ -118,7 +118,12 @@ public class MainView extends JPanel {
             loadEvents.run();
             showView(EVENT_VIEW);
         });
-        calendarView.addSelectionChangeListener(loadEvents);
+        calendarView.addSelectionChangeListener(() -> {
+            loadEvents.run();
+            weatherView.setSelectedDate(
+                    calendarView.getSelectedDate()
+            );
+        });
 
         weatherButton.addActionListener(event -> {
             weatherView.setSelectedDate(
