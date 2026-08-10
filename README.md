@@ -44,7 +44,7 @@ and weather panels from a running build.)*
 ![front-view.png](images/front-view.png)
 ![add-event-view.png](images/add-event-view.png)
 ![weather-view.png](images/weather-view.png)
-![reminders-view.png](images/reminders-view.png)
+![checklist-view.png](images/checklist-view.png)
 ![study-timer-view.png](images/study-timer-view.png)
 
 ## Installation

@@ -1,6 +1,8 @@
 package view;
 
 import org.junit.Test;
+import view.study_timer_view.StudyTimerView;
+
 import static org.junit.Assert.assertEquals;
 
 public class StudyTimerViewTest {
