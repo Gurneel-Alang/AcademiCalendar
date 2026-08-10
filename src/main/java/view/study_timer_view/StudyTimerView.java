@@ -92,7 +92,7 @@ public class StudyTimerView extends JPanel {
         });
     }
 
-    static String formatTime(int totalSeconds) {
+    public static String formatTime(int totalSeconds) {
         int hours = totalSeconds / 3600;
         int minutes = (totalSeconds % 3600) / 60;
         int seconds = totalSeconds % 60;
