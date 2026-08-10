@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import interface_adapter.checklist.TaskState;
+import view.checklist_view.BaseTaskFormatter;
+import view.checklist_view.CompletedFormatterDecorator;
+import view.checklist_view.OverdueFormatterDecorator;
+import view.checklist_view.TaskDisplayFormatter;
 
 public class CompletedFormatterDecoratorTest {
 

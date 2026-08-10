@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import interface_adapter.checklist.TaskState;
+import view.checklist_view.BaseTaskFormatter;
 
 public class BaseTaskFormatterTest {
 
