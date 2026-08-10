@@ -47,9 +47,8 @@ and weather panels from a running build.)*
 ![checklist-view.png](images/checklist-view.png)
 ![study-timer-view.png](images/study-timer-view.png)
 
-##API
+## API
 The Weather feature uses theOpenWeather API to retrieve forecast data. The application uses two API endpoints:
-
 Geocoding API
 Converts the city entered by the user into latitude and longitude.
 Geocoding API Documentation
