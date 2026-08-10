@@ -31,6 +31,9 @@ public class AddEventInteractor implements AddEventInputBoundary {
         if (eventDataAccessObject.existsByTitle(title)) {
             addEventPresenter.prepareFailView("Failed; event of given title already exists.");
         }
+        else if (endDate.isBefore(startDate)) {
+            addEventPresenter.prepareFailView("Failed; end date must come after start date.");
+        }
         else {
             final EventInterface event = eventFactory.create(title, description, startDate, endDate);
             eventDataAccessObject.addEvent(event);

@@ -43,6 +43,9 @@ public class EditEventInteractor implements EditEventInputBoundary {
                         + " already exists.");
             }
         }
+        else if (newEndDate.isBefore(newStartDate)) {
+            editEventPresenter.prepareFailView("Failed: new end date must come after new start date.");
+        }
         else {
             editEventPresenter.prepareFailView("Failed; event of given previous title"
                     + " does not exist.");

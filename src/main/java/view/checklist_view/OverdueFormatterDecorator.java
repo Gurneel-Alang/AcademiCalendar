@@ -1,4 +1,4 @@
-package view;
+package view.checklist_view;
 
 import java.time.LocalDate;
 
