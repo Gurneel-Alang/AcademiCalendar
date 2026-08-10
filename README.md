@@ -47,6 +47,17 @@ and weather panels from a running build.)*
 ![checklist-view.png](images/checklist-view.png)
 ![study-timer-view.png](images/study-timer-view.png)
 
+##API
+The Weather feature uses theOpenWeather API to retrieve forecast data. The application uses two API endpoints:
+
+Geocoding API
+Converts the city entered by the user into latitude and longitude.
+Geocoding API Documentation
+5 Day / 3 Hour Forecast API
+Retrieves weather forecast data using the latitude and longitude returned by the Geocoding API.
+Forecast API Documentation
+
+
 ## Installation
 
 **Requirements:** JDK 16+, Maven 3.8+, Git. Cross-platform (macOS, Windows,
@@ -94,11 +105,23 @@ openweatherAPI key under configurations for CalendarPreviewMain
    on the selected date.
 
 ### Note on weather viewing:
-- Make sure that the date is the same as the city you are searching (i.e Bejing's date would be one day ahead of Toronto's).
-- It automatically creates a local SQLite database at:
-  - macOS/Linux: `~/.academicalendar/academicalendar.db`
-  - Windows: `%USERPROFILE%\.academicalendar\academicalendar.db`
-- The database is generated automatically. Weather data must be fetched online at least once before it is available offline.
+
+The selected date is interpreted as the local date of the searched city. For
+example, Beijing may already be one calendar day ahead of Toronto.
+
+Weather information is available only for dates covered by the OpenWeather
+forecast service.
+
+Successful searches are cached locally in SQLite for offline access:
+
+- macOS/Linux: `~/.academicalendar/weather.db`
+- Windows: `%USERPROFILE%\.academicalendar\weather.db`
+
+The database is created automatically. Weather data must be fetched online at
+least once before it becomes available offline. Fresh cached results are reused
+for up to three hours. If the API or network is unavailable, the application
+will display an older cached result when one exists for the same city and date.
+
 
 ## Feedback and Suggestions
 Open a [GitHub Issue](https://github.com/Gurneel-Alang/AcademiCalendar/issues)
